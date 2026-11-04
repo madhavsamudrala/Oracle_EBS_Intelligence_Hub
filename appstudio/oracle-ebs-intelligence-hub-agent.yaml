@@ -1,0 +1,1655 @@
+# =============================================================================
+# Oracle EBS Intelligence Hub — IBM BOB Agent Configuration
+# Version:    5.0
+# Updated:    2025
+# Platform:   IBM App Studio + ICA Context Studio
+# App:        oracle-ebs-intelligence-hub.html  (Pure client-side SPA, zero backend)
+# Context:    oracle-ebs-intelligence-hub
+# =============================================================================
+#
+# COVERAGE CHECKLIST — every feature of the v5.0 app is represented here:
+#
+#  ✅ 7 Application Tabs    — Chat, Reports, SQL Advisor, Academy, SQL Lab, Data Connect, Doc Generator
+#  ✅ 2 Login Roles         — Employee (3 tabs) / Technical (all 7 tabs)
+#  ✅ 26 EBS Reports        — AP×9, PO×4, GL×3, iExpense×3, HRMS×4, AR×2, INV×1
+#  ✅ SQL Advisor           — Performance Advisor, 27-check Code Review, Formatter
+#  ✅ EBS Academy           — 15 modules with AI assistant (40+ handlers)
+#  ✅ SQL Lab               — 500+ queries, AI Prompt-to-SQL, 12 categories
+#  ✅ Data Connect          — Excel/CSV upload, Simulated DB, Live Oracle DB (proxy)
+#  ✅ Doc Generator         — TDD + FSD with 4 SVG diagrams
+#  ✅ Delete Workflow       — Employee request → Technical approve/reject + Recycle Bin
+#  ✅ Notification Panel    — Pending requests badge + Recycle Bin restore
+#  ✅ Chart Visualisation   — Bar, Line, Pie, Doughnut per report
+#  ✅ Export Formats        — CSV, Excel, PDF
+#  ✅ ICA Context           — Knowledge graph, NL query CSV, entity resolution
+#
+# =============================================================================
+
+agent:
+  name: oracle-ebs-intelligence-hub-assistant
+  version: "5.0"
+  description: >
+    AI assistant for Oracle EBS Intelligence Hub v5.0.
+    Handles natural-language queries for 26 Oracle EBS reports across
+    AP, AR, GL, PO, HRMS, INV and iExpense modules; SQL performance analysis,
+    27-check code review and formatting; EBS Academy (15 modules) topic lookup
+    with process flowcharts; SQL Lab (500+ queries) prompt-to-SQL generation;
+    Data Connect (Excel/CSV upload and DB query simulation); Document Generator
+    (TDD + FSD); Delete/Recycle Bin workflow; and role-based tab navigation
+    (Employee sees Chat + Reports + Data Connect; Technical sees all 7 tabs).
+    Zero backend — all logic runs client-side. No LLM API calls.
+  language: en
+  context: oracle-ebs-intelligence-hub
+  fallback_intent: show_help_menu
+  confidence_threshold: 0.70
+  app_file: oracle-ebs-intelligence-hub.html
+  app_version: "5.0"
+  roles:
+    - id: employee
+      password_hint: "see local ebs-credentials.js"
+      visible_tabs: [tab-chat, tab-reports, tab-dataconnect]
+      delete_mode: submit_request
+    - id: technical
+      password_hint: "see local ebs-credentials.js"
+      visible_tabs: [tab-chat, tab-reports, tab-dataconnect, tab-sql, tab-academy, tab-sqllab, tab-docgen]
+      delete_mode: direct_with_recycle_bin
+      notification_bell: true
+
+# =============================================================================
+# ENTITIES
+# =============================================================================
+entities:
+
+  # ── Oracle EBS Module ───────────────────────────────────────────────────────
+  - name: report_module
+    type: closed_list
+    context_node_type: OracleModule
+    values:
+      - AP
+      - AR
+      - GL
+      - PO
+      - HRMS
+      - INV
+      - iExpense
+    synonyms:
+      AP: [Accounts Payable, payables, vendor invoices]
+      AR: [Accounts Receivable, receivables, customer invoices]
+      GL: [General Ledger, ledger, journals]
+      PO: [Purchasing, procurement, purchase orders]
+      HRMS: [Human Resources, HR, employees, payroll]
+      INV: [Inventory, stock, warehouse]
+      iExpense: [expense reports, employee expenses, corporate card]
+
+  # ── Specific EBS Report ─────────────────────────────────────────────────────
+  - name: report_name
+    type: context_lookup
+    context_node_type: EBSReport
+    lookup_property: title
+
+  # ── Report Key (internal ID) ────────────────────────────────────────────────
+  - name: report_key
+    type: closed_list
+    values:
+      # AP
+      - aged_payables_detail
+      - invoice_register
+      - ap_trial_balance
+      - withholding_tax
+      - suppliers_report
+      - suppliers_high_payments_by_year
+      - supplier_paid_invoice_history
+      - supplier_payment_history
+      - supplier_audit
+      # PO
+      - po_detail
+      - po_distribution_detail
+      - receipt_adjustments
+      - savings_analysis
+      # GL
+      - gl_journals
+      - gl_trial_balance
+      - gl_account_analysis
+      # iExpense
+      - iexpense_detail
+      - credit_card_report
+      - workflow_approvals
+      # HRMS
+      - active_employees
+      - terminated_employees
+      - supervisor_details
+      - expense_cost_allocation
+      # AR
+      - ar_aging
+      - customer_statement
+      # INV
+      - inventory_valuation
+
+  # ── Fiscal Year ─────────────────────────────────────────────────────────────
+  - name: fiscal_year
+    type: pattern
+    pattern: "(FY)?20(2[0-9])"
+    example: "FY2024, 2023, FY2022"
+
+  # ── Month ───────────────────────────────────────────────────────────────────
+  - name: month_name
+    type: closed_list
+    values:
+      - January
+      - February
+      - March
+      - April
+      - May
+      - June
+      - July
+      - August
+      - September
+      - October
+      - November
+      - December
+    synonyms:
+      January: [Jan]
+      February: [Feb]
+      March: [Mar]
+      April: [Apr]
+      June: [Jun]
+      July: [Jul]
+      August: [Aug]
+      September: [Sep, Sept]
+      October: [Oct]
+      November: [Nov]
+      December: [Dec]
+
+  # ── Export Format ───────────────────────────────────────────────────────────
+  - name: export_format
+    type: closed_list
+    values: [csv, excel, xlsx, pdf, print]
+
+  # ── SQL Advisor Sub-tab ─────────────────────────────────────────────────────
+  - name: sql_advisor_subtab
+    type: closed_list
+    values: [performance, code_review, formatter]
+    synonyms:
+      performance: [perf, optimise, slow, execution plan, cost]
+      code_review:  [review, standards, quality, check, best practice]
+      formatter:    [format, beautify, indent, clean, uppercase keywords]
+
+  # ── Academy Module ──────────────────────────────────────────────────────────
+  - name: academy_module
+    type: closed_list
+    context_node_type: AcademyModule
+    values:
+      - acad_ap
+      - acad_ar
+      - acad_gl
+      - acad_iexp
+      - acad_hrms
+      - acad_po
+      - acad_inv
+      - acad_concurrent
+      - acad_dba
+      - acad_arch
+      - acad_soa
+      - acad_apex
+      - acad_testing
+      - acad_security
+      - acad_pm
+    synonyms:
+      acad_ap:         [accounts payable, AP module, invoice cycle, P2P]
+      acad_ar:         [accounts receivable, AR module, O2C, cash receipts]
+      acad_gl:         [general ledger, GL module, period close, journals]
+      acad_iexp:       [iExpense, expense reports, credit card, corporate card]
+      acad_hrms:       [HRMS, HR module, hire to retire, employees, payroll]
+      acad_po:         [purchasing, PO module, purchase orders, procurement]
+      acad_inv:        [inventory, INV module, stock, warehouse]
+      acad_concurrent: [concurrent programs, background jobs, request submission]
+      acad_dba:        [DBA, database admin, patching, performance tuning, RMAN]
+      acad_arch:       [architecture, three-tier, AD utilities, EBS infrastructure]
+      acad_soa:        [SOA, integration, BPEL, web services, REST API, OIC]
+      acad_apex:       [APEX, Oracle APEX, modernisation, low-code, EBS migration]
+      acad_testing:    [testing, QA, regression, UAT, test plan]
+      acad_security:   [security, responsibilities, SOD, user access, audit]
+      acad_pm:         [project manager, project management, cutover, go-live]
+
+  # ── SQL Library Category ────────────────────────────────────────────────────
+  - name: sql_category
+    type: closed_list
+    context_node_type: SQLCategory
+    values:
+      - cat_ap
+      - cat_ar
+      - cat_gl
+      - cat_po
+      - cat_hrms
+      - cat_inv
+      - cat_iexp
+      - cat_fnd
+      - cat_perf
+      - cat_sec
+      - cat_wf
+      - cat_multi
+
+  # ── Data Connect Source ─────────────────────────────────────────────────────
+  - name: data_connect_source
+    type: closed_list
+    values: [excel, csv, simulated, live_db]
+    synonyms:
+      excel:     [xlsx, spreadsheet, file upload, drag and drop]
+      csv:       [csv file, comma separated]
+      simulated: [simulate, demo, test, no db, without database]
+      live_db:   [live database, oracle db, real data, jdbc, production]
+
+  # ── Document Type ───────────────────────────────────────────────────────────
+  - name: doc_type
+    type: closed_list
+    values: [TDD, FSD, technical, functional, specification]
+    synonyms:
+      TDD:       [technical design document, technical spec, technical specification]
+      FSD:       [functional spec, functional design, business spec, functional design document]
+
+  # ── User Role ───────────────────────────────────────────────────────────────
+  - name: user_role
+    type: closed_list
+    values: [employee, technical]
+    synonyms:
+      employee:  [business user, end user, finance user, standard user]
+      technical: [developer, DBA, power user, admin, technical user]
+
+  # ── Delete Action ───────────────────────────────────────────────────────────
+  - name: delete_action
+    type: closed_list
+    values: [request, approve, reject, restore]
+
+  # ── Vendor / Supplier ───────────────────────────────────────────────────────
+  - name: vendor_name
+    type: context_lookup
+    context_node_type: Supplier
+    lookup_property: name
+
+  # ── Employee ────────────────────────────────────────────────────────────────
+  - name: employee_name
+    type: context_lookup
+    context_node_type: Employee
+    lookup_property: full_name
+
+# =============================================================================
+# SLOTS
+# =============================================================================
+slots:
+
+  - name: s_module
+    type: entity
+    entity: report_module
+    prompt: "Which Oracle EBS module? (AP, AR, GL, PO, HRMS, INV, iExpense)"
+
+  - name: s_year
+    type: entity
+    entity: fiscal_year
+    prompt: "Which fiscal year? (e.g., 2024, FY2023, or type 'all' for all years)"
+
+  - name: s_month
+    type: entity
+    entity: month_name
+    prompt: "Which month? (e.g., March, October)"
+
+  - name: s_vendor
+    type: entity
+    entity: vendor_name
+    prompt: "Which supplier or vendor name?"
+
+  - name: s_employee
+    type: entity
+    entity: employee_name
+    prompt: "Which employee (full name or employee number)?"
+
+  - name: s_export
+    type: entity
+    entity: export_format
+    prompt: "Download format? CSV, Excel (.xlsx), or PDF?"
+
+  - name: s_doc_type
+    type: entity
+    entity: doc_type
+    prompt: "Technical Design Document (TDD), Functional Specification (FSD), or both?"
+
+  - name: s_academy_module
+    type: entity
+    entity: academy_module
+    prompt: "Which Academy module? (e.g., AP, GL, HRMS, DBA, Architecture, SOA)"
+
+  - name: s_sql_category
+    type: entity
+    entity: sql_category
+    prompt: "Which SQL category? (AP, AR, GL, PO, HRMS, INV, iExpense, FND, Performance, Security, Workflow, Multi-Org)"
+
+  - name: s_data_source
+    type: entity
+    entity: data_connect_source
+    prompt: "Data source: Excel/CSV upload, Simulated DB query, or Live Oracle DB?"
+
+  - name: s_delete_action
+    type: entity
+    entity: delete_action
+    prompt: "Action: submit delete request, approve, reject, or restore from Recycle Bin?"
+
+  - name: s_report_key
+    type: entity
+    entity: report_key
+    prompt: "Which report? (e.g., aged_payables_detail, active_employees)"
+
+# =============================================================================
+# SKILLS
+# =============================================================================
+skills:
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # GROUP 1 — EBS REPORTS (26 reports across 7 modules)
+  # ────────────────────────────────────────────────────────────────────────────
+
+  - skill: generate_ap_report
+    description: >
+      Show AP reports — Aged Payables Detail, Invoice Register, AP Trial Balance,
+      Withholding Tax, Supplier Paid Invoice History, Supplier Payment History.
+    intents:
+      - aged_payables
+      - invoice_register
+      - ap_trial_balance
+      - withholding_tax
+      - paid_invoice_history
+      - payment_history
+    training_phrases:
+      - "show aged payables"
+      - "aged payables report"
+      - "outstanding invoices"
+      - "overdue payables"
+      - "AP aging"
+      - "what invoices are past due"
+      - "unpaid invoices"
+      - "invoice register"
+      - "all AP invoices entered this month"
+      - "AP trial balance"
+      - "vendor open balance"
+      - "withholding tax by supplier"
+      - "1099 report"
+      - "TDS by supplier"
+      - "supplier paid invoice history"
+      - "what did we pay to this vendor"
+      - "supplier payment history"
+    slots_required: [s_year, s_month]
+    response:
+      type: report_action
+      report_key_map:
+        aged_payables:      aged_payables_detail
+        invoice_register:   invoice_register
+        ap_trial_balance:   ap_trial_balance
+        withholding_tax:    withholding_tax
+        paid_invoice_history: supplier_paid_invoice_history
+        payment_history:    supplier_payment_history
+    fallback: >
+      AP reports available: Aged Payables Detail, Invoice Register, AP Trial Balance,
+      Withholding Tax, Supplier Paid Invoice History, Supplier Payment History.
+      Which would you like?
+
+  - skill: generate_supplier_report
+    description: >
+      Show supplier-related reports — Suppliers List, High Payments by Year,
+      Supplier Audit Trail.
+    intents:
+      - supplier_list
+      - high_payment_suppliers
+      - supplier_audit
+    training_phrases:
+      - "show all suppliers"
+      - "vendor list"
+      - "supplier report"
+      - "suppliers on hold"
+      - "suppliers with high payments"
+      - "top vendors by payment"
+      - "which vendors got paid the most"
+      - "3 year payment analysis"
+      - "supplier audit trail"
+      - "vendor changes"
+      - "supplier bank account changes"
+    slots_required: [s_year, s_vendor]
+    response:
+      type: report_action
+      report_key_map:
+        supplier_list:           suppliers_report
+        high_payment_suppliers:  suppliers_high_payments_by_year
+        supplier_audit:          supplier_audit
+    fallback: >
+      Supplier reports: Suppliers Report, High Payments by Year, Supplier Audit Trail.
+
+  - skill: generate_po_report
+    description: >
+      Show Purchasing reports — PO Detail, PO Distribution Detail,
+      Receipt Adjustments, Savings Analysis.
+    intents:
+      - po_detail
+      - po_distribution
+      - receipt_adjustments
+      - savings_analysis
+    training_phrases:
+      - "purchase orders"
+      - "PO detail report"
+      - "PO status this month"
+      - "approved purchase orders"
+      - "PO distribution"
+      - "accounting distributions for PO"
+      - "GL accounts for purchase orders"
+      - "receipt adjustments"
+      - "receiving adjustments"
+      - "savings analysis"
+      - "procurement savings"
+      - "buyer savings report"
+    slots_required: [s_year, s_month]
+    response:
+      type: report_action
+      report_key_map:
+        po_detail:          po_detail
+        po_distribution:    po_distribution_detail
+        receipt_adjustments: receipt_adjustments
+        savings_analysis:   savings_analysis
+    fallback: >
+      PO reports: Purchase Order Detail, Distribution Detail, Receipt Adjustments, Savings Analysis.
+
+  - skill: generate_gl_report
+    description: >
+      Show General Ledger reports — Journal Entries, GL Trial Balance,
+      Account Analysis.
+    intents:
+      - gl_journals
+      - gl_trial_balance
+      - account_analysis
+    training_phrases:
+      - "journal entries"
+      - "GL journals"
+      - "general ledger entries"
+      - "posted journals this period"
+      - "GL trial balance"
+      - "account balances"
+      - "period end balance"
+      - "account analysis"
+      - "GL account activity"
+      - "ledger report"
+    slots_required: [s_year, s_month]
+    response:
+      type: report_action
+      report_key_map:
+        gl_journals:      gl_journals
+        gl_trial_balance: gl_trial_balance
+        account_analysis: gl_account_analysis
+    fallback: "GL reports: Journal Entries, GL Trial Balance, Account Analysis."
+
+  - skill: generate_iexpense_report
+    description: >
+      Show iExpense reports — iExpense Detail, Credit Card Report,
+      Workflow Approvals.
+    intents:
+      - iexpense_detail
+      - credit_card
+      - workflow_approvals
+    training_phrases:
+      - "iExpense reports"
+      - "expense reports"
+      - "employee expenses"
+      - "expense pending approval"
+      - "show my expenses"
+      - "credit card report"
+      - "corporate card transactions"
+      - "card statement"
+      - "workflow approvals"
+      - "approval status"
+      - "pending expense approvals"
+      - "expense workflow"
+      - "expenses not yet approved"
+    slots_required: [s_year, s_employee]
+    response:
+      type: report_action
+      report_key_map:
+        iexpense_detail:    iexpense_detail
+        credit_card:        credit_card_report
+        workflow_approvals: workflow_approvals
+    fallback: "iExpense reports: iExpense Detail, Credit Card Report, Workflow Approvals."
+
+  - skill: generate_hrms_report
+    description: >
+      Show HRMS reports — Active Employees, Terminated Employees,
+      Supervisor Details, Expense Cost Allocation.
+    intents:
+      - active_employees
+      - terminated_employees
+      - supervisor_details
+      - expense_cost_allocation
+    training_phrases:
+      - "active employees"
+      - "headcount report"
+      - "current employees"
+      - "employee list"
+      - "staff list"
+      - "terminated employees"
+      - "ex employees"
+      - "leavers report"
+      - "resignations this year"
+      - "supervisor details"
+      - "manager report"
+      - "org hierarchy"
+      - "reporting line"
+      - "expense cost allocation"
+      - "employee GL accounts"
+      - "payroll cost distribution"
+    slots_required: [s_year, s_employee]
+    response:
+      type: report_action
+      report_key_map:
+        active_employees:       active_employees
+        terminated_employees:   terminated_employees
+        supervisor_details:     supervisor_details
+        expense_cost_allocation: expense_cost_allocation
+    fallback: "HRMS reports: Active Employees, Terminated Employees, Supervisor Details, Cost Allocation."
+
+  - skill: generate_ar_report
+    description: >
+      Show Accounts Receivable reports — AR Aging, Customer Statement.
+    intents:
+      - ar_aging
+      - customer_statement
+    training_phrases:
+      - "accounts receivable aging"
+      - "AR aging"
+      - "outstanding receivables"
+      - "customer outstanding balance"
+      - "overdue invoices from customers"
+      - "customer statement"
+      - "customer transactions"
+      - "receivable balance"
+      - "customer ledger"
+    slots_required: [s_year, s_month]
+    response:
+      type: report_action
+      report_key_map:
+        ar_aging:          ar_aging
+        customer_statement: customer_statement
+    fallback: "AR reports: AR Aging Report, Customer Statement."
+
+  - skill: generate_inv_report
+    description: >
+      Show Inventory report — Inventory Valuation.
+    intents:
+      - inventory_valuation
+    training_phrases:
+      - "inventory valuation"
+      - "stock value"
+      - "inventory on hand value"
+      - "warehouse stock report"
+      - "INV valuation"
+      - "stock at hand"
+      - "item cost report"
+    slots_required: [s_year, s_month]
+    response:
+      type: report_action
+      report_key_map:
+        inventory_valuation: inventory_valuation
+    fallback: "INV report available: Inventory Valuation."
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # GROUP 2 — SQL ADVISOR (Technical only — tab-sql)
+  # ────────────────────────────────────────────────────────────────────────────
+
+  - skill: sql_performance_advisor
+    description: >
+      Guide user to SQL Performance Advisor sub-tab for execution cost
+      estimation and automatic query optimisation.
+    role_required: technical
+    intents:
+      - sql_performance
+      - slow_query
+      - sql_optimise
+      - execution_plan
+    training_phrases:
+      - "my SQL is slow"
+      - "optimise my SQL"
+      - "SQL performance"
+      - "long running query"
+      - "query taking too long"
+      - "query optimisation"
+      - "execution plan"
+      - "SQL cost estimate"
+      - "how to speed up this SQL"
+      - "full table scan"
+      - "missing index"
+    response:
+      type: navigate_and_guide
+      tab: tab-sql
+      subtab: sql-perf-tab
+      message: >
+        Opening the SQL Performance Advisor. Paste your query and click
+        **Analyse & Optimise** — it estimates execution cost before and after,
+        detects missing ORG_ID / SELECT * / correlated subqueries, and generates
+        an optimised rewrite with comments. Use **Side-by-Side Compare** to review differences.
+
+  - skill: sql_code_review
+    description: >
+      Guide user to SQL Code Review sub-tab — 27 Oracle EBS compliance and
+      best-practice checks with a quality score out of 100.
+    role_required: technical
+    intents:
+      - code_review
+      - sql_quality
+      - check_ebs_standards
+    training_phrases:
+      - "review my SQL"
+      - "check SQL quality"
+      - "SQL code review"
+      - "Oracle EBS standards check"
+      - "is my SQL correct"
+      - "SQL best practices"
+      - "check for org_id filter"
+      - "check datetrack filter"
+      - "SQL compliance check"
+      - "score my SQL"
+    response:
+      type: navigate_and_guide
+      tab: tab-sql
+      subtab: sql-codereview-tab
+      message: >
+        Opening Code Review. Paste your SQL and click **Run Code Review** —
+        it checks 27 Oracle EBS standards across 5 categories (Compliance,
+        Performance, Best Practice, Security, Date Handling) and gives a
+        quality score out of 100. Critical issues score −20 each.
+    code_review_checks:
+      categories:
+        - name: EBS Compliance
+          checks:
+            - RULE_001: "Multi-Org ORG_ID Required — all _ALL tables need AND org_id filter"
+            - RULE_002: "DateTrack PER_ALL_PEOPLE_F — must use BETWEEN effective_start_date AND effective_end_date"
+            - RULE_003: "DateTrack PER_ALL_ASSIGNMENTS_F + PRIMARY_FLAG = 'Y'"
+            - RULE_004: "Exclude Cancelled Invoices — AND cancelled_date IS NULL"
+            - RULE_005: "Exclude Void Cheques — AND void_date IS NULL"
+            - RULE_006: "GL Summary Flag — AND summary_flag = 'N' AND enabled_flag = 'Y'"
+            - RULE_007: "iExpense SOURCE Filter — AND source = 'NonValidatedWebExpense'"
+            - RULE_014: "GL_BALANCES currency_code filter required"
+            - RULE_015: "PO authorization_status = 'APPROVED' unless draft needed"
+            - RULE_016: "AP payment_status_flag = 'Y'/'N'"
+            - RULE_017: "AR status != 'CL' for open items"
+            - RULE_018: "INV organization_id filter required"
+            - RULE_019: "FND_LOOKUP_VALUES — use _VL view or filter by LANGUAGE"
+            - RULE_020: "GL period status — closing_status = 'O'"
+            - RULE_021: "Hardcoded ORG_ID — use mo_global.get_current_org_id()"
+        - name: Performance
+          checks:
+            - RULE_008: "SELECT * Wildcard Prohibited"
+            - RULE_009: "Correlated Scalar Subquery — use JOIN instead"
+            - RULE_011: "LIKE Leading Wildcard — forces full table scan"
+            - RULE_022: "Missing TRUNC on date comparison"
+            - RULE_023: "Implicit column conversion suppresses index"
+            - RULE_024: "Cartesian Join Risk — missing JOIN predicate"
+        - name: SQL Best Practice
+          checks:
+            - RULE_012: "NOT IN with NULLs — use NOT EXISTS"
+            - RULE_013: "ROWNUM with ORDER BY — wrap in subquery"
+            - RULE_026: "Missing NOVALIDATE on FK constraints"
+            - RULE_027: "DBMS_OUTPUT in production code"
+        - name: Security
+          checks:
+            - RULE_010: "EXECUTE IMMEDIATE without bind variables"
+            - RULE_025: "Literal values in WHERE — use bind variables"
+
+  - skill: sql_code_formatter
+    description: >
+      Guide user to SQL Code Formatter — formats SELECT/DML/PL/SQL with
+      keyword casing options, one-column-per-line, and EBS header block.
+    role_required: technical
+    intents:
+      - format_sql
+      - beautify_sql
+      - clean_sql
+    training_phrases:
+      - "format my SQL"
+      - "beautify SQL"
+      - "clean up SQL"
+      - "SQL formatter"
+      - "indent my query"
+      - "uppercase SQL keywords"
+      - "fix SQL formatting"
+      - "add EBS header comment"
+    response:
+      type: navigate_and_guide
+      tab: tab-sql
+      subtab: sql-formatter-tab
+      message: >
+        Opening Code Formatter. Paste your SQL, choose keyword casing (UPPER/lower/Title),
+        indent size, and click **Format SQL**. It handles SELECT, INSERT/UPDATE/DELETE,
+        and PL/SQL blocks — one column per line, one JOIN per line, plus an Oracle EBS
+        header comment block and complexity stats.
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # GROUP 3 — EBS ACADEMY (Technical only — tab-academy)
+  # ────────────────────────────────────────────────────────────────────────────
+
+  - skill: academy_topic_lookup
+    description: >
+      Open the relevant EBS Academy module and topic. Covers all 15 modules
+      with functional + technical views, process flowcharts, and SQL examples.
+    role_required: technical
+    intents:
+      - academy_ap
+      - academy_ar
+      - academy_gl
+      - academy_iexp
+      - academy_hrms
+      - academy_po
+      - academy_inv
+      - academy_concurrent
+      - academy_dba
+      - academy_arch
+      - academy_soa
+      - academy_apex
+      - academy_testing
+      - academy_security
+      - academy_pm
+    training_phrases:
+      # AP
+      - "explain AP invoice approval flow"
+      - "how does P2P cycle work"
+      - "AP subledger accounting"
+      - "AP month end process"
+      # AR
+      - "O2C cycle steps"
+      - "explain AutoInvoice"
+      - "AR cash receipts process"
+      # GL
+      - "GL period close steps"
+      - "how to close an accounting period"
+      - "explain journal entries"
+      - "GL revaluation process"
+      # iExpense
+      - "how does iExpense work"
+      - "expense approval workflow"
+      - "iExpense credit card import"
+      # HRMS
+      - "hire to retire process"
+      - "how to hire an employee in Oracle"
+      - "HRMS DateTrack explained"
+      - "how does payroll run cycle work"
+      # PO
+      - "explain PR to PO flow"
+      - "three-way match explained"
+      - "purchasing cycle"
+      # INV
+      - "inventory valuation methods"
+      - "cycle counting in Oracle"
+      # Concurrent
+      - "how to submit a concurrent request"
+      - "concurrent manager setup"
+      - "monitor background jobs"
+      # DBA
+      - "Oracle EBS patching"
+      - "adop cutover phase"
+      - "RMAN backup"
+      - "performance tuning AWR"
+      # Architecture
+      - "Oracle EBS three-tier architecture"
+      - "AD utilities overview"
+      - "EBS architecture explained"
+      # SOA
+      - "Oracle SOA integration"
+      - "BPEL process"
+      - "REST API for EBS"
+      - "OIC integration"
+      # APEX
+      - "Oracle APEX development"
+      - "EBS to APEX migration"
+      - "how to build an APEX app"
+      # Testing
+      - "EBS testing strategy"
+      - "how to write a test plan"
+      - "UAT sign-off"
+      # Security
+      - "user responsibilities setup"
+      - "SOD controls Oracle EBS"
+      - "function security"
+      # PM
+      - "EBS go-live cutover strategy"
+      - "data migration planning"
+      - "stakeholder communication EBS project"
+    slots_required: [s_academy_module]
+    response:
+      type: navigate_and_guide
+      tab: tab-academy
+      message: >
+        Opening EBS Academy. Select the relevant module from the left sidebar
+        and click any topic to see the Functional View, Technical View,
+        process flowchart (SVG), and reference SQL.
+        You can also click **Ask Assistant** to chat with the EBS Academy AI.
+    module_map:
+      academy_ap:         acad_ap
+      academy_ar:         acad_ar
+      academy_gl:         acad_gl
+      academy_iexp:       acad_iexp
+      academy_hrms:       acad_hrms
+      academy_po:         acad_po
+      academy_inv:        acad_inv
+      academy_concurrent: acad_concurrent
+      academy_dba:        acad_dba
+      academy_arch:       acad_arch
+      academy_soa:        acad_soa
+      academy_apex:       acad_apex
+      academy_testing:    acad_testing
+      academy_security:   acad_security
+      academy_pm:         acad_pm
+
+  - skill: academy_assistant_query
+    description: >
+      Answer EBS questions through the in-app Academy AI Assistant panel.
+      The assistant handles 40+ keyword-matched topics across all 15 modules.
+    role_required: technical
+    intents:
+      - ask_academy_ai
+      - ebs_concept_question
+      - process_flowchart_request
+    training_phrases:
+      - "ask the academy assistant"
+      - "open the EBS assistant"
+      - "explain the P2P cycle with a diagram"
+      - "show me the O2C flowchart"
+      - "what is DateTrack"
+      - "explain multi-org"
+      - "how does AutoInvoice work"
+      - "show payroll run cycle"
+      - "what is Oracle Workflow"
+      - "explain BIP report development"
+      - "how to create an OAF page"
+      - "explain Hire to Retire with diagram"
+    response:
+      type: navigate_and_guide
+      tab: tab-academy
+      action: open_assistant_panel
+      message: >
+        Opening the EBS Academy Assistant. Ask any Oracle EBS question —
+        type a topic or click a quick button (P2P Cycle, O2C Cycle,
+        Hire-to-Retire, Period Close, Workflow, OAF Dev, BIP Reports, Payroll Run).
+        The assistant returns structured explanations with process flowcharts.
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # GROUP 4 — SQL LAB (Technical only — tab-sqllab)
+  # ────────────────────────────────────────────────────────────────────────────
+
+  - skill: sql_lab_prompt_to_sql
+    description: >
+      Use SQL Lab AI to convert a natural-language prompt into an Oracle EBS
+      SQL query. 500+ pre-written queries, keyword scoring, out-of-scope detection.
+    role_required: technical
+    intents:
+      - generate_sql
+      - sql_from_prompt
+      - write_sql_query
+    training_phrases:
+      - "generate SQL for unpaid invoices"
+      - "write SQL to show active employees"
+      - "create a query for GL journals"
+      - "SQL for outstanding POs"
+      - "generate an AP aging SQL"
+      - "write SQL for iExpense pending approval"
+      - "SQL lab query"
+      - "prompt to SQL"
+    slots_required: [s_sql_category]
+    response:
+      type: navigate_and_guide
+      tab: tab-sqllab
+      message: >
+        Opening SQL Lab. Type your requirement in the prompt box (e.g.
+        "show all unpaid invoices over 10000") and click **Generate SQL**.
+        The AI matches your prompt against 500+ EBS queries using keyword scoring
+        (min 40% match). Out-of-scope requests (Python, weather, etc.) are
+        rejected with a friendly message.
+        You can also browse queries by category using the left sidebar,
+        then copy or send directly to SQL Advisor / Formatter.
+    out_of_scope_detection: true
+    min_token_match: 0.40
+    categories:
+      - cat_ap:    "AP — 60 queries (invoices, payments, aging, trial balance)"
+      - cat_ar:    "AR — 30 queries (customer aging, cash receipts, statements)"
+      - cat_gl:    "GL — 40 queries (journals, trial balance, account analysis)"
+      - cat_po:    "PO — 45 queries (PO headers, lines, distributions, receipts)"
+      - cat_hrms:  "HRMS — 50 queries (employees, assignments, org hierarchy)"
+      - cat_inv:   "INV — 35 queries (on-hand, valuation, item master)"
+      - cat_iexp:  "iExpense — 25 queries (expense reports, credit cards)"
+      - cat_fnd:   "FND/System — 40 queries (concurrent, lookups, profiles)"
+      - cat_perf:  "Performance — 35 queries (AWR, top SQL, execution plan)"
+      - cat_sec:   "Security — 40 queries (responsibilities, SOD, access)"
+      - cat_wf:    "Workflow — 30 queries (notifications, stuck processes)"
+      - cat_multi: "Multi-Org — 70 queries (OU setup, MO profile, diagnostics)"
+
+  - skill: sql_lab_browse
+    description: >
+      Browse the SQL Library by module category and copy or analyse queries.
+    role_required: technical
+    intents:
+      - browse_sql_library
+      - sql_library_category
+    training_phrases:
+      - "browse SQL library"
+      - "show AP SQL queries"
+      - "list HRMS queries"
+      - "SQL library"
+      - "pre-written queries"
+      - "show me EBS SQL examples"
+      - "all GL queries"
+    slots_required: [s_sql_category]
+    response:
+      type: navigate_and_guide
+      tab: tab-sqllab
+      message: >
+        Opening SQL Lab library. Select a category from the left sidebar
+        to browse all queries. Click a query to view its full SQL, then use
+        **Copy**, **Send to Advisor**, or **Send to Formatter**.
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # GROUP 5 — DATA CONNECT (Employee + Technical — tab-dataconnect)
+  # ────────────────────────────────────────────────────────────────────────────
+
+  - skill: data_connect_excel_upload
+    description: >
+      Guide user to upload an Excel or CSV file and map columns to an EBS report.
+      Uses dcAutoMap() for fuzzy column matching. Supports transforms and preview.
+    intents:
+      - upload_excel
+      - import_csv
+      - load_own_data
+    training_phrases:
+      - "upload my Excel file"
+      - "import CSV"
+      - "load my own data"
+      - "use my spreadsheet"
+      - "drag and drop Excel"
+      - "bring in external data"
+      - "upload vendors from Excel"
+      - "import employee data from file"
+    slots_required: [s_data_source]
+    response:
+      type: navigate_and_guide
+      tab: tab-dataconnect
+      source: excel
+      message: >
+        Opening Data Connect — Excel/CSV Upload.
+        1. Drag & drop or click to select your .xlsx or .csv file.
+        2. Column types are auto-detected (number / date / text / bool).
+        3. Choose a target EBS report → click **Auto-Map** to fuzzy-match your columns.
+        4. Optionally apply transforms (TRIM, UPPER, Format Date, etc.).
+        5. **Preview** the mapped data with null% and unique count stats.
+        6. Click **Push to Reports** → the selected report now shows your data live.
+    column_mapping:
+      function: dcAutoMap()
+      similarity_threshold: 0.60
+      fallback: manual_selection
+
+  - skill: data_connect_simulated_db
+    description: >
+      Guide user to run a simulated DB query using real EBS table names
+      — matched to demo data without needing a live DB connection.
+    intents:
+      - simulated_db_query
+      - test_sql_without_db
+    training_phrases:
+      - "simulate a DB query"
+      - "test without database"
+      - "run a simulated query"
+      - "query demo data"
+      - "no database access"
+      - "EBS table demo"
+    response:
+      type: navigate_and_guide
+      tab: tab-dataconnect
+      source: simulated
+      message: >
+        Opening Data Connect — Simulated DB.
+        Select the **DB Query** source, enter a SELECT statement using real
+        Oracle EBS table names (e.g. ap_invoices_all, per_all_people_f),
+        and click **Run Query**. Results are matched to demo data instantly —
+        no DB connection required. Then map and push to any report.
+    supported_tables:
+      - ap_invoices_all
+      - ap_suppliers
+      - ar_customers
+      - gl_je_headers
+      - per_all_people_f
+      - po_headers_all
+      - fnd_concurrent_requests
+      - mtl_system_items_b
+
+  - skill: data_connect_live_db
+    description: >
+      Guide user to connect to a live Oracle EBS database via the proxy server.
+      Requires host, port, SID, username, password, and a running proxy.
+    intents:
+      - live_db_connect
+      - real_oracle_db
+    training_phrases:
+      - "connect to live Oracle DB"
+      - "production database"
+      - "live EBS connection"
+      - "real data from database"
+      - "JDBC connection"
+      - "connect to EBS prod"
+    response:
+      type: navigate_and_guide
+      tab: tab-dataconnect
+      source: live_db
+      message: >
+        Opening Data Connect — Live Oracle DB.
+        ⚠️ This requires a running backend proxy server.
+        Enter: Host, Port (1521), SID (e.g. EBSPROD), Username, Password, Proxy URL.
+        Click **Test Connection**, then run your SELECT query, map columns, and push.
+        Proxy API contract: POST /query with body { sql, host, port, sid, user, pass }
+        Returns: { columns: [...], rows: [[...], [...]] }
+    proxy_required: true
+    proxy_contract:
+      endpoint: POST /query
+      request_fields: [sql, host, port, sid, user, pass]
+      response_fields: [columns, rows]
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # GROUP 6 — DOCUMENT GENERATOR (Technical only — tab-docgen)
+  # ────────────────────────────────────────────────────────────────────────────
+
+  - skill: generate_document
+    description: >
+      Guide user to Document Generator — produces complete TDD or FSD
+      with 4 SVG diagrams (Process Flow, Data Flow, ER, PL/SQL Flowchart).
+    role_required: technical
+    intents:
+      - create_tdd
+      - create_fsd
+      - generate_spec
+      - technical_design
+      - functional_design
+    training_phrases:
+      - "generate technical design document"
+      - "create TDD"
+      - "write functional spec"
+      - "generate FSD"
+      - "create specification"
+      - "document my concurrent program"
+      - "Oracle EBS technical documentation"
+      - "concurrent program spec"
+      - "technical design for my package"
+      - "functional design document"
+      - "create program documentation"
+    slots_required: [s_doc_type]
+    response:
+      type: navigate_and_guide
+      tab: tab-docgen
+      message: >
+        Opening Document Generator.
+        Fill in: Program name, Package, Procedure, Module, Description,
+        Business rules. Then add Parameters (dynamic rows), Source Tables
+        (dynamic rows), and Value Sets (dynamic rows).
+        Click **Generate Document** — you get a complete specification with:
+        • Cover page with Oracle branding
+        • Business purpose, technical architecture, parameters table
+        • 4 SVG diagrams: Process Flow, Data Flow, ER Diagram, PL/SQL Flowchart
+        • Business rules, error handling, change log
+        Export as HTML (print to PDF) or direct download.
+    output_sections:
+      - cover_page
+      - business_purpose
+      - technical_architecture
+      - parameters_table
+      - svg_process_flow
+      - svg_data_flow
+      - svg_er_diagram
+      - svg_plsql_flowchart
+      - business_rules
+      - error_handling
+      - change_log
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # GROUP 7 — DELETE / RECYCLE BIN WORKFLOW
+  # ────────────────────────────────────────────────────────────────────────────
+
+  - skill: delete_report_employee
+    description: >
+      Employee submits a delete request for a report (reason + notes).
+      Report stays live until Technical approves.
+    role_required: employee
+    intents:
+      - request_delete_report
+      - submit_delete_request
+    training_phrases:
+      - "delete this report"
+      - "remove this report"
+      - "I don't need this report"
+      - "request report deletion"
+      - "submit delete request"
+    slots_required: [s_report_key]
+    response:
+      type: ui_action
+      action: open_delete_request_form
+      message: >
+        As an Employee, you can submit a delete request — enter your reason
+        and click Submit. The report stays visible until a Technical user
+        reviews and approves the request. You'll see a confirmation once submitted.
+    workflow:
+      initiator: employee
+      store: window.DELETE_REQUESTS
+      report_stays_live: true
+      notifies: technical_notification_bell
+
+  - skill: delete_report_technical
+    description: >
+      Technical user directly deletes a report — snapshot saved to Recycle Bin.
+      Can restore at any time from the Notification Panel.
+    role_required: technical
+    intents:
+      - direct_delete_report
+      - delete_with_confirm
+    training_phrases:
+      - "delete this report now"
+      - "permanently delete"
+      - "remove report"
+      - "delete and recycle"
+    slots_required: [s_report_key]
+    response:
+      type: ui_action
+      action: open_delete_confirm_modal
+      message: >
+        Deleting as Technical: A confirmation modal will appear. On confirm,
+        the report is deleted immediately and a snapshot is saved to the Recycle Bin
+        in your Notification Panel (🔔). You can restore it at any time.
+    workflow:
+      initiator: technical
+      confirm_modal: true
+      snapshot_saved: window.RECYCLE_BIN
+      blocked_in: window.DELETED_REPORTS
+
+  - skill: approve_or_reject_delete_request
+    description: >
+      Technical reviews pending Employee delete requests — approve (deletes
+      report to Recycle Bin) or reject (report stays live).
+    role_required: technical
+    intents:
+      - approve_delete_request
+      - reject_delete_request
+      - review_pending_requests
+    training_phrases:
+      - "approve delete request"
+      - "reject delete request"
+      - "review pending requests"
+      - "open notification panel"
+      - "pending employee requests"
+      - "approve report deletion"
+    slots_required: [s_delete_action]
+    response:
+      type: navigate_and_guide
+      action: open_notification_panel
+      tab_panel: pending_requests
+      message: >
+        Opening Notification Panel — Pending Requests tab.
+        Each request shows the report name, employee reason, and submission time.
+        Click **Approve** to delete and archive to Recycle Bin, or **Reject** to keep the report live.
+
+  - skill: restore_from_recycle_bin
+    description: >
+      Technical restores a deleted report from the Recycle Bin
+      in the Notification Panel.
+    role_required: technical
+    intents:
+      - restore_report
+      - recycle_bin
+      - undo_delete
+    training_phrases:
+      - "restore deleted report"
+      - "undo delete"
+      - "recycle bin"
+      - "bring back report"
+      - "recover deleted report"
+      - "restore from recycle bin"
+    response:
+      type: navigate_and_guide
+      action: open_notification_panel
+      tab_panel: recycle_bin
+      message: >
+        Opening Notification Panel — Recycle Bin tab.
+        All deleted reports are listed with title, module, and deletion time.
+        Click **Restore** next to any report to make it live again immediately.
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # GROUP 8 — DOWNLOAD / EXPORT
+  # ────────────────────────────────────────────────────────────────────────────
+
+  - skill: download_report
+    description: >
+      Download the currently loaded report as CSV, Excel, or PDF.
+    intents:
+      - download_csv
+      - download_excel
+      - download_pdf
+      - export_report
+    training_phrases:
+      - "download report"
+      - "export to CSV"
+      - "download Excel"
+      - "save as PDF"
+      - "export data"
+      - "get the file"
+      - "download this"
+      - "save the report"
+    slots_required: [s_export]
+    response:
+      type: trigger_download
+      format_map:
+        csv:   csv
+        excel: excel
+        xlsx:  excel
+        pdf:   pdf
+    fallback: "Load a report first, then tell me the format — CSV, Excel, or PDF."
+
+  - skill: filter_report
+    description: >
+      Apply year, month, or keyword filters to the current report.
+    intents:
+      - filter_by_year
+      - filter_by_month
+      - filter_by_keyword
+    training_phrases:
+      - "filter by year 2024"
+      - "show only March 2024"
+      - "filter this report"
+      - "narrow down to Q1"
+      - "search for vendor ABC"
+      - "show only unpaid"
+    slots_required: [s_year, s_month]
+    response:
+      type: apply_filter
+      message: >
+        Use the filter bar above the report table — select year, month, or
+        type a keyword. The table updates instantly. Pagination also resets to page 1.
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # GROUP 9 — NAVIGATION & HELP
+  # ────────────────────────────────────────────────────────────────────────────
+
+  - skill: navigate_to_tab
+    description: >
+      Navigate the user to a specific application tab.
+    intents:
+      - go_to_reports
+      - go_to_sql_advisor
+      - go_to_academy
+      - go_to_sql_lab
+      - go_to_data_connect
+      - go_to_doc_generator
+    training_phrases:
+      - "open EBS reports"
+      - "go to SQL advisor"
+      - "open academy"
+      - "go to SQL lab"
+      - "open data connect"
+      - "go to document generator"
+      - "switch to reports tab"
+    response:
+      type: navigate_tab
+      tab_map:
+        go_to_reports:       tab-reports
+        go_to_sql_advisor:   tab-sql
+        go_to_academy:       tab-academy
+        go_to_sql_lab:       tab-sqllab
+        go_to_data_connect:  tab-dataconnect
+        go_to_doc_generator: tab-docgen
+
+  - skill: show_help_menu
+    description: >
+      Fallback skill — shows all available capabilities based on the user's role.
+    intents:
+      - help
+      - what_can_you_do
+      - show_reports
+      - list_features
+    training_phrases:
+      - "help"
+      - "what can you do"
+      - "show available reports"
+      - "what reports are there"
+      - "options"
+      - "features"
+      - "capabilities"
+      - "how do I use this"
+    response:
+      type: rich_text
+      role_aware: true
+      message_employee: |
+        Welcome to the Oracle EBS Intelligence Hub! As an **Employee**, you have access to:
+
+        📊 **EBS Reports (26 reports):**
+        • AP: Aged Payables, Invoice Register, AP Trial Balance, Withholding Tax,
+               Suppliers, High Payments, Paid Invoice History, Payment History, Audit
+        • PO: PO Detail, Distribution, Receipt Adjustments, Savings Analysis
+        • GL: Journal Entries, Trial Balance, Account Analysis
+        • iExpense: Detail Report, Credit Card, Workflow Approvals
+        • HRMS: Active Employees, Terminated, Supervisor Details, Cost Allocation
+        • AR: AR Aging, Customer Statement
+        • INV: Inventory Valuation
+
+        🔌 **Data Connect:** Upload Excel/CSV or run a simulated DB query
+
+        🗑️ **Delete:** Submit delete requests — Technical will review them
+
+        Try: *"Show aged payables for October 2024"* or *"Upload my vendor Excel file"*
+
+      message_technical: |
+        Welcome to the Oracle EBS Intelligence Hub! As a **Technical User**, you have full access:
+
+        📊 **All 26 EBS Reports** (AP, AR, GL, PO, HRMS, INV, iExpense) with filter/chart/download
+        🔍 **SQL Advisor:** Performance Advisor · 27-check Code Review · Code Formatter
+        🎓 **EBS Academy:** 15 modules — AP to DBA to SOA to Project Manager + AI Assistant
+        🔬 **SQL Lab:** 500+ queries in 12 categories + AI Prompt-to-SQL generation
+        🔌 **Data Connect:** Excel/CSV upload · Simulated DB · Live Oracle DB (proxy)
+        📄 **Doc Generator:** TDD + FSD with 4 SVG diagrams
+        🔔 **Notifications:** Approve/reject delete requests + Recycle Bin restore
+
+        Try: *"Generate SQL for unpaid AP invoices"* · *"Review my SQL"* · *"Explain P2P cycle"*
+
+# =============================================================================
+# DIALOG FLOWS
+# =============================================================================
+dialog_flows:
+
+  - flow: ap_report_with_filters
+    trigger: generate_ap_report
+    steps:
+      - if: s_year is empty
+        action: ask_slot
+        slot: s_year
+        prompt: "Which fiscal year? (e.g., 2024, FY2023, or 'all')"
+      - if: s_year is set
+        action: load_report
+        with_filters:
+          year: s_year
+          month: s_month
+
+  - flow: supplier_high_payments_flow
+    trigger: generate_supplier_report
+    intent: high_payment_suppliers
+    steps:
+      - if: s_year is empty
+        action: ask_slot
+        slot: s_year
+        prompt: "Which fiscal year for High Payments? (2022, 2023, or 2024)"
+      - action: load_report
+        report_key: suppliers_high_payments_by_year
+        year_filter: s_year
+
+  - flow: hrms_report_flow
+    trigger: generate_hrms_report
+    steps:
+      - if: s_year is empty
+        action: ask_slot
+        slot: s_year
+        prompt: "Which year for the HRMS report? (e.g., 2024)"
+      - action: load_report
+        with_filters:
+          year: s_year
+
+  - flow: download_after_report
+    trigger: download_report
+    steps:
+      - if: no_report_loaded
+        action: respond
+        message: "Please load a report first (use chat or the EBS Reports tab), then ask me to download it."
+      - if: s_export is empty
+        action: ask_slot
+        slot: s_export
+        prompt: "Which format — CSV, Excel (.xlsx), or PDF?"
+      - action: trigger_download
+        format: s_export
+
+  - flow: data_connect_upload_flow
+    trigger: data_connect_excel_upload
+    steps:
+      - action: navigate_tab
+        tab: tab-dataconnect
+      - if: file_not_uploaded
+        action: respond
+        message: "Please drag & drop your Excel or CSV file into the upload zone, then click Auto-Map."
+      - if: file_uploaded AND target_not_selected
+        action: respond
+        message: "File loaded! Now choose a target EBS report from the dropdown and click Auto-Map."
+      - if: mapping_ready
+        action: respond
+        message: "Mapping looks good. Review transforms, then click Push to Reports to load your data."
+
+  - flow: sql_lab_generate_flow
+    trigger: sql_lab_prompt_to_sql
+    steps:
+      - action: navigate_tab
+        tab: tab-sqllab
+      - if: s_sql_category is empty
+        action: ask_slot
+        slot: s_sql_category
+        prompt: "Which module? (AP, AR, GL, PO, HRMS, INV, iExpense, FND, Performance, Security, Workflow, Multi-Org)"
+      - action: respond
+        message: "Type your requirement in the prompt box and click Generate SQL."
+
+  - flow: academy_topic_flow
+    trigger: academy_topic_lookup
+    steps:
+      - action: navigate_tab
+        tab: tab-academy
+      - if: s_academy_module is empty
+        action: ask_slot
+        slot: s_academy_module
+        prompt: "Which Academy module? (AP, GL, HRMS, DBA, Architecture, SOA, Testing, Security, PM, etc.)"
+      - action: open_module
+        module_id: s_academy_module
+
+  - flow: delete_request_employee_flow
+    trigger: delete_report_employee
+    steps:
+      - if: role is not employee
+        action: respond
+        message: "Technical users can delete directly from the report toolbar — no request needed."
+      - if: s_report_key is empty
+        action: ask_slot
+        slot: s_report_key
+        prompt: "Which report do you want to request deletion for?"
+      - action: open_delete_request_form
+        report_key: s_report_key
+
+  - flow: approve_delete_flow
+    trigger: approve_or_reject_delete_request
+    steps:
+      - if: role is not technical
+        action: respond
+        message: "Only Technical users can approve or reject delete requests."
+      - action: open_notification_panel
+        tab_panel: pending_requests
+
+  - flow: restore_recycle_bin_flow
+    trigger: restore_from_recycle_bin
+    steps:
+      - if: role is not technical
+        action: respond
+        message: "Only Technical users can access the Recycle Bin."
+      - action: open_notification_panel
+        tab_panel: recycle_bin
+
+# =============================================================================
+# CONTEXT INTEGRATION
+# =============================================================================
+context_integration:
+  context_name: oracle-ebs-intelligence-hub
+  context_version: "5.0"
+  schema_file: ica-schema/ebs-knowledge-graph-schema.json
+  resolve_entities_from_context: true
+
+  entity_resolution:
+    - entity: report_name
+      node_type: EBSReport
+      property: title
+    - entity: report_key
+      node_type: EBSReport
+      property: key
+    - entity: report_module
+      node_type: OracleModule
+      property: code
+    - entity: vendor_name
+      node_type: Supplier
+      property: name
+    - entity: employee_name
+      node_type: Employee
+      property: full_name
+    - entity: academy_module
+      node_type: AcademyModule
+      property: academy_id
+    - entity: sql_category
+      node_type: SQLCategory
+      property: category_id
+
+  nl_query_lookup:
+    enabled: true
+    csv_source: ica-schema/csv/natural_language_queries.csv
+    min_similarity: 0.70
+    fallback_intent: show_help_menu
+
+  knowledge_graph:
+    nodes_csv:         ica-schema/csv/ebs_nodes.csv
+    edges_csv:         ica-schema/csv/ebs_edges.csv
+    relationships_csv: ica-schema/csv/ebs_relationships.csv
+
+  sql_compliance_rules:
+    source: ica-schema/csv/approval_rules.csv
+    count: 27
+    categories: [EBS Compliance, Performance, SQL Best Practice, Security, Date Handling]
+
+  academy_modules:
+    source: ica-schema/csv/expense_templates.csv
+    count: 15
+
+  sql_categories:
+    source: ica-schema/csv/approver_groups.csv
+    count: 12
+    total_queries: "500+"
+
+  data_connect_sources:
+    source: ica-schema/csv/special_submitters.csv
+    types: [excel_csv, simulated_db, live_oracle_db]
+
+  test_scenarios:
+    source: ica-schema/csv/test_scenarios.csv
+    count: 35
+
+  sample_data:
+    source: ica-schema/04-sample-data.json
+    modules_covered: [AP, GL, PO, HRMS, iExpense, AR, INV]
+
+# =============================================================================
+# RESPONSE TEMPLATES
+# =============================================================================
+response_templates:
+
+  report_loaded:
+    text: "Here is the **{report_title}** ({module}) — {row_count} records loaded. Use the filter bar for year/month/keyword, the chart button for visualisation, and download for CSV/Excel/PDF."
+
+  report_not_found:
+    text: "I couldn't find a report matching '{query}'. Try a more specific phrase or browse the EBS Reports tab — {module} module has {count} reports."
+
+  download_success:
+    text: "**{report_title}** downloaded as {format} ({row_count} rows)."
+
+  sql_guidance:
+    text: "I've opened the **{tool_name}** in the SQL Advisor tab. {instructions}"
+
+  doc_guidance:
+    text: "Document Generator is ready. Fill in all fields and click Generate — you'll get a {doc_type} with SVG diagrams."
+
+  academy_guidance:
+    text: "Opening EBS Academy — **{module_name}** module. Select a topic to see Functional View, Technical View, process flowchart, and SQL examples."
+
+  sql_lab_result:
+    text: "Here's a SQL query for: *{prompt}*\n\nMatched from the {category} library. Review it in the editor, then Copy or Send to Advisor."
+
+  data_connect_success:
+    text: "**{row_count} rows** from {source_name} mapped to **{report_title}** ({mapped_columns}/{total_columns} columns matched). Click Push to Reports to go live."
+
+  data_connect_proxy_warning:
+    text: "⚠️ Live Oracle DB requires a running proxy server at {proxy_url}. Ensure the Node.js or Python proxy is started before connecting."
+
+  delete_request_submitted:
+    text: "Delete request submitted for **{report_title}**. A Technical user will review it. The report remains live until approved."
+
+  delete_approved:
+    text: "**{report_title}** deleted. A snapshot has been saved to your Recycle Bin — restore it anytime from the 🔔 Notification Panel."
+
+  delete_rejected:
+    text: "Delete request for **{report_title}** rejected. The report remains live."
+
+  report_restored:
+    text: "**{report_title}** has been restored from the Recycle Bin and is live again."
+
+  role_access_denied:
+    text: "That feature is only available to **Technical** users. Sign in with the Technical role to access {feature_name}."
+
+  fallback:
+    text: "I didn't quite understand that. Type **help** to see what I can do, or try something like: *'Show aged payables'*, *'Review my SQL'*, or *'Explain P2P cycle'*."
+
+# =============================================================================
+# APP FUNCTIONS REFERENCE
+# (Maps agent actions to the actual JS functions in ebs-reports.js)
+# =============================================================================
+app_function_map:
+
+  # Reports
+  load_report:                    "loadReport(reportKey)"
+  filter_report_year:             "filterReport(year, month)"
+  download_csv:                   "downloadCurrentReport('csv')"
+  download_excel:                 "downloadCurrentReport('excel')"
+  download_pdf:                   "downloadCurrentReport('pdf')"
+  switch_tab:                     "switchTab(tabId, btn)"
+  show_welcome:                   "goHome()"
+
+  # SQL Advisor
+  run_performance_advisor:        "runSQLAnalysis()"
+  run_code_review:                "runCodeReview()"
+  run_formatter:                  "formatSQL()"
+
+  # Academy
+  open_academy_module:            "openModule(moduleId)"
+  open_academy_topic:             "openTopic(moduleId, topicId)"
+  open_academy_assistant:         "openAcademyAssistant()"
+  send_academy_message:           "sendAcademyAsstMessage()"
+  close_academy_assistant:        "closeAcademyAssistant()"
+
+  # SQL Lab
+  generate_sql_from_prompt:       "generateSqlFromPrompt()"
+  browse_sql_category:            "selectSqlCategory(categoryId)"
+  copy_sql_lab_query:             "copySqlLabCode()"
+  send_to_advisor:                "sendSqlLabToAdvisor()"
+  send_to_formatter:              "sendSqlLabToFormatter()"
+
+  # Data Connect
+  dc_auto_map:                    "dcAutoMap()"
+  dc_push_to_reports:             "dcPushToReports()"
+  dc_clear_file:                  "dcClearFile()"
+  dc_clear_mapping:               "dcClearMapping()"
+  dc_apply_mapping:               "dcApplyMapping()"
+  dc_preview_data:                "dcPreview()"
+
+  # Doc Generator
+  generate_document:              "generateDocument()"
+  export_document_html:           "downloadDocHTML()"
+  export_document_word:           "downloadDocWord()"
+
+  # Delete Workflow
+  submit_delete_request:          "submitDeleteRequest(reportKey, reason)"
+  approve_delete_request:         "approveDeleteRequest(requestId)"
+  reject_delete_request:          "rejectDeleteRequest(requestId)"
+  restore_from_recycle_bin:       "restoreReport(reportKey)"
+  open_notification_panel:        "openNotifPanel()"
+  close_notification_panel:       "closeNotifPanel()"
+
+  # Navigation / Auth
+  reset_all_tab_state:            "_resetAllTabState()"
+  logout:                         "rlLogout()"
+  chat_clear:                     "clearChat()"
+  show_toast:                     "showToast(message, type)"

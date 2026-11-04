@@ -1,0 +1,247 @@
+{
+  "name": "Oracle EBS Intelligence Hub Assistant",
+  "description": "AI assistant for Oracle EBS consultants. Covers 7 capabilities: EBS Reports, SQL Advisor, Document Generator, EBS Academy, SQL Lab, Data Connect, and AI Chat. Built on IBM ICA Context Studio. CookCounty Team — IBM BoB Innovation Challenge 2025.",
+  "agentType": "http",
+  "url": "{{ICA_BASE_URL}}",
+  "geoLocation": "",
+  "visibility": "Team",
+  "recommendedRoles": [
+    "Software Developer",
+    "Business Consultant",
+    "Solution Architect",
+    "FSCT",
+    "Backend Developer",
+    "Project Manager"
+  ],
+  "customTags": ["oracle-ebs", "ica", "reports", "sql", "academy", "cook-county", "ams"],
+  "logo": "IBM",
+  "commands": [
+    {
+      "name": "ebs_reports",
+      "description": "Query the 26 EBS report templates. Find the right report, understand fields, filter by module/date/keyword, export data. Covers AP, AR, GL, PO, HRMS, INV, iExpense.",
+      "path": "/api/chat",
+      "method": "POST",
+      "body": "{\"message\": \"{{user_message}}\", \"capability\": \"reports\", \"context\": \"{{context}}\"}",
+      "headers": "{\"Content-Type\": \"application/json\", \"Authorization\": \"Bearer {{MCP_BEARER_TOKEN}}\", \"x-api-key\": \"{{ICA_API_KEY}}\"}",
+      "contextFormat": "STRING",
+      "multiTurn": true,
+      "eventStreaming": false,
+      "inputParameters": [
+        {
+          "name": "user_message",
+          "question": "What would you like to know about EBS Reports?",
+          "type": "String",
+          "defaultValue": "",
+          "isArray": false
+        },
+        {
+          "name": "context",
+          "question": "Previous conversation context (leave blank for new conversation)",
+          "type": "String",
+          "defaultValue": "",
+          "isArray": false
+        }
+      ]
+    },
+    {
+      "name": "sql_advisor",
+      "description": "Review Oracle EBS SQL for performance and compliance. Runs 27 Oracle EBS R12 coding standard checks. Formats SQL to Oracle style. Technical role only.",
+      "path": "/api/chat",
+      "method": "POST",
+      "body": "{\"message\": \"{{user_message}}\", \"capability\": \"sql_advisor\", \"sql\": \"{{sql_input}}\", \"context\": \"{{context}}\"}",
+      "headers": "{\"Content-Type\": \"application/json\", \"Authorization\": \"Bearer {{MCP_BEARER_TOKEN}}\", \"x-api-key\": \"{{ICA_API_KEY}}\"}",
+      "contextFormat": "STRING",
+      "multiTurn": true,
+      "eventStreaming": false,
+      "inputParameters": [
+        {
+          "name": "user_message",
+          "question": "Describe what you want reviewed or type 'review', 'format', or 'performance'",
+          "type": "String",
+          "defaultValue": "Review my SQL for Oracle EBS compliance",
+          "isArray": false
+        },
+        {
+          "name": "sql_input",
+          "question": "Paste your Oracle SQL here",
+          "type": "String",
+          "defaultValue": "",
+          "isArray": false
+        }
+      ]
+    },
+    {
+      "name": "doc_generator",
+      "description": "Generate TDD (Technical Design Document) or FDD (Functional Design Document) for Oracle EBS reports. Follows CCG Cook County template standards. 3-4 hours → 2 minutes. Technical role only.",
+      "path": "/api/chat",
+      "method": "POST",
+      "body": "{\"message\": \"{{user_message}}\", \"capability\": \"doc_generator\", \"doc_type\": \"{{doc_type}}\", \"report_name\": \"{{report_name}}\"}",
+      "headers": "{\"Content-Type\": \"application/json\", \"Authorization\": \"Bearer {{MCP_BEARER_TOKEN}}\", \"x-api-key\": \"{{ICA_API_KEY}}\"}",
+      "contextFormat": "STRING",
+      "multiTurn": true,
+      "eventStreaming": false,
+      "inputParameters": [
+        {
+          "name": "doc_type",
+          "question": "Which document type do you need?",
+          "type": "String",
+          "defaultValue": "TDD",
+          "possibleValues": ["TDD", "FDD"],
+          "isArray": false
+        },
+        {
+          "name": "report_name",
+          "question": "Enter the report name (e.g. AP Invoice Summary, GL Trial Balance)",
+          "type": "String",
+          "defaultValue": "",
+          "isArray": false
+        },
+        {
+          "name": "user_message",
+          "question": "Any additional details for the document? (optional)",
+          "type": "String",
+          "defaultValue": "Generate the document with all standard sections",
+          "isArray": false
+        }
+      ]
+    },
+    {
+      "name": "ebs_academy",
+      "description": "Learn Oracle EBS R12 concepts across 15 structured modules. Covers all roles: AP Clerk, AR Analyst, GL Accountant, Buyer, Developer, DBA, Project Manager. Includes SQL examples and process flows.",
+      "path": "/api/chat",
+      "method": "POST",
+      "body": "{\"message\": \"{{user_message}}\", \"capability\": \"academy\", \"module\": \"{{module_name}}\", \"role\": \"{{user_role}}\"}",
+      "headers": "{\"Content-Type\": \"application/json\", \"Authorization\": \"Bearer {{MCP_BEARER_TOKEN}}\", \"x-api-key\": \"{{ICA_API_KEY}}\"}",
+      "contextFormat": "STRING",
+      "multiTurn": true,
+      "eventStreaming": false,
+      "inputParameters": [
+        {
+          "name": "user_message",
+          "question": "What Oracle EBS topic would you like to learn about?",
+          "type": "String",
+          "defaultValue": "",
+          "isArray": false
+        },
+        {
+          "name": "module_name",
+          "question": "Which Oracle module? (e.g. AP, AR, GL, PO, HRMS, INV, iExpense, General)",
+          "type": "String",
+          "defaultValue": "General",
+          "possibleValues": ["AP", "AR", "GL", "PO", "HRMS", "INV", "iExpense", "SQL", "Integration", "Security", "Performance", "General"],
+          "isArray": false
+        },
+        {
+          "name": "user_role",
+          "question": "Your role on the engagement? (e.g. AP Clerk, Developer, DBA, Project Manager)",
+          "type": "String",
+          "defaultValue": "General",
+          "isArray": false
+        }
+      ]
+    },
+    {
+      "name": "sql_lab",
+      "description": "Find, explain, or generate Oracle EBS SQL queries from a library of 500+ queries across 12 categories. AI Prompt-to-SQL converts plain English to Oracle SQL. Technical role only.",
+      "path": "/api/chat",
+      "method": "POST",
+      "body": "{\"message\": \"{{user_message}}\", \"capability\": \"sql_lab\", \"category\": \"{{category}}\", \"context\": \"{{context}}\"}",
+      "headers": "{\"Content-Type\": \"application/json\", \"Authorization\": \"Bearer {{MCP_BEARER_TOKEN}}\", \"x-api-key\": \"{{ICA_API_KEY}}\"}",
+      "contextFormat": "STRING",
+      "multiTurn": true,
+      "eventStreaming": false,
+      "inputParameters": [
+        {
+          "name": "user_message",
+          "question": "Describe the SQL query you need in plain English, or paste a query to explain",
+          "type": "String",
+          "defaultValue": "",
+          "isArray": false
+        },
+        {
+          "name": "category",
+          "question": "Which Oracle module or category?",
+          "type": "String",
+          "defaultValue": "AP",
+          "possibleValues": ["AP", "AR", "GL", "PO", "HRMS", "INV", "iExpense", "System Admin", "Multi-Org", "Performance", "Integration", "Audit"],
+          "isArray": false
+        }
+      ]
+    },
+    {
+      "name": "data_connect",
+      "description": "Help with importing Excel/CSV files into EBS Reports. Guides column mapping, DB simulation setup, and Live DB Proxy configuration. Available to all roles.",
+      "path": "/api/chat",
+      "method": "POST",
+      "body": "{\"message\": \"{{user_message}}\", \"capability\": \"data_connect\"}",
+      "headers": "{\"Content-Type\": \"application/json\", \"Authorization\": \"Bearer {{MCP_BEARER_TOKEN}}\", \"x-api-key\": \"{{ICA_API_KEY}}\"}",
+      "contextFormat": "STRING",
+      "multiTurn": true,
+      "eventStreaming": false,
+      "inputParameters": [
+        {
+          "name": "user_message",
+          "question": "What do you need help with? (e.g. upload Excel, column mapping, simulate data, connect to DB)",
+          "type": "String",
+          "defaultValue": "",
+          "isArray": false
+        }
+      ]
+    },
+    {
+      "name": "ai_chat",
+      "description": "General Oracle EBS AI assistant. Ask anything about Oracle EBS R12 — reports, SQL, processes, terminology, roles, troubleshooting. Powered by IBM ICA Context Studio with 17,000+ chars of EBS knowledge.",
+      "path": "/api/chat",
+      "method": "POST",
+      "body": "{\"message\": \"{{user_message}}\", \"capability\": \"general\", \"context\": \"{{context}}\"}",
+      "headers": "{\"Content-Type\": \"application/json\", \"Authorization\": \"Bearer {{MCP_BEARER_TOKEN}}\", \"x-api-key\": \"{{ICA_API_KEY}}\"}",
+      "contextFormat": "STRING",
+      "multiTurn": true,
+      "eventStreaming": true,
+      "inputParameters": [
+        {
+          "name": "user_message",
+          "question": "Ask me anything about Oracle EBS R12...",
+          "type": "String",
+          "defaultValue": "",
+          "isArray": false
+        },
+        {
+          "name": "context",
+          "question": "Previous conversation context (leave blank for new conversation)",
+          "type": "String",
+          "defaultValue": "",
+          "isArray": false
+        }
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "name": "ICA_BASE_URL",
+      "description": "IBM ICA MCP Gateway base URL — from backend/.env ICA_WORKFLOW_URL",
+      "type": "Env",
+      "value": "https://servicesessentials.ibm.com/mcp-gateway/service/gateway/servers/YOUR_SERVER_ID/mcp"
+    },
+    {
+      "name": "CAPABILITY",
+      "description": "Active capability tab: reports, sql_advisor, doc_generator, academy, sql_lab, data_connect, general",
+      "type": "Text",
+      "value": "general"
+    },
+    {
+      "name": "USER_ROLE",
+      "description": "User's access role: employee (3 tabs) or technical (all 7 tabs)",
+      "type": "Text",
+      "value": "employee"
+    }
+  ],
+  "credentials": [
+    {
+      "system": "ICA-mcp",
+      "scope": "Global",
+      "credentialType": "Bearer Token",
+      "note": "Use MCP_BEARER_TOKEN from backend/.env — 90-day validity token from ICA MCP Gateway"
+    }
+  ]
+}

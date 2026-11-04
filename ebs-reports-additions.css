@@ -1,0 +1,930 @@
+/**
+ * ebs-reports-additions.css
+ * Oracle EBS Intelligence Hub v6.0 — ICA-specific styles
+ *
+ * IMPORTANT: Do NOT modify ebs-reports.css — add all new styles here.
+ * Loaded after ebs-reports.css so rules here take precedence where needed.
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ICA STATUS BADGE
+   Small pill in the header showing backend connectivity status.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ica-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border: 1px solid transparent;
+  cursor: default;
+  user-select: none;
+  transition: background 0.2s, border-color 0.2s;
+  margin-right: 6px;
+}
+
+.ica-badge-online {
+  background: rgba(25, 128, 56, 0.15);
+  color: #198038;
+  border-color: rgba(25, 128, 56, 0.3);
+}
+
+.ica-badge-offline {
+  background: rgba(90, 100, 120, 0.12);
+  color: #697077;
+  border-color: rgba(90, 100, 120, 0.2);
+}
+
+.ica-badge-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.ica-badge-online .ica-badge-dot {
+  background: #24A148;
+  box-shadow: 0 0 0 2px rgba(36, 161, 72, 0.3);
+  animation: ica-pulse 2s infinite;
+}
+
+.ica-badge-offline .ica-badge-dot {
+  background: #697077;
+}
+
+@keyframes ica-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(36, 161, 72, 0.3); }
+  50%       { box-shadow: 0 0 0 4px rgba(36, 161, 72, 0.15); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   INTELLIGENCE PANEL
+   Slide-in panel from the right showing module context.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ica-intel-panel {
+  position: fixed;
+  top: 48px;              /* below header */
+  right: -380px;
+  width: 360px;
+  max-height: calc(100vh - 48px);
+  background: #fff;
+  border-left: 1px solid #D6E6F5;
+  box-shadow: -4px 0 24px rgba(0, 39, 77, 0.12);
+  display: flex;
+  flex-direction: column;
+  z-index: 900;
+  transition: right 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.ica-intel-panel.visible {
+  right: 0;
+}
+
+.ica-intel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #00274D, #0572CE);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.ica-intel-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.ica-intel-close {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: #fff;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  line-height: 1;
+}
+
+.ica-intel-close:hover { background: rgba(255,255,255,0.3); }
+
+.ica-intel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 16px;
+}
+
+.ica-intel-loading {
+  font-size: 0.82rem;
+  color: #697077;
+  text-align: center;
+  padding: 24px 0;
+}
+
+.ica-intel-module-badge {
+  display: inline-block;
+  background: #E7F3FF;
+  color: #0043CE;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+  border: 1px solid #C0D9FF;
+}
+
+.ica-intel-section {
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #EEF4FA;
+}
+
+.ica-intel-section:last-of-type { border-bottom: none; }
+
+.ica-intel-section-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #00274D;
+  margin-bottom: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ica-intel-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.ica-intel-chip {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.ica-chip-tbl {
+  background: #F4F0FF;
+  color: #6929C4;
+  border: 1px solid #D4BBFF;
+}
+
+.ica-chip-rpt {
+  background: #E7F3FF;
+  color: #0043CE;
+  border: 1px solid #C0D9FF;
+}
+
+.ica-intel-rule-count {
+  font-size: 0.78rem;
+  color: #3D5A73;
+}
+
+.ica-intel-rice {
+  display: flex;
+  gap: 8px;
+}
+
+.ica-intel-rice span {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.ica-rice-r { background: #E7F3FF; color: #0572CE; }
+.ica-rice-i { background: #DEFBE6; color: #198038; }
+.ica-rice-c { background: #F4F0FF; color: #6929C4; }
+.ica-rice-e { background: #FFF0F7; color: #9F1853; }
+
+.ica-intel-footer {
+  font-size: 0.68rem;
+  color: #9AA5B4;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid #EEF4FA;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SQL COMPLIANCE RESULTS
+   Rendered inside SQL Advisor tab by icaRenderComplianceResults().
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ica-compliance-panel {
+  background: #fff;
+  border: 1.5px solid #D6E6F5;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.ica-comp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #00274D;
+  color: #fff;
+}
+
+.ica-comp-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.ica-comp-score {
+  font-size: 0.9rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.score-good { background: #DEFBE6; color: #0E6027; }
+.score-warn { background: #FFF8E1; color: #7C5800; }
+.score-bad  { background: #FFF1F1; color: #A51920; }
+
+.ica-comp-summary {
+  padding: 8px 14px;
+  font-size: 0.78rem;
+  color: #3D5A73;
+  background: #F8FBFF;
+  border-bottom: 1px solid #EEF4FA;
+}
+
+.ica-comp-findings {
+  padding: 6px 0;
+}
+
+.ica-compliance-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 7px 14px;
+  border-bottom: 1px solid #F5F8FB;
+  font-size: 0.75rem;
+}
+
+.ica-compliance-item:last-child { border-bottom: none; }
+
+.ica-comp-rule {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: #E7F3FF;
+  color: #0043CE;
+  padding: 1px 5px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.ica-sev-badge-critical { background: #FFF1F1; color: #A51920; }
+.ica-sev-badge-high     { background: #FFF1F1; color: #A51920; }
+.ica-sev-badge-medium   { background: #FFF8E1; color: #7C5800; }
+.ica-sev-badge-low      { background: #DEFBE6; color: #0E6027; }
+
+.ica-comp-sev {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.ica-comp-msg {
+  color: #3D5A73;
+  line-height: 1.45;
+}
+
+.ica-comp-ok {
+  padding: 10px 14px;
+  font-size: 0.78rem;
+  color: #198038;
+  font-weight: 600;
+}
+
+.ica-comp-footer {
+  padding: 6px 14px;
+  font-size: 0.66rem;
+  color: #9AA5B4;
+  background: #F8FBFF;
+  border-top: 1px solid #EEF4FA;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CHAT ICA INSIGHT BUBBLE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ica-insight-bubble .msg-bubble {
+  max-width: 520px;
+  border-radius: 8px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LOADING ANIMATION
+   Spinner used during async ICA calls.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ica-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(5, 114, 206, 0.2);
+  border-top-color: #0572CE;
+  border-radius: 50%;
+  animation: ica-spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+@keyframes ica-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   KNOWLEDGE GRAPH NODE TYPES
+   Used if a graph canvas/SVG is rendered on screen.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.kg-node {
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.kg-node:hover { opacity: 0.82; }
+
+.kg-node-module     { fill: #0572CE; }
+.kg-node-report     { fill: #198038; }
+.kg-node-table      { fill: #6929C4; }
+.kg-node-rule       { fill: #DC3545; }
+.kg-node-rice       { fill: #B28600; }
+.kg-node-compliance { fill: #9F1853; }
+.kg-node-pattern    { fill: #005D5D; }
+.kg-node-workflow   { fill: #0E6027; }
+.kg-node-ame        { fill: #1192E8; }
+.kg-node-knowledge  { fill: #8A3800; }
+
+.kg-label {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 10px;
+  fill: #fff;
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+.kg-edge {
+  stroke: #C0D9FF;
+  stroke-width: 1.5;
+  fill: none;
+  opacity: 0.7;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   QUERY TYPE BUTTONS
+   Shown in chat/SQL panels for quick ICA-powered query type selection.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ica-query-btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.ica-query-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  background: #F0F7FF;
+  border: 1px solid #C0D9FF;
+  color: #0043CE;
+  border-radius: 16px;
+  font-size: 0.73rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  font-family: inherit;
+}
+
+.ica-query-btn:hover {
+  background: #0572CE;
+  color: #fff;
+  border-color: #0572CE;
+}
+
+.ica-query-btn.active {
+  background: #0572CE;
+  color: #fff;
+  border-color: #0572CE;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   REQUIREMENTS ANALYZER TAB  (tab-reqanalyzer)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.rqa-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  height: calc(100vh - 112px);
+  overflow: hidden;
+  background: #f0f4f8;
+}
+
+/* ── Sidebar ──────────────────────────────────────────────────────────────── */
+.rqa-sidebar {
+  background: #fff;
+  border-right: 1px solid #d1dde8;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+  padding: 0 0 16px;
+}
+
+.rqa-sidebar::-webkit-scrollbar { width: 4px; }
+.rqa-sidebar::-webkit-scrollbar-thumb { background: #b0c4d8; border-radius: 4px; }
+
+.rqa-sidebar-header {
+  background: linear-gradient(135deg, #003366, #0572CE);
+  padding: 16px 14px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.rqa-sidebar-icon {
+  font-size: 22px;
+  width: 36px;
+  height: 36px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.rqa-sidebar-header h3 {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 2px;
+}
+
+.rqa-sidebar-header p {
+  font-size: 10px;
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* Upload zone */
+.rqa-upload-zone {
+  margin: 14px 14px 0;
+  border: 2px dashed #b0c4d8;
+  border-radius: 10px;
+  padding: 18px 12px;
+  text-align: center;
+  cursor: pointer;
+  background: #f8fbff;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.rqa-upload-zone:hover,
+.rqa-upload-zone.rqa-drag-active {
+  border-color: #0572CE;
+  background: #eef5ff;
+}
+
+.rqa-upload-icon { font-size: 26px; margin-bottom: 5px; }
+.rqa-upload-title { font-size: 12px; font-weight: 600; color: #003366; margin: 0 0 2px; }
+.rqa-upload-hint { font-size: 11px; color: #6b7c93; margin: 0 0 2px; }
+.rqa-upload-formats { font-size: 10px; color: #8a9bb0; margin: 0; }
+
+.rqa-or-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #8a9bb0;
+  margin: 10px 14px 0;
+}
+.rqa-or-divider::before,
+.rqa-or-divider::after { content:''; flex:1; height:1px; background:#d1dde8; }
+
+.rqa-manual-input {
+  display: block;
+  width: calc(100% - 28px);
+  margin: 8px 14px 0;
+  padding: 9px 10px;
+  font-size: 12px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  border: 1px solid #d1dde8;
+  border-radius: 8px;
+  resize: vertical;
+  outline: none;
+  background: #fafcff;
+  color: #1a2332;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+  min-height: 90px;
+}
+.rqa-manual-input:focus { border-color: #0572CE; background: #fff; }
+
+.rqa-control-row {
+  margin: 10px 14px 0;
+}
+
+.rqa-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #4a6080;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.rqa-select {
+  width: 100%;
+  padding: 7px 10px;
+  font-size: 12px;
+  border: 1px solid #d1dde8;
+  border-radius: 7px;
+  background: #fafcff;
+  color: #1a2332;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+.rqa-select:focus { border-color: #0572CE; }
+
+.rqa-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.rqa-check {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: #1a2332;
+  cursor: pointer;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid #e8eff6;
+  background: #f8fbff;
+  transition: all 0.15s;
+}
+.rqa-check:hover { border-color: #0572CE; background: #eef5ff; }
+.rqa-check input[type="checkbox"] { accent-color: #0572CE; cursor: pointer; width: 13px; height: 13px; }
+
+.rqa-analyse-btn {
+  display: block;
+  width: calc(100% - 28px);
+  margin: 14px 14px 0;
+  padding: 10px;
+  background: linear-gradient(135deg, #0572CE, #003366);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+.rqa-analyse-btn:hover {
+  background: linear-gradient(135deg, #0461b0, #002855);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(5,114,206,0.35);
+}
+
+.rqa-file-badge {
+  margin: 10px 14px 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 10px;
+  background: #e8f0fe;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #0572CE;
+  border: 1px solid #b0d0f0;
+  word-break: break-all;
+}
+
+.rqa-file-icon { font-size: 14px; flex-shrink: 0; }
+
+.rqa-clear-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #8a9bb0;
+  font-size: 13px;
+  padding: 0 2px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.rqa-clear-btn:hover { color: #c0392b; }
+
+/* ── Main area ────────────────────────────────────────────────────────────── */
+.rqa-main {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f0f4f8;
+  position: relative;
+}
+
+/* Welcome screen */
+.rqa-welcome {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 32px 24px;
+  overflow-y: auto;
+}
+.rqa-welcome-icon { font-size: 48px; margin-bottom: 10px; }
+.rqa-welcome h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #003366;
+  margin: 0 0 8px;
+}
+.rqa-welcome p {
+  font-size: 13px;
+  color: #4a6080;
+  text-align: center;
+  max-width: 520px;
+  margin: 0 0 20px;
+  line-height: 1.6;
+}
+
+.rqa-welcome-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 700px;
+}
+
+.rqa-feat-card {
+  background: #fff;
+  border: 1px solid #d1dde8;
+  border-radius: 10px;
+  padding: 14px 12px;
+  text-align: center;
+}
+.rqa-feat-card span { font-size: 24px; display: block; margin-bottom: 6px; }
+.rqa-feat-card h4 { font-size: 12px; font-weight: 700; color: #003366; margin: 0 0 5px; }
+.rqa-feat-card p { font-size: 11px; color: #6b7c93; margin: 0; line-height: 1.5; }
+
+/* Results area */
+#rqaResults {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.rqa-summary-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #d1dde8;
+  flex-shrink: 0;
+}
+
+.rqa-sum-chip {
+  padding: 4px 10px;
+  background: #eef5ff;
+  border-radius: 10px;
+  font-size: 11px;
+  color: #0572CE;
+  border: 1px solid #b0d0f0;
+}
+
+/* Output tab bar */
+.rqa-out-tabs {
+  display: flex;
+  gap: 0;
+  background: #fff;
+  border-bottom: 1px solid #d1dde8;
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+.rqa-out-tabs::-webkit-scrollbar { height: 3px; }
+.rqa-out-tabs::-webkit-scrollbar-thumb { background: #b0c4d8; }
+
+.rqa-out-tab {
+  padding: 9px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7c93;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.rqa-out-tab:hover { color: #0572CE; background: #f0f7ff; }
+.rqa-out-tab.active { color: #0572CE; border-bottom-color: #0572CE; background: #f0f7ff; }
+
+/* Panels container */
+#rqaOutputPanels {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.rqa-panel {
+  display: none;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+.rqa-panel.active { display: flex; }
+
+.rqa-panel-toolbar {
+  background: #1e2d42;
+  padding: 8px 14px;
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.rqa-tool-btn {
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid #3a5068;
+  border-radius: 5px;
+  background: transparent;
+  color: #a8c0d8;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.rqa-tool-btn:hover { background: #0572CE; border-color: #0572CE; color: #fff; }
+
+.rqa-code-pre {
+  flex: 1;
+  background: #0d1b2a;
+  color: #c8d8e8;
+  font-family: 'IBM Plex Mono', 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.7;
+  padding: 16px 20px;
+  margin: 0;
+  overflow-y: auto;
+  white-space: pre;
+  border: none;
+}
+.rqa-code-pre::-webkit-scrollbar { width: 5px; }
+.rqa-code-pre::-webkit-scrollbar-thumb { background: #3a5068; border-radius: 4px; }
+
+.rqa-doc-preview {
+  flex: 1;
+  border: none;
+  width: 100%;
+  background: #fff;
+}
+
+/* Test case styles */
+.rqa-testcase-wrap {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  background: #f8fbff;
+}
+.rqa-testcase-wrap::-webkit-scrollbar { width: 5px; }
+.rqa-testcase-wrap::-webkit-scrollbar-thumb { background: #b0c4d8; border-radius: 4px; }
+
+.rqa-tc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  background: #fff;
+  border: 1px solid #d1dde8;
+  border-radius: 8px;
+}
+.rqa-tc-count { font-size: 11px; color: #6b7c93; }
+
+.rqa-tc-group { margin-bottom: 16px; }
+.rqa-tc-group-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #003366;
+  padding: 6px 10px;
+  background: #e8f0fe;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.rqa-tc-row {
+  display: grid;
+  grid-template-columns: 70px 1fr 70px;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid #e0eaf4;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  align-items: start;
+}
+.rqa-tc-id { font-size: 11px; font-weight: 700; color: #0572CE; }
+.rqa-tc-body { font-size: 11px; line-height: 1.6; }
+.rqa-tc-scenario { font-weight: 600; color: #003366; margin-bottom: 4px; }
+.rqa-tc-steps { color: #4a6080; margin-bottom: 4px; }
+.rqa-tc-expected { color: #155724; }
+.rqa-tc-priority {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 8px;
+  text-align: center;
+}
+.rqa-pri-high { background: #f8d7da; color: #721c24; }
+.rqa-pri-medium { background: #fff3cd; color: #856404; }
+.rqa-pri-low { background: #d4edda; color: #155724; }
+
+/* Colour-coded test types */
+.rqa-tc-positive { border-left: 3px solid #28a745; }
+.rqa-tc-negative { border-left: 3px solid #dc3545; }
+.rqa-tc-boundary { border-left: 3px solid #ffc107; }
+.rqa-tc-security { border-left: 3px solid #6f42c1; }
+.rqa-tc-integration { border-left: 3px solid #17a2b8; }
+
+/* Spinner */
+.rqa-spinner-wrap {
+  position: absolute;
+  inset: 0;
+  background: rgba(240, 244, 248, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+.rqa-spinner-box {
+  background: #fff;
+  border: 1px solid #d1dde8;
+  border-radius: 12px;
+  padding: 28px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+.rqa-spinner-box p { font-size: 13px; color: #003366; font-weight: 600; margin: 0; }
+
+/* ICA spinner reuse */
+.ica-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e0eaf4;
+  border-top-color: #0572CE;
+  border-radius: 50%;
+  animation: ica-spin 0.8s linear infinite;
+}
+@keyframes ica-spin { to { transform: rotate(360deg); } }
+
+/* ─── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .rqa-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    height: auto;
+  }
+  .rqa-sidebar { max-height: 340px; }
+  .rqa-welcome-grid { grid-template-columns: 1fr 1fr; }
+}

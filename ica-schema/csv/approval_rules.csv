@@ -1,0 +1,28 @@
+rule_id,rule_name,rule_type,category,severity,applies_to,description,code_review_check_number
+RULE_001,Multi-Org ORG_ID Required,sql_compliance,EBS Compliance,Critical,"AP_INVOICES_ALL, AP_CHECKS_ALL, AP_PAYMENT_SCHEDULES_ALL, AP_EXPENSE_REPORT_HEADERS_ALL, PO_HEADERS_ALL, AR_PAYMENT_SCHEDULES_ALL",All _ALL tables must include AND org_id filter to prevent cross-org data leakage,4
+RULE_002,DateTrack PER_ALL_PEOPLE_F Filter,sql_compliance,DateTrack,Critical,PER_ALL_PEOPLE_F,Must filter BETWEEN effective_start_date AND effective_end_date using TRUNC(SYSDATE),2
+RULE_003,DateTrack PER_ALL_ASSIGNMENTS_F PRIMARY_FLAG,sql_compliance,DateTrack,Critical,PER_ALL_ASSIGNMENTS_F,Must filter BETWEEN dates AND primary_flag = 'Y' to get single active assignment,3
+RULE_004,Exclude Cancelled Invoices,sql_compliance,AP,Minor,AP_INVOICES_ALL,Add AND cancelled_date IS NULL to exclude voided invoices from AP reports,5
+RULE_005,Exclude Void Cheques,sql_compliance,AP,Minor,AP_CHECKS_ALL,Add AND void_date IS NULL to exclude void payment instruments,6
+RULE_006,GL Summary Flag Filter,sql_compliance,GL,Minor,GL_CODE_COMBINATIONS,Add AND summary_flag = 'N' to prevent double-counting summary accounts,7
+RULE_007,iExpense SOURCE Filter,sql_compliance,iExpense,Major,AP_EXPENSE_REPORT_HEADERS_ALL,Must include AND source = 'NonValidatedWebExpense' to isolate iExpense rows from AP,8
+RULE_008,SELECT * Wildcard Prohibited,sql_best_practice,Performance,Critical,All queries,SELECT * is prohibited in EBS — always name columns explicitly,1
+RULE_009,Correlated Scalar Subquery,sql_best_practice,Performance,Critical,All queries,Correlated scalar subqueries execute per row — use JOINs or WITH clause instead,9
+RULE_010,EXECUTE IMMEDIATE Injection,security,Security,Critical,PL/SQL,Dynamic SQL with EXECUTE IMMEDIATE must use bind variables — never concatenate user input,10
+RULE_011,LIKE Leading Wildcard,sql_best_practice,Performance,Major,All queries,LIKE '%value' forces full table scan — use LIKE 'value%' or function-based index,11
+RULE_012,NOT IN with NULLs,sql_best_practice,SQL Best Practice,Critical,All queries,NOT IN with a subquery that returns NULLs always returns empty set — use NOT EXISTS,12
+RULE_013,ROWNUM with ORDER BY,sql_best_practice,SQL Best Practice,Critical,All queries,ROWNUM applied before ORDER BY gives random rows — wrap in subquery or use FETCH FIRST,13
+RULE_014,Missing GL_BALANCES Currency Filter,sql_compliance,GL,Major,GL_BALANCES,Must filter by currency_code to avoid summing across currencies in GL balance queries,14
+RULE_015,PO Authorization Status,sql_compliance,PO,Minor,PO_HEADERS_ALL,Filter authorization_status = 'APPROVED' unless reporting all POs including drafts,15
+RULE_016,AP Payment Status Flag,sql_compliance,AP,Minor,AP_INVOICES_ALL,Use payment_status_flag = 'Y' for fully paid or 'N' for outstanding invoices,16
+RULE_017,AR Posted Transactions Only,sql_compliance,AR,Minor,AR_PAYMENT_SCHEDULES_ALL,Filter status != 'CL' for open items; use gl_date for posted-only AR transactions,17
+RULE_018,INV Organization Filter,sql_compliance,INV,Critical,"MTL_SYSTEM_ITEMS_B, MTL_ONHAND_QUANTITIES_DETAIL",Inventory tables require organization_id filter to avoid cross-warehouse aggregation,18
+RULE_019,FND_LOOKUP_VALUES Language,sql_compliance,FND,Minor,FND_LOOKUP_VALUES_VL,Always use the _VL (view) or filter language = USERENV('LANG') on base table,19
+RULE_020,GL Period Status Open,sql_compliance,GL,Minor,GL_PERIOD_STATUSES,Filter period_type and closing_status = 'O' for open periods only,20
+RULE_021,Hardcoded Org ID,sql_compliance,EBS Compliance,Major,All queries,Never hardcode numeric org_id values — use mo_global.get_current_org_id() function,21
+RULE_022,Missing TRUNC on Date Comparison,sql_best_practice,SQL Best Practice,Minor,All queries,Date comparisons without TRUNC may miss time-component rows — use TRUNC(date_col),22
+RULE_023,Implicit Column Conversion,sql_best_practice,Performance,Major,All queries,Applying functions to indexed columns (e.g. TO_CHAR(date)) suppresses index use,23
+RULE_024,Cartesian Join Risk,sql_best_practice,Performance,Critical,All queries,Tables listed in FROM without JOIN condition produce cartesian product — always check join predicates,24
+RULE_025,Bind Variable Missing in WHERE,security,Security,Major,All queries,Literal values in WHERE clauses prevent cursor sharing — use bind variables :param,25
+RULE_026,Missing NOVALIDATE on FK,sql_best_practice,SQL Best Practice,Minor,DDL statements,EBS FK constraints use RELY DISABLE NOVALIDATE — never add enforced FKs on EBS tables,26
+RULE_027,DBMS_OUTPUT in Production,sql_best_practice,SQL Best Practice,Minor,PL/SQL,DBMS_OUTPUT.PUT_LINE is for debugging only — remove from production PL/SQL packages,27

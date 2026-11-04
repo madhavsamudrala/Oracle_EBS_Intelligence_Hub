@@ -1,0 +1,1119 @@
+{
+  "@context": {
+    "owl":       "http://www.w3.org/2002/07/owl#",
+    "rdf":       "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs":      "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd":       "http://www.w3.org/2001/XMLSchema#",
+    "dcterms":   "http://purl.org/dc/terms/",
+    "schema":    "https://schema.org/",
+    "ebs":       "https://ibm.com/ica/oracle-ebs-intelligence-hub/ontology#",
+    "skos":      "http://www.w3.org/2004/02/skos/core#",
+    "ebsbase":   "http://ibm.com/oracle-ebs#",
+    "Entity":    "ebs:Entity",
+    "Operation": "ebs:Operation",
+    "identityKey":         "ebs:identityKey",
+    "humanRef":            "ebs:humanRef",
+    "invariant":           "ebs:invariant",
+    "attributes":          "ebs:attributes",
+    "keyTables":           "ebs:keyTables",
+    "relatesTo":           { "@id": "ebs:relatesTo",    "@type": "@id" },
+    "precondition":        "ebs:precondition",
+    "postcondition":       "ebs:postcondition",
+    "sqlExample":          "ebs:sqlExample",
+    "complianceRule":      "ebs:complianceRule",
+    "troubleshootingGuide":"ebs:troubleshootingGuide",
+    "learningObjectives":  "ebs:learningObjectives",
+    "correctUsage":        "ebs:correctUsage",
+    "incorrectUsage":      "ebs:incorrectUsage",
+    "violationImpact":     "ebs:violationImpact",
+    "templateSQL":         "ebs:templateSQL",
+    "requiredFilters":     "ebs:requiredFilters",
+    "patternId":           "ebs:patternId",
+    "ruleId":              "ebs:ruleId",
+    "moduleCode":          "ebs:moduleCode",
+    "affectedModules":     "ebs:affectedModules",
+    "affectedTables":      "ebs:affectedTables",
+    "processCode":         "ebs:processCode",
+    "keyMilestones":       "ebs:keyMilestones",
+    "accountingEntries":   "ebs:accountingEntries",
+    "periodCloseSequence": "ebs:periodCloseSequence",
+    "interfaceTable":      "ebs:interfaceTable",
+    "importProgram":       "ebs:importProgram",
+    "apiPackage":          "ebs:apiPackage",
+    "concurrentPrograms":  "ebs:concurrentPrograms",
+    "keyViews":            "ebs:keyViews",
+    "sourceColumn":        "ebs:sourceColumn",
+    "targetColumn":        "ebs:targetColumn",
+    "dataTransform":       "ebs:dataTransform",
+    "mappingConfidence":   "ebs:mappingConfidence",
+    "excelUploadFlow":     "ebs:excelUploadFlow",
+    "dbProxyContract":     "ebs:dbProxyContract",
+    "simulatedTables":     "ebs:simulatedTables"
+  },
+  "@graph": [
+
+    {
+      "@id": "ebs:",
+      "@type": "owl:Ontology",
+      "dcterms:title": "Oracle EBS Intelligence Hub Ontology",
+      "dcterms:description": "OWL 2 / JSON-LD ontology for the Oracle EBS Intelligence Hub v5.0 — covering 13 functional modules (AP, AR, GL, PO, HRMS, PAY, INV, OM, FA, CM, BEN, iEXP, FND), 4 end-to-end business processes (P2P, O2C, H2R, R2R), 26 pre-built reports, 40+ Oracle EBS tables, 10 SQL compliance rules (COMP-001 to COMP-010), 6 SQL query patterns, 15 Academy modules, 500+ SQL queries, RICE component taxonomy (Reports/Interfaces/Conversions/Extensions), AME approval rules, Oracle Workflow entities, OAF/SOA/APEX/ADF/Redwood component classes, role-based access, Data Connect (Excel upload, DB Simulated, Live Oracle DB with fuzzy column mapping), delete/recycle workflow, and document generation. ICA Context Studio primary upload file.",
+      "dcterms:version": "5.1",
+      "dcterms:creator": "IBM ICA — Oracle EBS Team",
+      "dcterms:created": "2025-06-01",
+      "dcterms:modified": "2025-07-01",
+      "dcterms:license": "https://creativecommons.org/licenses/by/4.0/",
+      "dcterms:subject": "Oracle EBS R12.2, Ontology, Knowledge Graph, ICA Context Studio",
+      "owl:versionIRI": "ebs:v5.1",
+      "rdfs:seeAlso": "https://github.com/madhavsamudrala/Oracle_EBS_Intelligence_Hub",
+      "rdfs:comment": "ICA Context Studio upload target (PRIORITY 1) — import this file to generate the complete Oracle EBS knowledge graph. Covers all 13 modules, 4 business processes, compliance rules, SQL patterns, and Data Connect mapping specifications.",
+      "skos:note": "Companion files: ebs-complete-ontology.jsonld (ICA entity format), ebs-knowledge-graph-schema.json (graph schema), csv/column_mapping_rules.csv (100 column mappings)"
+    },
+
+    { "@id": "ebs:OracleModule",
+      "@type": "owl:Class",
+      "rdfs:label": "Oracle EBS Module",
+      "rdfs:comment": "An Oracle EBS R12 functional module. The Intelligence Hub covers AP, AR, GL, PO, HRMS, INV, iExpense (7 core modules). The complete ontology (ebs-complete-ontology.jsonld) extends this to 13 modules: AP, AR, GL, PO, HRMS, PAY, INV, OM, FA, CM, BEN, iEXP. Each module belongs to a category (FINANCIAL, SUPPLY_CHAIN, HUMAN_RESOURCES, MANUFACTURING, TECHNOLOGY) and a business process (P2P, O2C, H2R, R2R).",
+      "skos:example": "Accounts Payable (AP), General Ledger (GL), Purchasing (PO), Fixed Assets (FA), Cash Management (CM), Payroll (PAY)",
+      "owl:equivalentClass": { "@id": "schema:SoftwareApplication" }
+    },
+
+    { "@id": "ebs:BusinessProcess",
+      "@type": "owl:Class",
+      "rdfs:label": "Oracle EBS Business Process",
+      "rdfs:comment": "An end-to-end business process spanning multiple Oracle EBS modules. Four core processes: P2P (Procure-to-Pay), O2C (Order-to-Cash), H2R (Hire-to-Retire), R2R (Record-to-Report). Each has start/end events, milestones, primary/secondary modules, and accounting entries.",
+      "skos:example": "P2P: PR → PO → Receipt → Invoice → Payment; O2C: Order → Ship → Invoice → Cash; H2R: Hire → Assign → Payroll → Terminate; R2R: Journals → Close → Statements",
+      "rdfs:subClassOf": { "@id": "schema:Action" }
+    },
+
+    { "@id": "ebs:RICEComponent",
+      "@type": "owl:Class",
+      "rdfs:label": "RICE Component",
+      "rdfs:comment": "A Reports-Interfaces-Conversions-Extensions component in Oracle EBS. RICE is the standard taxonomy for EBS customisations and developments. Types: REPORT, INTERFACE, CONVERSION, EXTENSION, FORM, WORKFLOW, AME, OAF, SOA, APEX, ADF, REDWOOD.",
+      "skos:example": "AP Invoice Register (Report), AP Invoice Open Interface (Interface), Supplier Master Conversion, AP Invoice Trigger (Extension)",
+      "rdfs:subClassOf": { "@id": "schema:SoftwareSourceCode" }
+    },
+
+    { "@id": "ebs:EBSInterface",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "ebs:RICEComponent" },
+      "rdfs:label": "EBS Interface",
+      "rdfs:comment": "An Oracle EBS interface component (RICE: I). Moves data into or out of Oracle EBS via open interface tables, APIs, SOA composites, REST services, or file-based mechanisms. Direction: INBOUND, OUTBOUND, or BIDIRECTIONAL.",
+      "skos:example": "AP Invoice Open Interface (ap_invoices_interface), GL Journal Open Interface (gl_interface), HR Employee Open Interface (HR_PERSON_API)"
+    },
+
+    { "@id": "ebs:EBSConversion",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "ebs:RICEComponent" },
+      "rdfs:label": "EBS Data Conversion",
+      "rdfs:comment": "A one-time data migration (RICE: C) moving legacy data into Oracle EBS. Types: INITIAL_LOAD, DELTA_LOAD, HISTORICAL, CUTOVER, OPEN_BALANCES, MASTER_DATA. Includes staging tables, validation queries, reconciliation queries, and rollback strategy.",
+      "skos:example": "Supplier Master Conversion, AP Open Invoices Conversion, GL Opening Balances Conversion"
+    },
+
+    { "@id": "ebs:EBSExtension",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "ebs:RICEComponent" },
+      "rdfs:label": "EBS Extension",
+      "rdfs:comment": "A customisation or extension to Oracle EBS (RICE: E). Types: DATABASE_TRIGGER, CUSTOM_PACKAGE, CUSTOM_TABLE, OAF_EXTENSION, ADF_EXTENSION, REDWOOD_EXTENSION, WORKFLOW_CUSTOMIZATION, AME_RULE, CUSTOM_CONCURRENT, CUSTOM_API, BUSINESS_EVENT.",
+      "skos:example": "AP Invoice Validation Trigger (xxcust_ap_inv_biu_trg), XXCUST_AP_UTILS_PKG Custom Package"
+    },
+
+    { "@id": "ebs:AMEConfiguration",
+      "@type": "owl:Class",
+      "rdfs:label": "AME Approval Management Engine Configuration",
+      "rdfs:comment": "An Oracle AME (Approval Management Engine) configuration defining approval rules, conditions, approver hierarchies, and routing logic for a transaction type (e.g. AP Invoice, Purchase Order, iExpense).",
+      "skos:example": "AP Invoice Approval (APINVOICE transaction type), PO Approval (PURCHASE_ORDER transaction type)",
+      "rdfs:subClassOf": { "@id": "schema:Action" }
+    },
+
+    { "@id": "ebs:OracleWorkflow",
+      "@type": "owl:Class",
+      "rdfs:label": "Oracle Workflow",
+      "rdfs:comment": "An Oracle Workflow process definition (item type + process name) used in Oracle EBS for approval routing, notifications, background processing, and event-based automation.",
+      "skos:example": "AP Invoice Approval Workflow (APINVOICE/AP_INVOICE_APPROVAL), PO Approval Workflow (POAPPRV/PO_APPROVAL), HR New Hire (HRSSA/HR_HIRE_PROCESS)",
+      "rdfs:subClassOf": { "@id": "schema:Action" }
+    },
+
+    { "@id": "ebs:OAFComponent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "ebs:RICEComponent" },
+      "rdfs:label": "OAF Component",
+      "rdfs:comment": "An Oracle Application Framework (OAF) component — page, region, controller extension, VO extension, or new OAF page for Oracle EBS customisation.",
+      "skos:example": "AP Invoice Entry Page Extension (Controller), AP Invoice VO Extension (VO_EXTENSION)"
+    },
+
+    { "@id": "ebs:SOAService",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "ebs:RICEComponent" },
+      "rdfs:label": "SOA Service",
+      "rdfs:comment": "An Oracle SOA Suite service (BPEL Process, Mediator, Human Task, REST or SOAP service) integrating with Oracle EBS. Integration patterns: SYNC_REQUEST_REPLY, ASYNC_REQUEST, FIRE_AND_FORGET, PUBLISH_SUBSCRIBE.",
+      "skos:example": "APInvoiceCompositeService (BPEL), XXCUSTInvoiceRestService (REST)"
+    },
+
+    { "@id": "ebs:APEXApplication",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "ebs:RICEComponent" },
+      "rdfs:label": "APEX Application",
+      "rdfs:comment": "An Oracle APEX application integrated with Oracle EBS R12. Authentication schemes: DATABASE_ACCOUNT, EBS_SSO, LDAP, CUSTOM. Includes interactive reports, forms, charts, and approval dashboards.",
+      "skos:example": "AP Invoice Management Dashboard (AP_INV_MGMT), Employee Self-Service Portal"
+    },
+
+    { "@id": "ebs:ADFApplication",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "ebs:RICEComponent" },
+      "rdfs:label": "ADF Application",
+      "rdfs:comment": "An Oracle ADF (Application Development Framework) application built on top of Oracle EBS data via EO/VO/AM business components. Deployed on WebLogic.",
+      "skos:example": "AP Invoice ADF App (adfVersion: 12.2.1.4)"
+    },
+
+    { "@id": "ebs:RedwoodComponent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": { "@id": "ebs:RICEComponent" },
+      "rdfs:label": "Oracle Redwood Component",
+      "rdfs:comment": "An Oracle Redwood UI component (Oracle JET + VBCS) for modernising Oracle EBS. Deployment targets: VBCS, EBS_EXTENSION. Data sources: REST_API, EBS_REST, CUSTOM_REST.",
+      "skos:example": "AP Invoice Redwood App (Oracle JET 14.0, VBCS 23.2)"
+    },
+
+    { "@id": "ebs:ModuleKnowledge",
+      "@type": "owl:Class",
+      "rdfs:label": "Module Knowledge Topic",
+      "rdfs:comment": "A structured learning topic for an Oracle EBS module or technical area. Includes learning objectives, key concepts explanation, step-by-step guide, common mistakes, best practices, troubleshooting guide, SQL/PL/SQL examples, interview Q&A, and real-world scenarios.",
+      "skos:example": "AP Functional Setup (AP-FUNC-001), AP Invoice Processing (AP-FUNC-002), GL Ledger Setup (GL-FUNC-001), P2P Complete Process (P2P-PROC-001)",
+      "rdfs:subClassOf": { "@id": "schema:LearningResource" }
+    },
+
+    { "@id": "ebs:SQLPattern",
+      "@type": "owl:Class",
+      "rdfs:label": "Oracle EBS SQL Pattern",
+      "rdfs:comment": "A reusable SQL query template with all mandatory Oracle EBS compliance filters included. Covers specific module/scenario combinations (AP invoices, GL journals, HRMS employees, P2P status, O2C status, Payroll results). Includes required filters, difficulty, and template SQL.",
+      "skos:example": "SQL-AP-001 AP Invoice Basic, SQL-GL-001 GL Journal Basic, SQL-HR-001 HRMS Employee Basic, SQL-P2P-001 P2P Complete Status",
+      "rdfs:subClassOf": { "@id": "schema:SoftwareSourceCode" }
+    },
+
+    { "@id": "ebs:ComplianceRule",
+      "@type": "owl:Class",
+      "rdfs:label": "Oracle EBS SQL Compliance Rule",
+      "rdfs:comment": "An Oracle EBS SQL coding compliance rule enforced by the SQL Advisor Code Review. 10 rules from the complete ontology guide (COMP-001 to COMP-010) covering: ORG_ID Required, DateTrack Filter, GL LedgerId, Cancelled Invoice, Reversal Distribution, Primary Assignment, Bind Variables, No SELECT*, No Function on Index, HRMS Business Group.",
+      "skos:example": "COMP-001 ORG_ID Required (CRITICAL), COMP-002 DateTrack Filter (CRITICAL), COMP-007 Bind Variables (CRITICAL)",
+      "rdfs:subClassOf": { "@id": "ebs:BusinessRule" }
+    },
+
+    { "@id": "ebs:EBSReport",
+      "@type": "owl:Class",
+      "rdfs:label": "EBS Report",
+      "rdfs:comment": "A pre-built Oracle EBS report available in the Reports Browser. Each report has a key, title, module, SQL definition, columns, and sample rows. There are 26 reports across all 7 modules.",
+      "skos:example": "Invoice Register, AP Aging Report, GL Journal Entries, PO Status",
+      "rdfs:subClassOf": { "@id": "schema:Dataset" }
+    },
+
+    { "@id": "ebs:OracleTable",
+      "@type": "owl:Class",
+      "rdfs:label": "Oracle EBS Table",
+      "rdfs:comment": "An Oracle EBS base table or view used by one or more reports or SQL queries. Many tables require multi-org (ORG_ID) or DateTrack filters for correct results.",
+      "skos:example": "AP_INVOICES_ALL, PER_ALL_PEOPLE_F, GL_JE_HEADERS, PO_HEADERS_ALL",
+      "rdfs:subClassOf": { "@id": "schema:Dataset" }
+    },
+
+    { "@id": "ebs:BusinessRule",
+      "@type": "owl:Class",
+      "rdfs:label": "Business / SQL Compliance Rule",
+      "rdfs:comment": "An Oracle EBS coding rule, SQL best practice, or compliance check. Applied by the SQL Advisor Code Review tool. 27 rules total across 5 categories: EBS Compliance, Performance, SQL Best Practice, Security, Date Handling.",
+      "skos:example": "Multi-Org ORG_ID Required, DateTrack PER_ALL_PEOPLE_F Filter, SELECT * Prohibited"
+    },
+
+    { "@id": "ebs:NLQuery",
+      "@type": "owl:Class",
+      "rdfs:label": "Natural Language Query",
+      "rdfs:comment": "A user utterance in natural language that the Chat Assistant maps to a report, feature, or tab using keyword-based intent matching. 115+ query examples provided.",
+      "skos:example": "show me unpaid invoices, AP aging over 90 days, list employees in Finance",
+      "rdfs:subClassOf": { "@id": "schema:SearchAction" }
+    },
+
+    { "@id": "ebs:UserRole",
+      "@type": "owl:Class",
+      "rdfs:label": "User Role",
+      "rdfs:comment": "A login role controlling which tabs are visible and what actions are permitted. Two roles: Employee (3 tabs, can request deletes) and Technical (all 7 tabs, can approve/delete/restore).",
+      "skos:example": "Employee, Technical",
+      "rdfs:subClassOf": { "@id": "schema:Role" }
+    },
+
+    { "@id": "ebs:AppTab",
+      "@type": "owl:Class",
+      "rdfs:label": "Application Tab",
+      "rdfs:comment": "One of the 7 navigation tabs in the Oracle EBS Intelligence Hub. Each tab is either visible to all roles or restricted to Technical only.",
+      "skos:example": "Chat Assistant, EBS Reports, SQL Advisor, SQL Lab, EBS Academy, Data Connect, Doc Generator"
+    },
+
+    { "@id": "ebs:AcademyModule",
+      "@type": "owl:Class",
+      "rdfs:label": "EBS Academy Module",
+      "rdfs:comment": "One of 15 learning modules in the EBS Academy tab. Covers functional EBS topics (AP through INV), technical topics (Concurrent Programs, DBA, Architecture, SOA, APEX, Testing, Security), and PM Guide.",
+      "skos:example": "Module 1 — Accounts Payable, Module 9 — DBA & System Admin, Module 15 — Project Manager Guide",
+      "rdfs:subClassOf": { "@id": "schema:Course" }
+    },
+
+    { "@id": "ebs:AcademyTopic",
+      "@type": "owl:Class",
+      "rdfs:label": "Academy Topic",
+      "rdfs:comment": "A learning topic within an Academy module. Each topic has structured content text, an optional SVG process flowchart, and SQL code examples.",
+      "rdfs:subClassOf": { "@id": "schema:LearningResource" }
+    },
+
+    { "@id": "ebs:SQLQuery",
+      "@type": "owl:Class",
+      "rdfs:label": "SQL Library Query",
+      "rdfs:comment": "A pre-written Oracle EBS SQL query stored in the SQL Library (SQL Lab tab). 500+ queries organised in 12 categories. Each query has a title, description, module, tags, and SQL text.",
+      "skos:example": "AP Unpaid Invoices Over Amount, GL Journal Entries by Period, Active Employees by Department",
+      "rdfs:subClassOf": { "@id": "schema:SoftwareSourceCode" }
+    },
+
+    { "@id": "ebs:SQLCategory",
+      "@type": "owl:Class",
+      "rdfs:label": "SQL Library Category",
+      "rdfs:comment": "A grouping category for SQL Library queries by Oracle EBS module or function. 12 categories: AP, AR, GL, PO, HRMS, INV, iExpense, FND/System, Performance & Tuning, Security & Access, Workflow, Multi-Org & Diagnostics.",
+      "skos:example": "Accounts Payable (AP), Performance & Tuning, Security & Access"
+    },
+
+    { "@id": "ebs:DataConnectSource",
+      "@type": "owl:Class",
+      "rdfs:label": "Data Connect Source",
+      "rdfs:comment": "A supported data input method for the Data Connect tab. Three types: Excel/CSV file upload (no proxy needed), DB Simulated (in-memory SQL matching), and Live Oracle DB (requires backend proxy server).",
+      "skos:example": "Excel/CSV Upload, DB Simulated, Live Oracle DB",
+      "rdfs:subClassOf": { "@id": "schema:DataFeed" }
+    },
+
+    { "@id": "ebs:ColumnMapping",
+      "@type": "owl:Class",
+      "rdfs:label": "Column Mapping",
+      "rdfs:comment": "A mapping relationship between an incoming column (from Excel or DB) and a target EBS report column. Created by dcAutoMap() via fuzzy string normalisation. May include a data transform (TRIM, UPPER, Format Date, Format Number).",
+      "skos:example": "Vendor Name → VENDOR_NAME, Invoice Amount → INVOICE_AMOUNT",
+      "rdfs:subClassOf": { "@id": "schema:PropertyValue" }
+    },
+
+    { "@id": "ebs:DeleteRequest",
+      "@type": "owl:Class",
+      "rdfs:label": "Delete Request",
+      "rdfs:comment": "An Employee-submitted request to delete an imported report. Contains reason, notes, and status (pending/approved/rejected). Stored in window.DELETE_REQUESTS. Technical role approves or rejects via the Notification Panel.",
+      "skos:example": "Delete request for Invoice Register import — reason: test data",
+      "rdfs:subClassOf": { "@id": "schema:Action" }
+    },
+
+    { "@id": "ebs:RecycleBinEntry",
+      "@type": "owl:Class",
+      "rdfs:label": "Recycle Bin Entry",
+      "rdfs:comment": "A snapshot of a deleted EBS report (columns + rows) stored in window.RECYCLE_BIN. Technical role can restore a recycle bin entry, which re-registers the report in window.REPORT_DATA and IMPORTED_REPORTS.",
+      "rdfs:subClassOf": { "@id": "schema:CreativeWork" }
+    },
+
+    { "@id": "ebs:Employee",
+      "@type": "owl:Class",
+      "rdfs:label": "Oracle EBS Employee",
+      "rdfs:comment": "An Oracle HRMS employee record from PER_ALL_PEOPLE_F / PER_ALL_ASSIGNMENTS_F. Has employee number, name, department, job title, supervisor, and org assignment.",
+      "rdfs:subClassOf": { "@id": "schema:Person" }
+    },
+
+    { "@id": "ebs:Supplier",
+      "@type": "owl:Class",
+      "rdfs:label": "Oracle EBS Supplier",
+      "rdfs:comment": "An Oracle AP vendor/supplier record from AP_SUPPLIERS (PO_VENDORS). Has vendor ID, name, type, enabled/hold flags, and multi-org org_id assignment.",
+      "rdfs:subClassOf": { "@id": "schema:Organization" }
+    },
+
+    { "@id": "ebs:DocumentTemplate",
+      "@type": "owl:Class",
+      "rdfs:label": "Document Generator Template",
+      "rdfs:comment": "A Technical Design or Functional Specification document template generated by the Doc Generator tab. Output includes cover page, SVG diagrams (Process Flow, Data Flow, ERD, PL/SQL Flowchart), and structured sections.",
+      "rdfs:subClassOf": { "@id": "schema:DigitalDocument" }
+    },
+
+    { "@id": "ebs:OperatingUnit",
+      "@type": "owl:Class",
+      "rdfs:label": "Oracle EBS Operating Unit",
+      "rdfs:comment": "A legal/business entity in Oracle EBS Multi-Org (MOAC) setup. Identified by ORG_ID in _ALL tables. All multi-org tables require an AND org_id = :p_org_id filter.",
+      "skos:example": "Gulf Business Unit (ORG_ID=101), UAE Shared Services (ORG_ID=102)",
+      "rdfs:subClassOf": { "@id": "schema:Organization" }
+    },
+
+    { "@id": "ebs:BusinessProcessOnt",
+      "@type": "owl:Class",
+      "rdfs:label": "Oracle EBS Business Process",
+      "rdfs:comment": "An end-to-end Oracle EBS business process. Four core processes: P2P (Procure-to-Pay: PR → PO → Receipt → Invoice → Payment), O2C (Order-to-Cash: Order → Ship → Invoice → Cash), H2R (Hire-to-Retire: Hire → Payroll → Terminate), R2R (Record-to-Report: Journals → Close → Statements). Each has primary/secondary modules, milestones, accounting entries, and period-close sequences.",
+      "skos:example": "P2P (PO+AP+INV), O2C (OM+INV+AR), H2R (HRMS+PAY+BEN), R2R (GL+AP+AR+FA)",
+      "rdfs:subClassOf": { "@id": "schema:Action" }
+    },
+
+    { "@id": "ebs:ComplianceRuleEntity",
+      "@type": "owl:Class",
+      "rdfs:label": "EBS SQL Compliance Rule",
+      "rdfs:comment": "One of 10 Oracle EBS SQL compliance rules (COMP-001 to COMP-010). Categories: COMPLIANCE, SECURITY, PERFORMANCE. Severity: CRITICAL (−20 pts), MAJOR (−10 pts), MINOR (−5 pts). Each rule specifies: affectedModules, affectedTables, correctUsage, incorrectUsage, violationImpact.",
+      "skos:example": "COMP-001 ORG_ID Required (CRITICAL), COMP-002 DateTrack Filter (CRITICAL), COMP-007 Bind Variables (CRITICAL/SECURITY)",
+      "rdfs:subClassOf": { "@id": "ebs:BusinessRule" }
+    },
+
+    { "@id": "ebs:SQLPatternEntity",
+      "@type": "owl:Class",
+      "rdfs:label": "Oracle EBS SQL Pattern",
+      "rdfs:comment": "A reusable SQL query template with all mandatory Oracle EBS compliance filters pre-applied. Six patterns: SQL-AP-001 (AP Invoice Basic), SQL-GL-001 (GL Journal Basic), SQL-HR-001 (HRMS Employee with DateTrack), SQL-P2P-001 (P2P Complete Status), SQL-O2C-001 (O2C Complete Status), SQL-PAY-001 (Payroll Results). Each pattern has patternId, module, difficulty, requiredFilters, templateSQL.",
+      "skos:example": "SQL-AP-001 AP Invoice Basic, SQL-GL-001 GL Journal Basic, SQL-HR-001 HRMS Employee DateTrack",
+      "rdfs:subClassOf": { "@id": "schema:SoftwareSourceCode" }
+    },
+
+    { "@id": "ebs:OracleModule",
+      "@type": "owl:Class",
+      "rdfs:label": "Oracle EBS Module",
+      "rdfs:comment": "An Oracle EBS R12.2 functional module. 13 modules covered: AP, AR, GL, PO, HRMS, PAY, INV, OM, FA, CM, BEN, iEXP, FND. Attributes: moduleCode, moduleName, moduleCategory (FINANCIAL/SUPPLY_CHAIN/HUMAN_RESOURCES), businessProcess (P2P/O2C/H2R/R2R), keyTables, invariant rules, keySchema, releaseVersion, concurrentPrograms, keyViews.",
+      "skos:example": "AP (Accounts Payable), GL (General Ledger), HRMS (Human Resources), PAY (Payroll), FA (Fixed Assets), CM (Cash Management)",
+      "owl:equivalentClass": { "@id": "schema:SoftwareApplication" }
+    },
+
+    { "@id": "ebs:DataConnectMapping",
+      "@type": "owl:Class",
+      "rdfs:label": "Data Connect Column Mapping Specification",
+      "rdfs:comment": "The complete Data Connect mapping workflow specification. Three source types: (1) Excel/CSV Upload — SheetJS parse → _dcDetectType() → dcAutoMap() fuzzy match → manual adjust → transform → preview → push. (2) DB Simulated — SQL paste → table name parse → demo data match → column map. (3) Live Oracle DB — proxy POST /query {sql,host,port,sid,user,pass} → {columns,rows} → fuzzy map → push. Fuzzy matching normalizes: lowercase + strip spaces/underscores/specials, then includes() or exact match. Confidence threshold: 0.70.",
+      "skos:example": "Excel col 'Vendor Name' → EBS col 'VENDOR_NAME' (confidence 0.95), 'Inv Amt' → 'INVOICE_AMOUNT' (confidence 0.88)",
+      "rdfs:subClassOf": { "@id": "schema:DataFeed" }
+    },
+
+    { "@id": "ebs:moduleCode",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "Module Code",
+      "rdfs:comment": "Short identifier for an Oracle EBS module: AP, AR, GL, PO, HRMS, PAY, INV, OM, FA, CM, BEN, iEXP, FND.",
+      "rdfs:domain": { "@id": "ebs:OracleModule" },
+      "rdfs:range":  { "@id": "xsd:string" }
+    },
+
+    { "@id": "ebs:reportKey",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "Report Key",
+      "rdfs:comment": "Internal JavaScript key for an EBS report (used in window.REPORT_DATA). e.g. 'invoice_register', 'aged_payables_detail'.",
+      "rdfs:domain": { "@id": "ebs:EBSReport" },
+      "rdfs:range":  { "@id": "xsd:string" }
+    },
+
+    { "@id": "ebs:reportTitle",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "Report Title",
+      "rdfs:comment": "Human-readable display title of an EBS report.",
+      "rdfs:domain": { "@id": "ebs:EBSReport" },
+      "rdfs:range":  { "@id": "xsd:string" },
+      "owl:equivalentProperty": { "@id": "dcterms:title" }
+    },
+
+    { "@id": "ebs:sqlText",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "SQL Text",
+      "rdfs:comment": "The Oracle SQL SELECT statement for a report or library query.",
+      "rdfs:domain": { "@id": "owl:Thing" },
+      "rdfs:range":  { "@id": "xsd:string" },
+      "owl:equivalentProperty": { "@id": "schema:programmingLanguage" }
+    },
+
+    { "@id": "ebs:tableName",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "Oracle Table Name",
+      "rdfs:comment": "Full Oracle EBS base table or view name, e.g. AP_INVOICES_ALL, PER_ALL_PEOPLE_F.",
+      "rdfs:domain": { "@id": "ebs:OracleTable" },
+      "rdfs:range":  { "@id": "xsd:string" }
+    },
+
+    { "@id": "ebs:isMultiOrg",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "Is Multi-Org Table",
+      "rdfs:comment": "Whether this Oracle EBS table is a multi-org (_ALL) table requiring ORG_ID filter.",
+      "rdfs:domain": { "@id": "ebs:OracleTable" },
+      "rdfs:range":  { "@id": "xsd:boolean" }
+    },
+
+    { "@id": "ebs:isDateTrack",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "Is DateTrack Table",
+      "rdfs:comment": "Whether this table uses Oracle HRMS DateTrack — requires BETWEEN effective_start_date AND effective_end_date filter.",
+      "rdfs:domain": { "@id": "ebs:OracleTable" },
+      "rdfs:range":  { "@id": "xsd:boolean" }
+    },
+
+    { "@id": "ebs:ruleId",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "Rule ID",
+      "rdfs:comment": "Unique identifier for a business/SQL rule, e.g. RULE_001.",
+      "rdfs:domain": { "@id": "ebs:BusinessRule" },
+      "rdfs:range":  { "@id": "xsd:string" }
+    },
+
+    { "@id": "ebs:severity",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "Severity",
+      "rdfs:comment": "Severity of a business rule violation: Critical (−20 pts), Major (−10 pts), or Minor (−5 pts).",
+      "rdfs:domain": { "@id": "ebs:BusinessRule" },
+      "rdfs:range":  { "@id": "xsd:string" }
+    },
+
+    { "@id": "ebs:confidenceScore",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "Confidence Score",
+      "rdfs:comment": "0.0–1.0 confidence that an NL query maps to the target report/tab. Minimum threshold: 0.70.",
+      "rdfs:domain": { "@id": "ebs:NLQuery" },
+      "rdfs:range":  { "@id": "xsd:decimal" }
+    },
+
+    { "@id": "ebs:tabId",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "Tab DOM ID",
+      "rdfs:comment": "HTML element ID of the application tab panel, e.g. tab-chat, tab-reports, tab-sql.",
+      "rdfs:domain": { "@id": "ebs:AppTab" },
+      "rdfs:range":  { "@id": "xsd:string" }
+    },
+
+    { "@id": "ebs:sourceColumn",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "Source Column",
+      "rdfs:comment": "Column header from the incoming Excel/CSV file or DB query result set.",
+      "rdfs:domain": { "@id": "ebs:ColumnMapping" },
+      "rdfs:range":  { "@id": "xsd:string" }
+    },
+
+    { "@id": "ebs:targetColumn",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "Target Column",
+      "rdfs:comment": "EBS report column that the source column is mapped to in the Data Connect workflow.",
+      "rdfs:domain": { "@id": "ebs:ColumnMapping" },
+      "rdfs:range":  { "@id": "xsd:string" }
+    },
+
+    { "@id": "ebs:dataTransform",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "Data Transform",
+      "rdfs:comment": "Optional transformation applied to a mapped column value: trim, upper, lower, title, date_fmt, or num_fmt.",
+      "rdfs:domain": { "@id": "ebs:ColumnMapping" },
+      "rdfs:range":  { "@id": "xsd:string" }
+    },
+
+    { "@id": "ebs:detectedType",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "Detected Column Type",
+      "rdfs:comment": "Auto-detected data type for an incoming column: number, date, bool, text, or mixed. Detected by _dcDetectType() sampling up to 50 rows.",
+      "rdfs:domain": { "@id": "ebs:ColumnMapping" },
+      "rdfs:range":  { "@id": "xsd:string" }
+    },
+
+    { "@id": "ebs:orgId",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "Org ID",
+      "rdfs:comment": "Oracle EBS Multi-Org Operating Unit identifier. Must be applied as AND org_id = :p_org_id on all _ALL tables.",
+      "rdfs:domain": { "@id": "ebs:OperatingUnit" },
+      "rdfs:range":  { "@id": "xsd:integer" }
+    },
+
+    { "@id": "ebs:requestStatus",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:label": "Request Status",
+      "rdfs:comment": "Current status of a delete request: pending, approved, or rejected.",
+      "rdfs:domain": { "@id": "ebs:DeleteRequest" },
+      "rdfs:range":  { "@id": "xsd:string" }
+    },
+
+    { "@id": "ebs:moduleHasReport",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "module has report",
+      "rdfs:comment": "An Oracle EBS module owns one or more pre-built reports. Cardinality: 1:N.",
+      "rdfs:domain": { "@id": "ebs:OracleModule" },
+      "rdfs:range":  { "@id": "ebs:EBSReport" },
+      "owl:inverseOf": { "@id": "ebs:reportBelongsToModule" }
+    },
+
+    { "@id": "ebs:reportBelongsToModule",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "report belongs to module",
+      "rdfs:comment": "Inverse of moduleHasReport — each EBS report belongs to exactly one Oracle module.",
+      "rdfs:domain": { "@id": "ebs:EBSReport" },
+      "rdfs:range":  { "@id": "ebs:OracleModule" },
+      "rdf:type": "owl:FunctionalProperty"
+    },
+
+    { "@id": "ebs:reportUsesTable",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "report uses table",
+      "rdfs:comment": "An EBS report queries one or more Oracle EBS base tables in its SQL definition. Cardinality: N:M.",
+      "rdfs:domain": { "@id": "ebs:EBSReport" },
+      "rdfs:range":  { "@id": "ebs:OracleTable" }
+    },
+
+    { "@id": "ebs:tableHasRule",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "table has rule",
+      "rdfs:comment": "An Oracle EBS base table is subject to one or more business/compliance rules enforced by the SQL Advisor. Cardinality: N:M.",
+      "rdfs:domain": { "@id": "ebs:OracleTable" },
+      "rdfs:range":  { "@id": "ebs:BusinessRule" }
+    },
+
+    { "@id": "ebs:nlQueryMapsToReport",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "NL query maps to report",
+      "rdfs:comment": "A natural language chat query resolves to a specific EBS report via keyword intent matching (generateChatResponse()). Cardinality: N:1.",
+      "rdfs:domain": { "@id": "ebs:NLQuery" },
+      "rdfs:range":  { "@id": "ebs:EBSReport" }
+    },
+
+    { "@id": "ebs:nlQueryMapsToTab",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "NL query maps to tab",
+      "rdfs:comment": "A natural language query navigates to an application tab or feature.",
+      "rdfs:domain": { "@id": "ebs:NLQuery" },
+      "rdfs:range":  { "@id": "ebs:AppTab" }
+    },
+
+    { "@id": "ebs:roleCanAccessTab",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "role can access tab",
+      "rdfs:comment": "A user role has visibility of an application tab. Employee role sees only Chat, EBS Reports, and Data Connect. Technical role sees all 7 tabs. Cardinality: N:M.",
+      "rdfs:domain": { "@id": "ebs:UserRole" },
+      "rdfs:range":  { "@id": "ebs:AppTab" }
+    },
+
+    { "@id": "ebs:tabHostsFeature",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "tab hosts feature",
+      "rdfs:comment": "An application tab is the host for content or feature nodes. e.g. EBS Reports tab hosts all 26 EBSReport nodes. Cardinality: 1:N.",
+      "rdfs:domain": { "@id": "ebs:AppTab" },
+      "rdfs:range":  { "@id": "owl:Thing" }
+    },
+
+    { "@id": "ebs:academyModuleCoversOracleModule",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "academy module covers oracle module",
+      "rdfs:comment": "An EBS Academy learning module maps to an Oracle EBS functional module (for modules 1–7: AP, AR, GL, iExpense, HRMS, PO, INV). Technical modules 8–15 have no direct OracleModule counterpart. Cardinality: 1:1.",
+      "rdfs:domain": { "@id": "ebs:AcademyModule" },
+      "rdfs:range":  { "@id": "ebs:OracleModule" },
+      "rdf:type": "owl:FunctionalProperty"
+    },
+
+    { "@id": "ebs:academyModuleHasTopic",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "academy module has topic",
+      "rdfs:comment": "An EBS Academy module contains one or more learning topics. Cardinality: 1:N.",
+      "rdfs:domain": { "@id": "ebs:AcademyModule" },
+      "rdfs:range":  { "@id": "ebs:AcademyTopic" }
+    },
+
+    { "@id": "ebs:topicUsesTable",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "topic uses table",
+      "rdfs:comment": "An Academy topic includes SQL examples or theory referencing a specific Oracle EBS table. Cardinality: N:M.",
+      "rdfs:domain": { "@id": "ebs:AcademyTopic" },
+      "rdfs:range":  { "@id": "ebs:OracleTable" }
+    },
+
+    { "@id": "ebs:sqlQueryInCategory",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "SQL query in category",
+      "rdfs:comment": "A SQL Library query belongs to exactly one SQL category. Cardinality: N:1.",
+      "rdfs:domain": { "@id": "ebs:SQLQuery" },
+      "rdfs:range":  { "@id": "ebs:SQLCategory" },
+      "rdf:type": "owl:FunctionalProperty"
+    },
+
+    { "@id": "ebs:sqlCategoryCoversModule",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "SQL category covers module",
+      "rdfs:comment": "A SQL Library category groups queries for a specific Oracle EBS module. Cardinality: N:1.",
+      "rdfs:domain": { "@id": "ebs:SQLCategory" },
+      "rdfs:range":  { "@id": "ebs:OracleModule" }
+    },
+
+    { "@id": "ebs:sqlQueryUsesTable",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "SQL query uses table",
+      "rdfs:comment": "A SQL Library query references one or more Oracle EBS base tables. Cardinality: N:M.",
+      "rdfs:domain": { "@id": "ebs:SQLQuery" },
+      "rdfs:range":  { "@id": "ebs:OracleTable" }
+    },
+
+    { "@id": "ebs:reportHasSQL",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "report has SQL query",
+      "rdfs:comment": "Most EBS reports have an associated SQL query in the SQL Library (EBS_SQL_LIBRARY). Viewable via SQL panel in the report. Cardinality: 1:1.",
+      "rdfs:domain": { "@id": "ebs:EBSReport" },
+      "rdfs:range":  { "@id": "ebs:SQLQuery" },
+      "rdf:type": "owl:FunctionalProperty"
+    },
+
+    { "@id": "ebs:dataConnectSourceMapsToReport",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "Data Connect source maps to report",
+      "rdfs:comment": "An imported dataset (Excel/DB) is fuzzy-mapped via dcAutoMap() to a target EBS report template. The mapping uses normalised string matching (lowercase, strip spaces/underscores/specials) with includes/substring logic. Cardinality: N:1.",
+      "rdfs:domain": { "@id": "ebs:DataConnectSource" },
+      "rdfs:range":  { "@id": "ebs:EBSReport" }
+    },
+
+    { "@id": "ebs:dataConnectHasColumnMapping",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "Data Connect has column mapping",
+      "rdfs:comment": "A Data Connect session produces one ColumnMapping per source column that is mapped to a target EBS column.",
+      "rdfs:domain": { "@id": "ebs:DataConnectSource" },
+      "rdfs:range":  { "@id": "ebs:ColumnMapping" }
+    },
+
+    { "@id": "ebs:columnMappingTargetsReport",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "column mapping targets report",
+      "rdfs:comment": "A ColumnMapping object references the target EBS report whose column set it maps into.",
+      "rdfs:domain": { "@id": "ebs:ColumnMapping" },
+      "rdfs:range":  { "@id": "ebs:EBSReport" }
+    },
+
+    { "@id": "ebs:reportBelongsToOperatingUnit",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "report belongs to operating unit",
+      "rdfs:comment": "An EBS report's SQL is scoped to a specific Oracle EBS Operating Unit via ORG_ID. Cardinality: N:1.",
+      "rdfs:domain": { "@id": "ebs:EBSReport" },
+      "rdfs:range":  { "@id": "ebs:OperatingUnit" }
+    },
+
+    { "@id": "ebs:employeeSubmitsDeleteRequest",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "employee submits delete request",
+      "rdfs:comment": "The Employee user role submits a delete request for an imported report. Technical role approves or rejects. Cardinality: 1:N.",
+      "rdfs:domain": { "@id": "ebs:UserRole" },
+      "rdfs:range":  { "@id": "ebs:DeleteRequest" }
+    },
+
+    { "@id": "ebs:deleteRequestTargetsReport",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "delete request targets report",
+      "rdfs:comment": "Each delete request identifies exactly one EBS report for removal. Cardinality: N:1.",
+      "rdfs:domain": { "@id": "ebs:DeleteRequest" },
+      "rdfs:range":  { "@id": "ebs:EBSReport" },
+      "rdf:type": "owl:FunctionalProperty"
+    },
+
+    { "@id": "ebs:reportMovedToRecycleBin",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "report moved to recycle bin",
+      "rdfs:comment": "When Technical approves a delete or direct-deletes a report, a snapshot is stored in the Recycle Bin (window.RECYCLE_BIN) for possible restoration.",
+      "rdfs:domain": { "@id": "ebs:EBSReport" },
+      "rdfs:range":  { "@id": "ebs:RecycleBinEntry" },
+      "rdf:type": "owl:FunctionalProperty"
+    },
+
+    { "@id": "ebs:chatResolvesIntent",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "chat resolves intent to",
+      "rdfs:comment": "The Chat Assistant (generateChatResponse()) resolves an NL query to a specific EBS report or feature. Minimum confidence threshold: 0.70. Fallback: show_help_menu.",
+      "rdfs:domain": { "@id": "ebs:NLQuery" },
+      "rdfs:range":  { "@id": "ebs:EBSReport" }
+    },
+
+    { "@id": "ebs:sqlAdvisorReviewsQuery",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "SQL Advisor reviews query against rules",
+      "rdfs:comment": "The SQL Advisor Code Review (runCodeReview()) checks user-submitted SQL against all applicable BusinessRules and returns violations with score deductions. Score = 100 − (Critical×20) − (Major×10) − (Minor×5).",
+      "rdfs:domain": { "@id": "ebs:AppTab" },
+      "rdfs:range":  { "@id": "ebs:BusinessRule" }
+    },
+
+    { "@id": "ebs:docGeneratorDocumentsReport",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "Doc Generator documents report",
+      "rdfs:comment": "The Document Generator tab (Technical only) produces a Technical Design Document or Functional Specification for a selected EBS report. Cardinality: 1:N.",
+      "rdfs:domain": { "@id": "ebs:AppTab" },
+      "rdfs:range":  { "@id": "ebs:EBSReport" }
+    },
+
+    { "@id": "ebs:employeeWorksInDepartment",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "employee works in department",
+      "rdfs:comment": "An Oracle HRMS employee is assigned to an organisation unit (HR_ALL_ORGANIZATION_UNITS) via PER_ALL_ASSIGNMENTS_F.",
+      "rdfs:domain": { "@id": "ebs:Employee" },
+      "rdfs:range":  { "@id": "ebs:OperatingUnit" }
+    },
+
+    { "@id": "ebs:supplierBelongsToOperatingUnit",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "supplier belongs to operating unit",
+      "rdfs:comment": "An Oracle AP supplier may be scoped to a specific Operating Unit for multi-org AP processing.",
+      "rdfs:domain": { "@id": "ebs:Supplier" },
+      "rdfs:range":  { "@id": "ebs:OperatingUnit" }
+    },
+
+    { "@id": "ebs:processHasModule",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "process has primary module",
+      "rdfs:comment": "A business process (P2P/O2C/H2R/R2R) has one or more primary Oracle EBS modules.",
+      "rdfs:domain": { "@id": "ebs:BusinessProcessOnt" },
+      "rdfs:range":  { "@id": "ebs:OracleModule" }
+    },
+
+    { "@id": "ebs:complianceRuleAppliesToModule",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "compliance rule applies to module",
+      "rdfs:comment": "A SQL compliance rule applies to one or more Oracle EBS modules.",
+      "rdfs:domain": { "@id": "ebs:ComplianceRuleEntity" },
+      "rdfs:range":  { "@id": "ebs:OracleModule" }
+    },
+
+    { "@id": "ebs:sqlPatternForModule",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "SQL pattern for module",
+      "rdfs:comment": "A SQL query pattern is designed for a specific Oracle EBS module.",
+      "rdfs:domain": { "@id": "ebs:SQLPatternEntity" },
+      "rdfs:range":  { "@id": "ebs:OracleModule" }
+    },
+
+    { "@id": "ebs:MOD_AP",
+      "@type": "ebs:OracleModule",
+      "ebs:moduleCode": "AP",
+      "rdfs:label": "Accounts Payable",
+      "rdfs:comment": "Oracle EBS Accounts Payable module — supplier invoices, payments, aging, withholding tax."
+    },
+    { "@id": "ebs:MOD_AR",
+      "@type": "ebs:OracleModule",
+      "ebs:moduleCode": "AR",
+      "rdfs:label": "Accounts Receivable",
+      "rdfs:comment": "Oracle EBS Accounts Receivable module — customer invoices, AR aging, statements."
+    },
+    { "@id": "ebs:MOD_GL",
+      "@type": "ebs:OracleModule",
+      "ebs:moduleCode": "GL",
+      "rdfs:label": "General Ledger",
+      "rdfs:comment": "Oracle EBS General Ledger module — journal entries, trial balance, budget vs actual."
+    },
+    { "@id": "ebs:MOD_PO",
+      "@type": "ebs:OracleModule",
+      "ebs:moduleCode": "PO",
+      "rdfs:label": "Purchasing",
+      "rdfs:comment": "Oracle EBS Purchasing module — purchase orders, receipts, buyers, spend analysis."
+    },
+    { "@id": "ebs:MOD_HRMS",
+      "@type": "ebs:OracleModule",
+      "ebs:moduleCode": "HRMS",
+      "rdfs:label": "Human Resources",
+      "rdfs:comment": "Oracle HRMS module — employees, assignments, payroll, cost allocation, supervisor hierarchy."
+    },
+    { "@id": "ebs:MOD_INV",
+      "@type": "ebs:OracleModule",
+      "ebs:moduleCode": "INV",
+      "rdfs:label": "Inventory",
+      "rdfs:comment": "Oracle EBS Inventory module — on-hand quantities, item valuations, organization-level filtering."
+    },
+    { "@id": "ebs:MOD_IEXP",
+      "@type": "ebs:OracleModule",
+      "ebs:moduleCode": "IEXP",
+      "rdfs:label": "iExpense",
+      "rdfs:comment": "Oracle iExpense module — employee expense reports, credit card transactions, approval workflows.",
+      "keyTables": ["ap_expense_report_headers_all","ap_expense_report_lines_all","ap_pol_violations_all"],
+      "invariant": ["Expense report requires employee assignment","Receipts required above policy threshold","Approved expense creates AP invoice"],
+      "relatesTo": ["ebs:MOD_AP","ebs:MOD_GL","ebs:MOD_HRMS"]
+    },
+    { "@id": "ebs:MOD_PAY",
+      "@type": "ebs:OracleModule",
+      "ebs:moduleCode": "PAY",
+      "rdfs:label": "Oracle Payroll",
+      "rdfs:comment": "Oracle EBS Payroll — payroll processing, elements, fast formulas, costing, GL transfer, retro pay. H2R process. Release: R12.2.",
+      "keyTables": ["pay_payrolls_f","pay_element_types_f","pay_element_entries_f","pay_payroll_actions","pay_assignment_actions","pay_run_results","pay_costs"],
+      "invariant": ["DateTrack filter required for ALL PAY tables","Payroll run must complete before pre-payments","Pre-payments must complete before costing","Cannot reopen closed payroll period"],
+      "relatesTo": ["ebs:MOD_HRMS","ebs:MOD_GL","ebs:MOD_BEN"]
+    },
+    { "@id": "ebs:MOD_FA",
+      "@type": "ebs:OracleModule",
+      "ebs:moduleCode": "FA",
+      "rdfs:label": "Fixed Assets",
+      "rdfs:comment": "Oracle EBS Fixed Assets — asset lifecycle, depreciation (SL/DDB), mass additions, retirements, R2R process. Release: R12.2.",
+      "keyTables": ["fa_assets","fa_books","fa_categories_b","fa_locations","fa_asset_history","fa_mass_additions","fa_deprn_summary","fa_retirements"],
+      "invariant": ["Asset must be in book before depreciation","Depreciation period must be open","Cannot skip depreciation periods","CIP assets do not depreciate"],
+      "relatesTo": ["ebs:MOD_GL","ebs:MOD_AP"]
+    },
+    { "@id": "ebs:MOD_CM",
+      "@type": "ebs:OracleModule",
+      "ebs:moduleCode": "CM",
+      "rdfs:label": "Cash Management",
+      "rdfs:comment": "Oracle EBS Cash Management — bank reconciliation, cash forecasting, bank statement import. R2R process. Release: R12.2.",
+      "keyTables": ["ce_bank_accounts","ce_bank_branches_v","ce_statement_headers","ce_statement_lines","ce_reconciliations"],
+      "invariant": ["Bank account must be active","Statement must be imported before reconciliation","AP payments reconcile via check number","AR receipts reconcile via receipt number"],
+      "relatesTo": ["ebs:MOD_AP","ebs:MOD_AR","ebs:MOD_GL"]
+    },
+    { "@id": "ebs:MOD_BEN",
+      "@type": "ebs:OracleModule",
+      "ebs:moduleCode": "BEN",
+      "rdfs:label": "Oracle Benefits",
+      "rdfs:comment": "Oracle EBS Benefits — benefit plans, enrollment, life events, COBRA, dependents. H2R process. Release: R12.2.",
+      "keyTables": ["ben_prtt_enrt_rslt_f","ben_pgm_f","ben_pl_f","ben_pl_typ_f","ben_opt_f","ben_ler_f","ben_enrt_rt"],
+      "invariant": ["DateTrack filter required for all BEN tables","Life event required to trigger enrollment","Open enrollment window must be active"],
+      "relatesTo": ["ebs:MOD_HRMS","ebs:MOD_PAY","ebs:MOD_GL"]
+    },
+    { "@id": "ebs:MOD_OM",
+      "@type": "ebs:OracleModule",
+      "ebs:moduleCode": "OM",
+      "rdfs:label": "Order Management",
+      "rdfs:comment": "Oracle EBS Order Management — sales orders, pick/ship, AutoInvoice to AR. O2C process. Release: R12.2.",
+      "keyTables": ["oe_order_headers_all","oe_order_lines_all","oe_order_holds_all","wsh_delivery_details","wsh_new_deliveries","wsh_delivery_assignments"],
+      "invariant": ["Sales order must be booked before pick release","Credit check must pass before booking","AutoInvoice creates AR invoice after ship"],
+      "relatesTo": ["ebs:MOD_AR","ebs:MOD_INV","ebs:MOD_GL"]
+    },
+    { "@id": "ebs:MOD_FND",
+      "@type": "ebs:OracleModule",
+      "ebs:moduleCode": "FND",
+      "rdfs:label": "Oracle Applications Foundation",
+      "rdfs:comment": "Oracle EBS Foundation (FND) — users, responsibilities, concurrent programs, lookups, flexfields (KFF/DFF), profiles, menus, WHO columns. FND_GLOBAL provides session context: USER_ID, ORG_ID, RESP_ID, LOGIN_ID.",
+      "keyTables": ["fnd_user","fnd_concurrent_requests","fnd_concurrent_programs","fnd_lookups","fnd_flex_values","fnd_flex_value_sets","fnd_responsibility","fnd_profile_options","fnd_menus","fnd_form_functions"]
+    },
+
+    { "@id": "ebs:PROC_P2P",
+      "@type": "ebs:BusinessProcessOnt",
+      "ebs:processCode": "P2P",
+      "rdfs:label": "Procure-to-Pay (P2P)",
+      "rdfs:comment": "P2P end-to-end: PR Created → PR Approved → PO Created → PO Approved → Goods Received → Invoice Received & Matched → Invoice Validated & Approved → Payment Processed → GL Posted → Bank Reconciled. Primary modules: PO, AP, INV. Secondary: GL, CM, iEXP.",
+      "keyMilestones": ["PR Created and Approved","PO Created and Approved","Goods Received","Invoice Matched and Validated","Invoice Approved","Payment Processed","Bank Reconciliation Complete","GL Entries Posted"],
+      "accountingEntries": ["PR Approval: DR Requisition Encumbrance CR Budget","PO Approval: DR Obligation CR Requisition Encumbrance","Receipt: DR Receiving Inspection CR AP Accrual","Delivery: DR Inventory CR Receiving Inspection","Invoice Match: DR AP Accrual CR AP Liability","Payment: DR AP Liability CR Cash Clearing","Bank Clear: DR Cash Clearing CR Bank Account"],
+      "relatesTo": ["ebs:MOD_PO","ebs:MOD_AP","ebs:MOD_INV","ebs:MOD_GL","ebs:MOD_CM"]
+    },
+    { "@id": "ebs:PROC_O2C",
+      "@type": "ebs:BusinessProcessOnt",
+      "ebs:processCode": "O2C",
+      "rdfs:label": "Order-to-Cash (O2C)",
+      "rdfs:comment": "O2C end-to-end: Sales Order → Order Booked → Credit Check → Pick Released → Ship Confirmed → AutoInvoice → Invoice Sent → Payment Received → Receipt Applied → GL Posted → Bank Reconciled. Primary modules: OM, INV, AR.",
+      "keyMilestones": ["Sales Order Created","Order Booked","Credit Check Passed","Pick Released","Ship Confirmed","AutoInvoice Created","Payment Received","Receipt Applied","GL Entries Posted"],
+      "accountingEntries": ["Ship Confirm: DR COGS CR Inventory Valuation","Invoice: DR Accounts Receivable CR Revenue","Receipt: DR Bank Account CR Accounts Receivable","Discount: DR Discount Expense CR AR"],
+      "relatesTo": ["ebs:MOD_OM","ebs:MOD_INV","ebs:MOD_AR","ebs:MOD_GL","ebs:MOD_CM"]
+    },
+    { "@id": "ebs:PROC_H2R",
+      "@type": "ebs:BusinessProcessOnt",
+      "ebs:processCode": "H2R",
+      "rdfs:label": "Hire-to-Retire (H2R)",
+      "rdfs:comment": "H2R end-to-end: Requisition → Candidate Selected → Offer Accepted → Employee Hired → Onboarding → Benefits Enrolled → First Payroll → Performance Review → Salary Increase → Termination → Final Payroll → Benefits Terminated → Final Settlement → COBRA. Primary: HRMS, PAY, BEN. APIs: hr_employee_api.create_employee, hr_assignment_api.update_emp_asg, hr_ex_employee_api.actual_termination_emp.",
+      "accountingEntries": ["Payroll Run: DR Salary Expense CR Payroll Liability","Deductions: DR Payroll Liability CR Benefits Payable","Payment: DR Payroll Liability CR Bank Account","GL Transfer: DR Expense Accounts CR Payroll Clearing"],
+      "relatesTo": ["ebs:MOD_HRMS","ebs:MOD_PAY","ebs:MOD_BEN","ebs:MOD_GL"]
+    },
+    { "@id": "ebs:PROC_R2R",
+      "@type": "ebs:BusinessProcessOnt",
+      "ebs:processCode": "R2R",
+      "rdfs:label": "Record-to-Report (R2R)",
+      "rdfs:comment": "R2R: Subledger Transactions → Transfer to GL → Journals → Period Close → Trial Balance → Financial Statements. 10-step close sequence: Close AP → Close AR → Close FA → Close Payroll → Revaluation → Allocations → Intercompany → Trial Balance → Clear Suspense → Close GL.",
+      "periodCloseSequence": ["Step 1: Close AP Period","Step 2: Close AR Period","Step 3: Close FA Period","Step 4: Close Payroll Period","Step 5: GL Revaluation","Step 6: GL Allocations","Step 7: GL Intercompany","Step 8: Review Trial Balance","Step 9: Clear Suspense Account","Step 10: Close GL Period"],
+      "relatesTo": ["ebs:MOD_GL","ebs:MOD_AP","ebs:MOD_AR","ebs:MOD_FA","ebs:MOD_CM","ebs:MOD_PAY"]
+    },
+
+    { "@id": "ebs:COMP_001",
+      "@type": "ebs:ComplianceRuleEntity",
+      "identityKey": "COMP-001",
+      "rdfs:label": "COMP-001 ORG_ID Required (CRITICAL)",
+      "rdfs:comment": "All multi-org _ALL tables require AND table.org_id = :p_org_id. Modules: AP, AR, PO, INV, OM, iEXP, CM, FA. Violation: full table scan, wrong org data, performance degradation, data security breach.",
+      "attributes": { "ruleId":"COMP-001","category":"COMPLIANCE","severity":"CRITICAL","correctUsage":"WHERE table.org_id = :p_org_id","incorrectUsage":"Missing org_id filter" },
+      "affectedModules": ["AP","AR","PO","INV","OM","iEXP","CM","FA"],
+      "affectedTables": ["ap_invoices_all","ap_invoice_distributions_all","ap_checks_all","ap_holds_all","ra_customer_trx_all","ar_cash_receipts_all","po_headers_all","po_lines_all","po_line_locations_all","mtl_material_transactions","mtl_onhand_quantities_detail","oe_order_headers_all","ap_expense_report_headers_all"]
+    },
+    { "@id": "ebs:COMP_002",
+      "@type": "ebs:ComplianceRuleEntity",
+      "identityKey": "COMP-002",
+      "rdfs:label": "COMP-002 DateTrack Filter Required (CRITICAL)",
+      "rdfs:comment": "All HRMS/PAY/BEN DateTracked tables require SYSDATE BETWEEN effective_start_date AND effective_end_date. Without: multiple rows per employee, incorrect aggregations, performance issues.",
+      "attributes": { "ruleId":"COMP-002","category":"COMPLIANCE","severity":"CRITICAL","correctUsage":"WHERE SYSDATE BETWEEN table.effective_start_date AND table.effective_end_date","historicalUsage":"WHERE :p_date BETWEEN table.effective_start_date AND table.effective_end_date","incorrectUsage":"Missing date filter on DateTracked table" },
+      "affectedModules": ["HRMS","PAY","BEN"],
+      "affectedTables": ["per_all_people_f","per_all_assignments_f","hr_all_positions_f","pay_payrolls_f","pay_element_types_f","pay_input_values_f","pay_element_entries_f","pay_element_entry_values_f","ben_prtt_enrt_rslt_f","ben_pgm_f","ben_pl_f","ben_pl_typ_f","ben_opt_f","ben_ler_f"]
+    },
+    { "@id": "ebs:COMP_003",
+      "@type": "ebs:ComplianceRuleEntity",
+      "identityKey": "COMP-003",
+      "rdfs:label": "COMP-003 GL Uses Ledger ID Not Org ID (CRITICAL)",
+      "rdfs:comment": "GL tables use ledger_id NOT org_id. WHERE gjh.ledger_id = :p_ledger_id. Using org_id on GL tables returns wrong/cross-ledger data.",
+      "attributes": { "ruleId":"COMP-003","category":"COMPLIANCE","severity":"CRITICAL","correctUsage":"WHERE gjh.ledger_id = :p_ledger_id","incorrectUsage":"WHERE gjh.org_id = :p_org_id" },
+      "affectedModules": ["GL"],
+      "affectedTables": ["gl_je_headers","gl_je_lines","gl_balances","gl_ledgers","gl_period_statuses","xla_ae_headers","xla_ae_lines"]
+    },
+    { "@id": "ebs:COMP_004",
+      "@type": "ebs:ComplianceRuleEntity",
+      "identityKey": "COMP-004",
+      "rdfs:label": "COMP-004 Cancelled Invoice Exclusion (MAJOR)",
+      "rdfs:comment": "Always exclude cancelled AP invoices: AND aia.cancelled_date IS NULL. Without: cancelled invoices in payment runs, incorrect outstanding amounts, wrong aging.",
+      "attributes": { "ruleId":"COMP-004","category":"COMPLIANCE","severity":"MAJOR","correctUsage":"AND aia.cancelled_date IS NULL","incorrectUsage":"Missing cancelled_date IS NULL" },
+      "affectedModules": ["AP"],
+      "affectedTables": ["ap_invoices_all"]
+    },
+    { "@id": "ebs:COMP_005",
+      "@type": "ebs:ComplianceRuleEntity",
+      "identityKey": "COMP-005",
+      "rdfs:label": "COMP-005 Reversal Distribution Exclusion (MAJOR)",
+      "rdfs:comment": "Exclude reversal distributions: AND aida.reversal_flag != 'Y'. Without: double counting amounts, incorrect GL reconciliation.",
+      "attributes": { "ruleId":"COMP-005","category":"COMPLIANCE","severity":"MAJOR","correctUsage":"AND aida.reversal_flag != 'Y'","incorrectUsage":"Missing reversal_flag filter" },
+      "affectedModules": ["AP"],
+      "affectedTables": ["ap_invoice_distributions_all"]
+    },
+    { "@id": "ebs:COMP_006",
+      "@type": "ebs:ComplianceRuleEntity",
+      "identityKey": "COMP-006",
+      "rdfs:label": "COMP-006 Primary Assignment Filter (MAJOR)",
+      "rdfs:comment": "Always filter primary assignment: AND paaf.primary_flag = 'Y'. Without: multiple assignments per employee, incorrect headcount, duplicate payroll.",
+      "attributes": { "ruleId":"COMP-006","category":"COMPLIANCE","severity":"MAJOR","correctUsage":"AND paaf.primary_flag = 'Y'","incorrectUsage":"Missing primary_flag filter" },
+      "affectedModules": ["HRMS","PAY"],
+      "affectedTables": ["per_all_assignments_f"]
+    },
+    { "@id": "ebs:COMP_007",
+      "@type": "ebs:ComplianceRuleEntity",
+      "identityKey": "COMP-007",
+      "rdfs:label": "COMP-007 Bind Variables Required (CRITICAL/SECURITY)",
+      "rdfs:comment": "Always use bind variables (:p_org_id, :p_vendor_id). Prevents SQL injection, avoids hard parsing, reduces shared pool exhaustion. Applies to all modules.",
+      "attributes": { "ruleId":"COMP-007","category":"SECURITY","severity":"CRITICAL","correctUsage":"WHERE org_id = :p_org_id AND vendor_id = :p_vendor_id","incorrectUsage":"WHERE org_id = 101 AND vendor_id = 5432" },
+      "affectedModules": ["AP","AR","GL","PO","INV","HRMS","PAY","FA","CM","BEN","iEXP","OM"]
+    },
+    { "@id": "ebs:COMP_008",
+      "@type": "ebs:ComplianceRuleEntity",
+      "identityKey": "COMP-008",
+      "rdfs:label": "COMP-008 No SELECT Star in Production (MAJOR)",
+      "rdfs:comment": "Never use SELECT * in production. Causes full row fetch, network waste, prevents index-only scans.",
+      "attributes": { "ruleId":"COMP-008","category":"PERFORMANCE","severity":"MAJOR","correctUsage":"SELECT invoice_num, invoice_amount FROM ap_invoices_all","incorrectUsage":"SELECT * FROM ap_invoices_all" },
+      "affectedModules": ["AP","AR","GL","PO","INV","HRMS","PAY"]
+    },
+    { "@id": "ebs:COMP_009",
+      "@type": "ebs:ComplianceRuleEntity",
+      "identityKey": "COMP-009",
+      "rdfs:label": "COMP-009 No Functions on Indexed Columns (MAJOR)",
+      "rdfs:comment": "Avoid functions on indexed columns (TO_CHAR, UPPER, TRUNC) — prevents index scan, forces full table scan.",
+      "attributes": { "ruleId":"COMP-009","category":"PERFORMANCE","severity":"MAJOR","correctUsage":"WHERE invoice_date BETWEEN DATE '2025-01-01' AND DATE '2025-12-31'","incorrectUsage":"WHERE TO_CHAR(invoice_date,'YYYY') = '2025'" },
+      "affectedModules": ["AP","AR","GL","PO","INV","HRMS","PAY"]
+    },
+    { "@id": "ebs:COMP_010",
+      "@type": "ebs:ComplianceRuleEntity",
+      "identityKey": "COMP-010",
+      "rdfs:label": "COMP-010 HRMS Business Group Filter (CRITICAL)",
+      "rdfs:comment": "HRMS people tables use business_group_id NOT org_id. Using org_id causes cross-business-group data leakage.",
+      "attributes": { "ruleId":"COMP-010","category":"COMPLIANCE","severity":"CRITICAL","correctUsage":"WHERE papf.business_group_id = :p_bg_id","incorrectUsage":"WHERE papf.org_id = :p_org_id" },
+      "affectedModules": ["HRMS"],
+      "affectedTables": ["per_all_people_f","per_all_assignments_f","per_periods_of_service","per_jobs","per_grades","per_business_groups"]
+    },
+
+    { "@id": "ebs:SQLPAT_AP_001",
+      "@type": "ebs:SQLPatternEntity",
+      "identityKey": "SQL-AP-001",
+      "rdfs:label": "SQL-AP-001 AP Invoice Basic Query",
+      "rdfs:comment": "AP Invoice query pattern — all required filters: org_id AND cancelled_date IS NULL AND date BETWEEN. Joins: ap_invoices_all + po_vendors.",
+      "attributes": { "patternId":"SQL-AP-001","module":"AP","difficulty":"BEGINNER" },
+      "requiredFilters": ["ORG_ID filter mandatory","cancelled_date IS NULL","Date range filter"],
+      "templateSQL": "SELECT aia.invoice_num, aia.invoice_date, aia.invoice_amount, aia.approval_status, aia.payment_status_flag, pv.vendor_name FROM ap_invoices_all aia, po_vendors pv WHERE aia.vendor_id = pv.vendor_id AND aia.org_id = :p_org_id AND aia.cancelled_date IS NULL AND aia.invoice_date BETWEEN :p_start_date AND :p_end_date ORDER BY aia.invoice_date DESC"
+    },
+    { "@id": "ebs:SQLPAT_GL_001",
+      "@type": "ebs:SQLPatternEntity",
+      "identityKey": "SQL-GL-001",
+      "rdfs:label": "SQL-GL-001 GL Journal Basic Query",
+      "rdfs:comment": "GL Journal query — uses ledger_id NOT org_id. Required: ledger_id + status='P' + period_name. Joins: gl_je_headers + gl_je_lines + gl_code_combinations_kfv.",
+      "attributes": { "patternId":"SQL-GL-001","module":"GL","difficulty":"BEGINNER" },
+      "requiredFilters": ["ledger_id filter mandatory","status = P for posted journals","period_name filter"],
+      "templateSQL": "SELECT gjh.name, gjh.je_source, gjh.je_category, gjh.period_name, gjh.status, gjh.running_total_dr, gjh.running_total_cr, gjl.je_line_num, gjl.entered_dr, gjl.entered_cr, gcc.concatenated_segments AS account FROM gl_je_headers gjh, gl_je_lines gjl, gl_code_combinations_kfv gcc WHERE gjh.je_header_id = gjl.je_header_id AND gjl.code_combination_id = gcc.code_combination_id AND gjh.ledger_id = :p_ledger_id AND gjh.period_name = :p_period_name AND gjh.status = 'P'"
+    },
+    { "@id": "ebs:SQLPAT_HR_001",
+      "@type": "ebs:SQLPatternEntity",
+      "identityKey": "SQL-HR-001",
+      "rdfs:label": "SQL-HR-001 HRMS Employee Basic (DateTrack)",
+      "rdfs:comment": "HRMS Employee query — DateTrack on papf AND paaf MANDATORY + primary_flag='Y' + business_group_id filter. Without DateTrack: multiple rows per employee.",
+      "attributes": { "patternId":"SQL-HR-001","module":"HRMS","difficulty":"INTERMEDIATE" },
+      "requiredFilters": ["SYSDATE BETWEEN papf.effective_start_date AND papf.effective_end_date","SYSDATE BETWEEN paaf.effective_start_date AND paaf.effective_end_date","paaf.primary_flag = 'Y'","papf.business_group_id = :p_bg_id"]
+    },
+    { "@id": "ebs:SQLPAT_P2P_001",
+      "@type": "ebs:SQLPatternEntity",
+      "identityKey": "SQL-P2P-001",
+      "rdfs:label": "SQL-P2P-001 Complete P2P Status Query",
+      "rdfs:comment": "Full P2P trace: PR → PO → Receipt → Invoice → Payment with GL charge account. Outer joins for optional stages. org_id on pha.org_id.",
+      "attributes": { "patternId":"SQL-P2P-001","module":"PO","difficulty":"ADVANCED" },
+      "requiredFilters": ["org_id filter on pha.org_id","Outer joins for receipt, invoice, payment stages"]
+    },
+    { "@id": "ebs:SQLPAT_O2C_001",
+      "@type": "ebs:SQLPatternEntity",
+      "identityKey": "SQL-O2C-001",
+      "rdfs:label": "SQL-O2C-001 Complete O2C Status Query",
+      "rdfs:comment": "Full O2C trace: Sales Order → Shipment → AR Invoice → Receipt. OM→AR link via rctl.interface_line_attribute1 = TO_CHAR(ooh.order_number) AND interface_line_context = 'ORDER ENTRY'. org_id on ooh.",
+      "attributes": { "patternId":"SQL-O2C-001","module":"OM","difficulty":"ADVANCED" },
+      "requiredFilters": ["org_id on ooh.org_id","Outer joins for shipment/invoice/receipt","interface_line_context = ORDER ENTRY for OM→AR link"]
+    },
+    { "@id": "ebs:SQLPAT_PAY_001",
+      "@type": "ebs:SQLPatternEntity",
+      "identityKey": "SQL-PAY-001",
+      "rdfs:label": "SQL-PAY-001 Payroll Results Query",
+      "rdfs:comment": "Payroll run results — DateTrack on pet, paaf, papf. Filter: action_type='R' AND action_status='C' AND payroll_id AND date_earned BETWEEN.",
+      "attributes": { "patternId":"SQL-PAY-001","module":"PAY","difficulty":"ADVANCED" },
+      "requiredFilters": ["DateTrack on pay_element_types_f","DateTrack on per_all_assignments_f","DateTrack on per_all_people_f","action_type = R","action_status = C"]
+    },
+
+    { "@id": "ebs:DC_MAPPING_SPEC",
+      "@type": "ebs:DataConnectMapping",
+      "rdfs:label": "Data Connect Column Mapping — Complete Specification",
+      "rdfs:comment": "Complete Data Connect workflow for all 3 source types. Excel/CSV: SheetJS → _dcDetectType() → dcAutoMap() → manual adjust → transforms → preview → push. DB Simulated: SQL paste → table parse → demo data. Live DB: proxy POST /query → column map → push.",
+      "attributes": {
+        "excelUploadSteps": "1.Drop file → 2.SheetJS parse → 3.Select sheet → 4.DC.rawHeaders+rawRows → 5._dcDetectType(50 rows sample) → 6.Select target report → 7.dcAutoMap() fuzzy match → 8.Manual column adjustment → 9.Apply transforms → 10.dcApplyMapping() → 11.Preview grid+profiling → 12.dcPushToReport() → 13.Report in EBS Reports tab",
+        "fuzzyMatchAlgorithm": "norm=s.toLowerCase().replace(/[\\s_\\/\\-\\.#]/g,''); match if: norm(target)===norm(src) OR norm(target).includes(norm(src)) OR norm(src).includes(norm(target))",
+        "detectTypeRules": "sample 50 rows: >80% numeric→number, >80% date pattern→date, >80% bool→bool, num+date>50%→mixed, else→text",
+        "confidenceThreshold": "0.70",
+        "transforms": "trim|upper|lower|title|date_fmt(YYYY-MM-DD)|num_fmt(en-US 2 decimals)"
+      },
+      "simulatedTables": ["AP_INVOICES_ALL","AP_SUPPLIERS","AR_CUSTOMERS","GL_JE_HEADERS","PER_ALL_PEOPLE_F","PO_HEADERS_ALL","FND_CONCURRENT_REQUESTS"],
+      "dbProxyContract": "POST proxy_url/query Body: {sql:string, host:string, port:string, sid:string, user:string, credential:string} Response: {columns:string[], rows:any[][]}"
+    },
+
+    { "@id": "ebs:ROLE_EMPLOYEE",
+      "@type": "ebs:UserRole",
+      "rdfs:label": "Employee",
+      "rdfs:comment": "Business user role. Visible tabs: Chat, EBS Reports, Data Connect. Can submit report delete requests."
+    },
+    { "@id": "ebs:ROLE_TECHNICAL",
+      "@type": "ebs:UserRole",
+      "rdfs:label": "Technical",
+      "rdfs:comment": "Power user role. All 7 tabs visible. Can directly delete reports, approve/reject employee requests, and restore from Recycle Bin. Has notification bell."
+    },
+
+    { "@id": "ebs:TAB_CHAT",
+      "@type": "ebs:AppTab",
+      "ebs:tabId": "tab-chat",
+      "rdfs:label": "Chat Assistant",
+      "rdfs:comment": "AI chat assistant tab — keyword-matched NL query → EBS report inline preview. Upload Excel/CSV in chat. Both roles."
+    },
+    { "@id": "ebs:TAB_REPORTS",
+      "@type": "ebs:AppTab",
+      "ebs:tabId": "tab-reports",
+      "rdfs:label": "EBS Reports",
+      "rdfs:comment": "Reports browser tab — 26 EBS reports across 7 modules. Filter, chart, download (CSV/Excel/PDF), view SQL. Both roles."
+    },
+    { "@id": "ebs:TAB_SQL",
+      "@type": "ebs:AppTab",
+      "ebs:tabId": "tab-sql",
+      "rdfs:label": "SQL Advisor",
+      "rdfs:comment": "SQL Advisor tab — 3 sub-tabs: Performance Advisor, Code Review (27 checks), Code Formatter. Technical only."
+    },
+    { "@id": "ebs:TAB_SQLLAB",
+      "@type": "ebs:AppTab",
+      "ebs:tabId": "tab-sqllab",
+      "rdfs:label": "SQL Lab",
+      "rdfs:comment": "SQL Lab tab — browse 500+ pre-written EBS queries by category. AI Prompt-to-SQL generator. Technical only."
+    },
+    { "@id": "ebs:TAB_ACADEMY",
+      "@type": "ebs:AppTab",
+      "ebs:tabId": "tab-academy",
+      "rdfs:label": "EBS Academy",
+      "rdfs:comment": "EBS Academy tab — 15 learning modules with structured content, SVG flowcharts, SQL examples, and AI assistant. Technical only."
+    },
+    { "@id": "ebs:TAB_DATACONNECT",
+      "@type": "ebs:AppTab",
+      "ebs:tabId": "tab-dataconnect",
+      "rdfs:label": "Data Connect",
+      "rdfs:comment": "Data Connect tab — import real data from Excel/CSV, Simulated DB, or Live Oracle DB. Fuzzy column mapping (dcAutoMap), transforms, preview, push to reports. Both roles."
+    },
+    { "@id": "ebs:TAB_DOCGEN",
+      "@type": "ebs:AppTab",
+      "ebs:tabId": "tab-docgen",
+      "rdfs:label": "Doc Generator",
+      "rdfs:comment": "Document Generator tab — generate Technical Design Documents and Functional Specs with SVG diagrams. Technical only."
+    },
+
+    { "@id": "ebs:DC_EXCEL",
+      "@type": "ebs:DataConnectSource",
+      "rdfs:label": "Excel / CSV Upload",
+      "rdfs:comment": "Drag-and-drop .xlsx or .csv file import. SheetJS parses headers and rows. No proxy required. Supports sheet selection and max-rows limit. Column types auto-detected by _dcDetectType()."
+    },
+    { "@id": "ebs:DC_SIMULATED",
+      "@type": "ebs:DataConnectSource",
+      "rdfs:label": "DB Simulated",
+      "rdfs:comment": "In-browser Oracle SQL simulation. Paste a SELECT using real EBS table names — matched to demo data from window.REPORT_DATA. No proxy or real DB required. Supported tables: AP_INVOICES_ALL, AP_SUPPLIERS, AR_CUSTOMERS, GL_JE_HEADERS, PER_ALL_PEOPLE_F, PO_HEADERS_ALL, FND_CONCURRENT_REQUESTS."
+    },
+    { "@id": "ebs:DC_LIVE",
+      "@type": "ebs:DataConnectSource",
+      "rdfs:label": "Live Oracle DB",
+      "rdfs:comment": "Real Oracle database connection via backend proxy. Configure Host/Port/SID/Username/Password/Proxy URL → Test → Run Query → Map → Push. Proxy contract: POST /query {sql, host, port, sid, user, pass} → {columns, rows}. Requires Node.js oracledb or Python cx_Oracle proxy."
+    }
+
+  ]
+}

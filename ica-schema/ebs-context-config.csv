@@ -1,0 +1,49 @@
+config_key,config_value,description
+context_name,oracle-ebs-intelligence-hub,ICA Context Studio context identifier
+context_version,6.0,Schema version — matches app version
+language,en,Primary language
+domain,Oracle EBS R12 Finance / HR / Technical / DASC Security / Team Reuse,Business domain
+confidence_threshold,0.70,Minimum intent confidence to trigger action
+fallback_intent,show_help_menu,Default intent when no match found
+nl_query_csv,ica-schema/csv/natural_language_queries.csv,Natural language query mappings (115+ queries)
+nodes_csv,ica-schema/csv/ebs_nodes.csv,Node definitions
+edges_csv,ica-schema/csv/ebs_edges.csv,Edge definitions
+relationships_csv,ica-schema/csv/ebs_relationships.csv,Relationship definitions
+schema_json,ica-schema/Oracle_EBS_Intelligence_Hub.jsonld,Context Studio upload - schema Oracle_EBS_Intelligence_Hub (v6.0)
+report_count,26,Number of EBS reports in portal
+module_count,7,Oracle EBS modules covered (AP AR GL PO HRMS INV iExpense)
+academy_module_count,15,EBS Academy learning modules
+sql_library_query_count,500+,Pre-written SQL queries in SQL Library
+tab_count,7,App tabs (Chat Reports SQL-Advisor Academy SQL-Lab Data-Connect Doc-Generator)
+user_role_count,2,Login roles (Employee Technical)
+code_review_checks,27,SQL code review checks in SQL Advisor
+table_count,40+,Oracle EBS base tables referenced across all reports
+bot_name,Oracle EBS Intelligence Hub Assistant,Display name for BOB agent
+max_preview_rows,10,Max rows shown in chat preview
+default_export_format,csv,Default download format
+delete_workflow,employee_request_technical_approve,Delete workflow pattern (DASC dual-control governance)
+recycle_bin_enabled,true,Deleted reports can be restored from Recycle Bin
+live_db_proxy_required,true,Live Oracle DB connection requires a backend proxy server
+sql_lab_out_of_scope_detection,true,Non-EBS prompts rejected by SQL Lab AI
+academy_ai_assistant_handlers,40+,Keyword-matched response handlers in Academy AI
+ica_mcp_gateway_enabled,true,IBM ICA Context Studio connected via MCP Gateway
+ica_backend_url,http://localhost:8000,FastAPI backend for ICA MCP proxy
+ica_health_check_interval_sec,30,Seconds between ICA health check polls
+dasc_compliant,true,IBM Digital AppSec Champion (DASC) compliant — role-based access + zero-trust API + audit trail
+dasc_employee_tabs,Chat|EBS Reports|Data Connect,Tabs visible to Employee role (Standard clearance)
+dasc_technical_tabs,Chat|EBS Reports|Data Connect|SQL Advisor|Doc Generator|SQL Lab|EBS Academy,Tabs visible to Technical role (Full clearance)
+dasc_least_privilege,true,Employee role sees ONLY their 3 tabs — no indication of other tabs existing
+dasc_zero_trust_api,true,ICA API key and MCP token stored in backend .env only — never in client code
+dasc_audit_trail,true,Every deletion approval and data push logged with timestamp and role
+dasc_dual_control,true,Report deletion requires Employee request AND Technical approval
+dasc_info_bar_enabled,true,DASC security info bar shown below tab nav after login (role-specific)
+team_reuse_strategy,true,Reusable IBM Consulting accelerator — team-wide deployment in under 1 hour
+team_deploy_command,start-all.bat,One command to start frontend + backend + ICA connectivity
+team_shared_ica_knowledge,true,ICA Context Studio knowledge graph shared across entire consulting team
+team_onboarding_days,2-3,New joiners productive in days not weeks via Academy + Chat
+team_target,IBM Oracle EBS engagement teams,Intended deployment target for reuse
+challenge_team,CookCountyBoB,IBM BoB Challenge team name
+challenge_version,6.0,Submission version
+built_with,IBM Bob,Development tool used for all code generation
+app_version,6.0,Current application version
+deployment_model,start-all.bat,One-command deployment for team use

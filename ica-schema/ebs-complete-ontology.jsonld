@@ -1,0 +1,2008 @@
+{
+  "@context": {
+    "ebs":              "http://ibm.com/oracle-ebs#",
+    "schema":           "http://schema.org/",
+    "owl":              "http://www.w3.org/2002/07/owl#",
+    "rdfs":             "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd":              "http://www.w3.org/2001/XMLSchema#",
+    "dcterms":          "http://purl.org/dc/terms/",
+    "skos":             "http://www.w3.org/2004/02/skos/core#",
+    "id":               "@id",
+    "type":             "@type",
+    "name":             "schema:name",
+    "description":      "schema:description",
+    "attributes":       "ebs:attributes",
+    "identityKey":      "ebs:identityKey",
+    "humanRef":         "ebs:humanRef",
+    "invariant":        "ebs:invariant",
+    "relatesTo":        { "@id": "ebs:relatesTo",        "@type": "@id" },
+    "from":             { "@id": "ebs:from",             "@type": "@id" },
+    "to":               { "@id": "ebs:to",               "@type": "@id" },
+    "precondition":     "ebs:precondition",
+    "postcondition":    "ebs:postcondition",
+    "sqlExample":       "ebs:sqlExample",
+    "businessRule":     "ebs:businessRule",
+    "keyTables":        "ebs:keyTables",
+    "complianceRule":   "ebs:complianceRule",
+    "troubleshootingGuide": "ebs:troubleshootingGuide",
+    "interviewQuestions":   "ebs:interviewQuestions",
+    "learningObjectives":   "ebs:learningObjectives",
+    "Entity":           "ebs:Entity",
+    "Operation":        "ebs:Operation",
+    "BusinessProcess":  "ebs:BusinessProcess",
+    "RICEComponent":    "ebs:RICEComponent",
+    "ModuleKnowledge":  "ebs:ModuleKnowledge"
+  },
+
+  "@graph": [
+
+    {
+      "id": "ebs:",
+      "type": "owl:Ontology",
+      "dcterms:title": "Oracle EBS Enterprise Intelligence and Learning Platform — Complete Ontology",
+      "dcterms:description": "Complete JSON-LD ontology for Oracle EBS R12 Intelligence Hub. Covers all EBS modules (AP, AR, GL, PO, HRMS, PAY, INV, OM, FA, CM, BEN, iEXP), business processes (P2P, O2C, H2R, R2R), RICE components (Reports, Interfaces, Conversions, Extensions), AME, Workflows, OAF, SOA, APEX, ADF, Redwood, compliance rules (COMP-001 to COMP-010), SQL patterns, and ModuleKnowledge instances with step-by-step guides, SQL examples, and interview questions.",
+      "dcterms:version": "5.0-complete",
+      "dcterms:creator": "IBM ICA — Oracle EBS Team",
+      "dcterms:created": "2025-06-01",
+      "owl:versionIRI": "ebs:v5.0-complete",
+      "rdfs:seeAlso": "ica-schema/ebs-ontology.jsonld",
+      "rdfs:comment": "ICA Context Studio primary upload target — import this file to generate the full Oracle EBS Enterprise knowledge graph. Companion to ebs-ontology.jsonld (OWL type definitions)."
+    },
+
+    {
+      "id": "ebs:AP",
+      "type": "Entity",
+      "name": "Accounts Payable",
+      "description": "Oracle EBS AP module — supplier invoice processing, 3-way matching, payment runs, aging, withholding tax, and GL transfer. Primary process: P2P.",
+      "identityKey": "moduleCode: AP",
+      "humanRef": "moduleName",
+      "attributes": {
+        "moduleCode": "AP",
+        "moduleName": "Accounts Payable",
+        "moduleCategory": "FINANCIAL",
+        "businessProcess": "P2P",
+        "releaseVersion": "R12.2",
+        "licenseType": "CORE",
+        "keySchema": "APPS",
+        "commonInvoiceTypes": ["STANDARD","CREDIT","DEBIT","PREPAYMENT","EXPENSE REPORT","INTEREST","MIXED"],
+        "matchingTypes": ["PO_MATCH_2WAY","PO_MATCH_3WAY","PO_MATCH_4WAY","NO_MATCH"],
+        "keySetupSteps": ["Financial Options","Payables Options","Payment Terms","Supplier Master","Banks & Bank Accounts","Payment Documents"]
+      },
+      "invariant": [
+        "All invoices require ORG_ID filter on _ALL tables",
+        "Cancelled invoices must be excluded: AND cancelled_date IS NULL",
+        "Invoice amounts must balance to distributions",
+        "Payment requires approved and validated invoice",
+        "3-way match requires approved PO shipment",
+        "GL date must be in open AP period",
+        "Void payments excluded: AND void_date IS NULL",
+        "iExpense rows filtered: AND source = 'NonValidatedWebExpense'"
+      ],
+      "keyTables": [
+        "ap_invoices_all",
+        "ap_invoice_distributions_all",
+        "ap_invoice_lines_all",
+        "ap_holds_all",
+        "ap_checks_all",
+        "ap_invoice_payments_all",
+        "ap_payment_schedules_all",
+        "ap_expense_report_headers_all",
+        "ap_expense_report_lines_all",
+        "po_vendors",
+        "po_vendor_sites_all",
+        "ap_invoices_interface",
+        "ap_invoice_lines_interface"
+      ],
+      "relatesTo": ["ebs:GL","ebs:PO","ebs:CM","ebs:iEXP","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:AR",
+      "type": "Entity",
+      "name": "Accounts Receivable",
+      "description": "Oracle EBS AR module — customer invoicing via AutoInvoice, receipt application, AR aging, lockbox, revenue recognition, and GL transfer. Primary process: O2C.",
+      "identityKey": "moduleCode: AR",
+      "humanRef": "moduleName",
+      "attributes": {
+        "moduleCode": "AR",
+        "moduleName": "Accounts Receivable",
+        "moduleCategory": "FINANCIAL",
+        "businessProcess": "O2C",
+        "releaseVersion": "R12.2",
+        "keySetupSteps": ["AR System Options","Customer Master","Transaction Types","Receipt Classes","AutoAccounting Rules","AutoInvoice Setup","Revenue Rules"]
+      },
+      "invariant": [
+        "All transactions require ORG_ID filter",
+        "AutoInvoice requires valid customer bill-to site",
+        "Receipts must be applied or on-account (status ACC/UNAPP)",
+        "Revenue recognition rules apply for deferred revenue",
+        "Period close requires GL transfer complete",
+        "Status NOT IN ('CL','VOID') for open items",
+        "complete_flag = 'Y' required for completed transactions"
+      ],
+      "keyTables": [
+        "ra_customer_trx_all",
+        "ra_customer_trx_lines_all",
+        "ar_cash_receipts_all",
+        "ar_receivable_applications_all",
+        "ar_payment_schedules_all",
+        "hz_cust_accounts",
+        "hz_parties",
+        "hz_cust_site_uses_all",
+        "ra_interface_lines_all",
+        "ra_interface_errors_all"
+      ],
+      "relatesTo": ["ebs:GL","ebs:OM","ebs:CM","ebs:O2C_Process"]
+    },
+
+    {
+      "id": "ebs:GL",
+      "type": "Entity",
+      "name": "General Ledger",
+      "description": "Oracle EBS GL module — chart of accounts, ledger setup, journal entry, period close, subledger accounting (XLA), financial reporting (FSG), budget vs actual.",
+      "identityKey": "moduleCode: GL",
+      "humanRef": "moduleName",
+      "attributes": {
+        "moduleCode": "GL",
+        "moduleName": "General Ledger",
+        "moduleCategory": "FINANCIAL",
+        "businessProcess": "R2R",
+        "releaseVersion": "R12.2",
+        "coaStructure": "segment1:Company, segment2:CostCenter, segment3:Account, segment4:SubAccount, segment5:Product",
+        "accountTypes": {"A":"Asset","L":"Liability","O":"OwnerEquity","R":"Revenue","E":"Expense"},
+        "actualFlags": {"A":"Actual","B":"Budget","E":"Encumbrance"},
+        "periodCloseSequence": ["AP Period","AR Period","FA Period","Payroll Period","GL Revaluation","GL Allocations","Intercompany","Trial Balance","Clear Suspense","Close GL Period"]
+      },
+      "invariant": [
+        "GL uses ledger_id NOT org_id for all filtering",
+        "Journals must balance: total_dr = total_cr",
+        "Period must be open before posting journals",
+        "Suspense account must be zero at period end",
+        "COA segment combinations must satisfy cross-validation rules",
+        "summary_flag = 'N' required on gl_code_combinations to avoid double-count",
+        "actual_flag = 'A' for actuals, 'B' for budget, 'E' for encumbrance"
+      ],
+      "keyTables": [
+        "gl_je_headers","gl_je_lines","gl_balances",
+        "gl_code_combinations","gl_code_combinations_kfv",
+        "gl_ledgers","gl_period_statuses","gl_budget_versions",
+        "xla_events","xla_ae_headers","xla_ae_lines",
+        "xla_distribution_links","gl_import_references"
+      ],
+      "relatesTo": ["ebs:AP","ebs:AR","ebs:FA","ebs:PAY","ebs:CM","ebs:R2R_Process"]
+    },
+
+    {
+      "id": "ebs:PO",
+      "type": "Entity",
+      "name": "Purchasing",
+      "description": "Oracle EBS PO module — purchase requisitions, purchase orders (Standard/Blanket/Contract/Planned), receiving, 3-way match, supplier management.",
+      "identityKey": "moduleCode: PO",
+      "humanRef": "moduleName",
+      "attributes": {
+        "moduleCode": "PO",
+        "moduleName": "Purchasing",
+        "moduleCategory": "SUPPLY_CHAIN",
+        "businessProcess": "P2P",
+        "releaseVersion": "R12.2",
+        "poTypes": ["STANDARD","BLANKET","CONTRACT","PLANNED"],
+        "poStatusFlow": ["INCOMPLETE","IN PROCESS","PRE-APPROVED","APPROVED","CLOSED FOR RECEIVING","CLOSED FOR INVOICING","FINALLY CLOSED"]
+      },
+      "invariant": [
+        "All POs require ORG_ID filter",
+        "PO must be in APPROVED status before receipt",
+        "Receipt quantity cannot exceed PO shipment quantity",
+        "Invoice matching requires APPROVED PO",
+        "FINALLY CLOSED PO cannot receive or invoice",
+        "Filter authorization_status = 'APPROVED' for valid POs"
+      ],
+      "keyTables": [
+        "po_headers_all","po_lines_all",
+        "po_line_locations_all","po_distributions_all",
+        "po_requisition_headers_all","po_requisition_lines_all",
+        "po_req_distributions_all",
+        "po_vendors","po_vendor_sites_all",
+        "rcv_shipment_headers","rcv_shipment_lines",
+        "rcv_transactions","rcv_receiving_sub_ledger"
+      ],
+      "relatesTo": ["ebs:AP","ebs:INV","ebs:GL","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:HRMS",
+      "type": "Entity",
+      "name": "Human Resources",
+      "description": "Oracle HRMS module — employee master data, assignments, jobs, grades, positions, organisation units. All tables are DateTracked with effective_start_date / effective_end_date.",
+      "identityKey": "moduleCode: HRMS",
+      "humanRef": "moduleName",
+      "attributes": {
+        "moduleCode": "HRMS",
+        "moduleName": "Human Resources",
+        "moduleCategory": "HUMAN_RESOURCES",
+        "businessProcess": "H2R",
+        "releaseVersion": "R12.2",
+        "personTypes": ["EMPLOYEE","APPLICANT","CONTINGENT WORKER","CONTACT","RETIREE"],
+        "keyAPIs": ["hr_employee_api.create_employee","hr_assignment_api.update_emp_asg","hr_person_api.create_person","hr_ex_employee_api.actual_termination_emp"]
+      },
+      "invariant": [
+        "HRMS uses business_group_id NOT org_id for people tables",
+        "DateTrack filter mandatory: SYSDATE BETWEEN effective_start_date AND effective_end_date",
+        "primary_flag = 'Y' required on per_all_assignments_f to get single active assignment",
+        "effective_start_date AND effective_end_date filter always required",
+        "Person types determine data access and API rules"
+      ],
+      "keyTables": [
+        "per_all_people_f","per_all_assignments_f",
+        "per_periods_of_service","per_jobs",
+        "hr_all_positions_f","hr_all_organization_units",
+        "per_grades","hr_locations_all",
+        "per_business_groups","per_person_types"
+      ],
+      "relatesTo": ["ebs:PAY","ebs:BEN","ebs:GL","ebs:H2R_Process"]
+    },
+
+    {
+      "id": "ebs:PAY",
+      "type": "Entity",
+      "name": "Payroll",
+      "description": "Oracle Payroll — element structures, fast formulas, payroll processing (Run/Pre-payments/Costing/GL Transfer), EFT generation. All tables are DateTracked.",
+      "identityKey": "moduleCode: PAY",
+      "humanRef": "moduleName",
+      "attributes": {
+        "moduleCode": "PAY",
+        "moduleName": "Oracle Payroll",
+        "moduleCategory": "HUMAN_RESOURCES",
+        "businessProcess": "H2R",
+        "releaseVersion": "R12.2",
+        "payrollCycle": ["Pre-Payroll Activities","Payroll Run","Pre-Payment Verification","Pre-Payments","EFT/Checks","Costing","GL Transfer","Year-End Processing"],
+        "elementCategories": ["Earnings","Deductions","Information","Employer Charges"],
+        "keyAPIs": ["pay_element_entry_api.create_element_entry","pay_proposal_api.create_salary_proposal","pay_payroll_api","hr_assignment_api"]
+      },
+      "invariant": [
+        "DateTrack filter required for all pay_element_* _f tables",
+        "Payroll run must complete before pre-payments",
+        "Pre-payments must complete before costing",
+        "Costing must complete before GL transfer",
+        "Cannot reopen closed payroll period",
+        "Fast formulas must compile before payroll run",
+        "action_type = 'R' for payroll runs",
+        "action_status = 'C' for completed payroll actions"
+      ],
+      "keyTables": [
+        "pay_payrolls_f","pay_element_types_f",
+        "pay_element_entries_f","pay_element_entry_values_f",
+        "pay_payroll_actions","pay_assignment_actions",
+        "pay_run_results","pay_run_values_v",
+        "pay_costs","pay_element_classifications"
+      ],
+      "relatesTo": ["ebs:HRMS","ebs:GL","ebs:BEN","ebs:H2R_Process"]
+    },
+
+    {
+      "id": "ebs:INV",
+      "type": "Entity",
+      "name": "Inventory",
+      "description": "Oracle Inventory — item master, subinventory management, on-hand quantities, material transactions, serial/lot control, costing. Requires organization_id filter.",
+      "identityKey": "moduleCode: INV",
+      "humanRef": "moduleName",
+      "attributes": {
+        "moduleCode": "INV",
+        "moduleName": "Oracle Inventory",
+        "moduleCategory": "SUPPLY_CHAIN",
+        "businessProcess": "P2P",
+        "releaseVersion": "R12.2",
+        "costingMethods": ["STANDARD","AVERAGE","FIFO","LIFO","ACTUAL"],
+        "transactionTypes": ["PO RECEIPT","SALES ORDER ISSUE","MISCELLANEOUS","ACCOUNT ALIAS ISSUE","TRANSFER","CYCLE COUNT"]
+      },
+      "invariant": [
+        "All inventory transactions require organization_id filter",
+        "Item must be enabled in the specific organization",
+        "Serial controlled items require serial number",
+        "Lot controlled items require lot number",
+        "Costing method (mtl_parameters) determines valuation logic",
+        "Subinventory must be active for transactions"
+      ],
+      "keyTables": [
+        "mtl_system_items_b","mtl_onhand_quantities_detail",
+        "mtl_material_transactions","mtl_parameters",
+        "mtl_secondary_inventories","cst_item_costs",
+        "mtl_lot_numbers","mtl_serial_numbers",
+        "cst_item_cost_details"
+      ],
+      "relatesTo": ["ebs:PO","ebs:OM","ebs:GL","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:OM",
+      "type": "Entity",
+      "name": "Order Management",
+      "description": "Oracle Order Management — sales orders, order booking, pick/ship/deliver, ATP check, order holds, AutoInvoice trigger for AR. Primary process: O2C.",
+      "identityKey": "moduleCode: OM",
+      "humanRef": "moduleName",
+      "attributes": {
+        "moduleCode": "OM",
+        "moduleName": "Order Management",
+        "moduleCategory": "SUPPLY_CHAIN",
+        "businessProcess": "O2C",
+        "releaseVersion": "R12.2",
+        "orderStatusFlow": ["ENTERED","BOOKED","PICK RELEASED","SHIPPED","CLOSED","CANCELLED"],
+        "holdTypes": ["CREDIT CHECK","MANUAL","ORDER TYPE","SHIPPING","CUSTOMER"]
+      },
+      "invariant": [
+        "Sales order must be BOOKED before pick release",
+        "Credit check must pass before booking",
+        "Item must be shippable for shipment lines",
+        "AutoInvoice creates AR invoice after ship confirm",
+        "Order holds prevent all downstream processing",
+        "Price list required for all standard orders"
+      ],
+      "keyTables": [
+        "oe_order_headers_all","oe_order_lines_all",
+        "oe_order_holds_all","oe_hold_sources_all",
+        "oe_hold_definitions","wsh_delivery_details",
+        "wsh_new_deliveries","wsh_delivery_assignments"
+      ],
+      "relatesTo": ["ebs:AR","ebs:INV","ebs:GL","ebs:O2C_Process"]
+    },
+
+    {
+      "id": "ebs:FA",
+      "type": "Entity",
+      "name": "Fixed Assets",
+      "description": "Oracle Fixed Assets — asset master, depreciation books, mass additions from AP, depreciation run, CIP tracking, retirements, revaluation, GL transfer.",
+      "identityKey": "moduleCode: FA",
+      "humanRef": "moduleName",
+      "attributes": {
+        "moduleCode": "FA",
+        "moduleName": "Fixed Assets",
+        "moduleCategory": "FINANCIAL",
+        "businessProcess": "R2R",
+        "releaseVersion": "R12.2",
+        "depreciationMethods": ["STRAIGHT_LINE (STL)","DOUBLE_DECLINING_BALANCE (DDB)","SUM_OF_YEARS_DIGITS","UNITS_OF_PRODUCTION"],
+        "assetTypes": ["CAPITALIZED","CIP","EXPENSED"],
+        "keyPrograms": ["FADPRUN (Depreciation)","FAPOST (Create Journals)","FAMASADJ (Mass Additions Post)","FAREPORT (Asset Register)"]
+      },
+      "invariant": [
+        "Asset must be in a book before depreciation runs",
+        "Depreciation period must be open",
+        "Cannot skip depreciation periods — must run in sequence",
+        "CIP (Construction-in-Progress) assets do not depreciate",
+        "Retirement requires depreciation catch-up",
+        "Mass additions must be posted to create assets",
+        "transaction_header_id_out IS NULL for current book records"
+      ],
+      "keyTables": [
+        "fa_assets","fa_books","fa_categories_b",
+        "fa_locations","fa_asset_history",
+        "fa_mass_additions","fa_deprn_summary",
+        "fa_retirements","fa_deprn_detail"
+      ],
+      "relatesTo": ["ebs:GL","ebs:AP","ebs:R2R_Process"]
+    },
+
+    {
+      "id": "ebs:CM",
+      "type": "Entity",
+      "name": "Cash Management",
+      "description": "Oracle Cash Management — bank statement import, bank reconciliation, cash forecasting. Links AP payments and AR receipts to bank statement lines.",
+      "identityKey": "moduleCode: CM",
+      "humanRef": "moduleName",
+      "attributes": {
+        "moduleCode": "CM",
+        "moduleName": "Cash Management",
+        "moduleCategory": "FINANCIAL",
+        "businessProcess": "R2R",
+        "releaseVersion": "R12.2",
+        "statementFormats": ["BAI2","SWIFT MT940","SWIFT MT942","MANUAL"],
+        "reconciliationMethods": ["AUTOMATIC","MANUAL","BATCH"]
+      },
+      "invariant": [
+        "Bank account must be active for transactions",
+        "Statement must be imported before reconciliation",
+        "Reconciled items cannot be unreconciled",
+        "Bank account linked to GL cash account via account use",
+        "AP payments reconcile via check number",
+        "AR receipts reconcile via receipt number"
+      ],
+      "keyTables": [
+        "ce_bank_accounts","ce_bank_branches_v",
+        "ce_statement_headers","ce_statement_lines",
+        "ce_reconciliations","ce_forecast_headers",
+        "ce_forecast_lines","ap_bank_accounts_all"
+      ],
+      "relatesTo": ["ebs:AP","ebs:AR","ebs:GL","ebs:R2R_Process"]
+    },
+
+    {
+      "id": "ebs:BEN",
+      "type": "Entity",
+      "name": "Benefits",
+      "description": "Oracle Benefits — plan/program administration, open enrollment, life events, dependent tracking, COBRA. All benefit tables are DateTracked.",
+      "identityKey": "moduleCode: BEN",
+      "humanRef": "moduleName",
+      "attributes": {
+        "moduleCode": "BEN",
+        "moduleName": "Oracle Benefits",
+        "moduleCategory": "HUMAN_RESOURCES",
+        "businessProcess": "H2R",
+        "releaseVersion": "R12.2",
+        "lifeEventTypes": ["BIRTH","DEATH","MARRIAGE","DIVORCE","HIRE","TERMINATION","OPEN ENROLLMENT"]
+      },
+      "invariant": [
+        "DateTrack filter required for all ben_* _f tables",
+        "Employee must be active for benefits enrollment",
+        "Life event required to trigger enrollment change",
+        "Open enrollment window must be active",
+        "Dependent verification required for family plans",
+        "COBRA triggered on qualifying life event"
+      ],
+      "keyTables": [
+        "ben_prtt_enrt_rslt_f","ben_pgm_f","ben_pl_f",
+        "ben_pl_typ_f","ben_opt_f","ben_ler_f",
+        "ben_enrt_rt","ben_prtt_enrt_dpnt"
+      ],
+      "relatesTo": ["ebs:HRMS","ebs:PAY","ebs:GL","ebs:H2R_Process"]
+    },
+
+    {
+      "id": "ebs:iEXP",
+      "type": "Entity",
+      "name": "iExpense",
+      "description": "Oracle iExpense — employee expense report submission, policy enforcement, credit card reconciliation, approval routing, automatic AP invoice creation on approval.",
+      "identityKey": "moduleCode: iEXP",
+      "humanRef": "moduleName",
+      "attributes": {
+        "moduleCode": "iEXP",
+        "moduleName": "Oracle iExpense",
+        "moduleCategory": "FINANCIAL",
+        "businessProcess": "P2P",
+        "releaseVersion": "R12.2",
+        "sourceFilter": "NonValidatedWebExpense",
+        "expenseCategories": ["AIRFARE","HOTEL","MEALS","GROUND TRANSPORT","MISCELLANEOUS","CORPORATE CARD"]
+      },
+      "invariant": [
+        "Expense report requires active employee assignment",
+        "Receipts required above policy threshold",
+        "Policy violations require business justification",
+        "Approved expense report creates AP invoice automatically",
+        "Advances must be applied before reimbursement",
+        "Corporate card transactions must be assigned to expense report",
+        "Filter: AND source = 'NonValidatedWebExpense' to isolate iExpense from AP"
+      ],
+      "keyTables": [
+        "ap_expense_report_headers_all",
+        "ap_expense_report_lines_all",
+        "ap_pol_violations_all",
+        "ap_credit_card_trxns_all",
+        "ap_invoices_all",
+        "ap_checks_all"
+      ],
+      "relatesTo": ["ebs:AP","ebs:GL","ebs:HRMS","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:P2P_Process",
+      "type": "BusinessProcess",
+      "name": "Procure-to-Pay",
+      "description": "End-to-end procurement process: Purchase Requisition → PO → Goods Receipt → AP Invoice Matching → Payment → Bank Reconciliation → GL Posting.",
+      "identityKey": "processCode: P2P",
+      "humanRef": "processName",
+      "attributes": {
+        "processCode": "P2P",
+        "fullName": "Procure-to-Pay",
+        "startEvent": "Purchase Requisition Created",
+        "endEvent": "Supplier Payment Cleared in Bank",
+        "primaryModules": ["PO","AP","INV"],
+        "secondaryModules": ["GL","CM","iEXP"],
+        "keyMilestones": [
+          "PR Created and Approved",
+          "PO Created and Approved",
+          "Goods Received (3-way match trigger)",
+          "AP Invoice Received and Matched",
+          "Invoice Validated and Approved",
+          "Payment Processed",
+          "Bank Reconciliation Complete",
+          "GL Entries Posted"
+        ],
+        "keyTables": [
+          "po_requisition_headers_all","po_headers_all",
+          "rcv_transactions","ap_invoices_all","ap_checks_all"
+        ],
+        "accountingEntries": [
+          "PR Approval: DR Requisition Encumbrance / CR Budgetary Control",
+          "PO Approval: DR Obligation / CR Requisition Encumbrance",
+          "Receipt: DR Receiving Inspection / CR AP Accrual",
+          "Delivery: DR Inventory/Expense / CR Receiving Inspection",
+          "Invoice Match: DR AP Accrual / CR AP Liability",
+          "Payment: DR AP Liability / CR Cash Clearing",
+          "Bank Clear: DR Cash Clearing / CR Bank Account"
+        ],
+        "kpiMetrics": ["Invoice Cycle Time","PO Compliance Rate","Matched Invoice %","Days Payable Outstanding","Payment Discount Captured"]
+      },
+      "relatesTo": ["ebs:PO","ebs:AP","ebs:INV","ebs:GL","ebs:CM"]
+    },
+
+    {
+      "id": "ebs:O2C_Process",
+      "type": "BusinessProcess",
+      "name": "Order-to-Cash",
+      "description": "End-to-end order fulfillment: Sales Order → Pick/Ship → AutoInvoice → Cash Receipt → Application → GL Posting → Bank Reconciliation.",
+      "identityKey": "processCode: O2C",
+      "humanRef": "processName",
+      "attributes": {
+        "processCode": "O2C",
+        "fullName": "Order-to-Cash",
+        "startEvent": "Sales Order Created",
+        "endEvent": "Cash Receipt Applied and Bank Cleared",
+        "primaryModules": ["OM","INV","AR"],
+        "secondaryModules": ["GL","CM","PA"],
+        "keyMilestones": [
+          "Sales Order Created","Order Booked",
+          "Credit Check Passed","Pick Released",
+          "Items Picked","Ship Confirmed",
+          "AutoInvoice Created","Invoice Sent to Customer",
+          "Payment Received","Receipt Applied",
+          "GL Entries Posted","Bank Reconciled"
+        ],
+        "keyTables": [
+          "oe_order_headers_all","wsh_delivery_details",
+          "ra_customer_trx_all","ar_cash_receipts_all",
+          "ar_receivable_applications_all"
+        ],
+        "accountingEntries": [
+          "Ship Confirm: DR COGS / CR Inventory Valuation",
+          "AutoInvoice: DR Accounts Receivable / CR Revenue",
+          "Receipt: DR Bank Account / CR Accounts Receivable",
+          "Discount: DR Sales Discount / CR Accounts Receivable"
+        ]
+      },
+      "relatesTo": ["ebs:OM","ebs:INV","ebs:AR","ebs:GL","ebs:CM"]
+    },
+
+    {
+      "id": "ebs:H2R_Process",
+      "type": "BusinessProcess",
+      "name": "Hire-to-Retire",
+      "description": "End-to-end employee lifecycle: Job Requisition → Hire → Assignment → Benefits → Payroll → Performance → Termination → Final Pay.",
+      "identityKey": "processCode: H2R",
+      "humanRef": "processName",
+      "attributes": {
+        "processCode": "H2R",
+        "fullName": "Hire-to-Retire",
+        "startEvent": "Job Requisition Created",
+        "endEvent": "Final Pay Processed and Employment Terminated",
+        "primaryModules": ["HRMS","PAY","BEN"],
+        "keyMilestones": [
+          "Requisition Created","Candidate Selected",
+          "Offer Extended and Accepted","Employee Hired in System",
+          "Onboarding Complete","Benefits Enrolled",
+          "First Payroll Processed","Annual Performance Review",
+          "Salary Increase Processed","Termination Notice",
+          "Termination Processed","Final Payroll Run",
+          "Benefits Terminated","Final Settlement Paid",
+          "COBRA Notification Sent"
+        ],
+        "accountingEntries": [
+          "Payroll Run: DR Salary Expense / CR Payroll Liability",
+          "Deductions: DR Payroll Liability / CR Benefits/Tax Payable",
+          "Employer Tax: DR Tax Expense / CR Tax Liability",
+          "Payment: DR Payroll Liability / CR Bank Account",
+          "GL Transfer: DR Expense Accounts / CR Payroll Clearing"
+        ],
+        "keyAPIs": [
+          "hr_employee_api.create_employee",
+          "hr_assignment_api.update_emp_asg",
+          "pay_proposal_api.create_salary_proposal",
+          "hr_ex_employee_api.actual_termination_emp",
+          "pay_element_entry_api.create_element_entry"
+        ]
+      },
+      "relatesTo": ["ebs:HRMS","ebs:PAY","ebs:BEN","ebs:GL"]
+    },
+
+    {
+      "id": "ebs:R2R_Process",
+      "type": "BusinessProcess",
+      "name": "Record-to-Report",
+      "description": "Month-end financial close: Subledger Transactions → GL Transfer → Journals → Period Close Sequence → Trial Balance → Financial Statements.",
+      "identityKey": "processCode: R2R",
+      "humanRef": "processName",
+      "attributes": {
+        "processCode": "R2R",
+        "fullName": "Record-to-Report",
+        "startEvent": "Subledger Transactions Created",
+        "endEvent": "Financial Statements Published",
+        "primaryModules": ["GL","AP","AR","FA","CM"],
+        "keyMilestones": [
+          "All AP Invoices Validated","All AP Payments Processed",
+          "AP Transfer to GL Complete","All AR Invoices Generated",
+          "All AR Receipts Applied","AR Transfer to GL Complete",
+          "FA Depreciation Run Complete","FA Transfer to GL Complete",
+          "Payroll Transfer to GL Complete",
+          "Foreign Currency Revaluation Done",
+          "Allocation Journals Complete","Intercompany Eliminations Done",
+          "Suspense Account Cleared to Zero","Trial Balance Reviewed",
+          "FSG Reports Generated","Management Review Complete",
+          "GL Period Closed","Financial Statements Published"
+        ],
+        "periodCloseSequence": [
+          "Step 1: Close AP Period",
+          "Step 2: Close AR Period",
+          "Step 3: Close FA Period",
+          "Step 4: Close Payroll Period",
+          "Step 5: GL Foreign Currency Revaluation",
+          "Step 6: GL Allocation Journals",
+          "Step 7: GL Intercompany Eliminations",
+          "Step 8: Review Trial Balance",
+          "Step 9: Clear Suspense Account",
+          "Step 10: Close GL Period"
+        ]
+      },
+      "relatesTo": ["ebs:GL","ebs:AP","ebs:AR","ebs:FA","ebs:CM","ebs:PAY"]
+    },
+
+    {
+      "id": "ebs:CreateAPInvoice",
+      "type": "Operation",
+      "name": "Create AP Invoice",
+      "description": "Create supplier invoice in AP module with distributions, matching, and accounting.",
+      "from": "ebs:AP",
+      "to": "ebs:GL",
+      "precondition": [
+        "Valid supplier and supplier site must exist",
+        "ORG_ID must be provided and valid",
+        "GL date must be in open AP and GL period",
+        "Invoice amount must match distributions",
+        "Duplicate invoice check must pass (per vendor)"
+      ],
+      "postcondition": [
+        "Invoice created in ap_invoices_all with distributions",
+        "Accounting entries created in XLA (xla_ae_lines)",
+        "AME/Workflow triggered for approval routing",
+        "Payment schedule created in ap_payment_schedules_all"
+      ]
+    },
+
+    {
+      "id": "ebs:ProcessP2PCycle",
+      "type": "Operation",
+      "name": "Process Complete P2P Cycle",
+      "description": "Execute full procure-to-pay cycle from requisition through bank reconciliation.",
+      "from": "ebs:PO",
+      "to": "ebs:CM",
+      "precondition": [
+        "Valid supplier exists in po_vendors",
+        "Budget available for requisition amount",
+        "AME approver hierarchy configured",
+        "Bank account configured for payment",
+        "GL accounts and periods configured"
+      ],
+      "postcondition": [
+        "PR created and approved",
+        "PO created and approved",
+        "Goods received (rcv_transactions)",
+        "Invoice matched, validated, and approved",
+        "Payment processed (ap_checks_all)",
+        "GL entries posted (gl_je_lines)",
+        "Bank reconciliation complete"
+      ]
+    },
+
+    {
+      "id": "ebs:ProcessPeriodClose",
+      "type": "Operation",
+      "name": "Process Month-End Period Close (R2R)",
+      "description": "Execute complete month-end period close sequence across all subledgers and GL.",
+      "from": "ebs:GL",
+      "to": "ebs:GL",
+      "precondition": [
+        "All subledger (AP/AR/FA/PAY) transfers to GL complete",
+        "All journals posted — no journals in 'unposted' status",
+        "Suspense account balance = zero",
+        "Management approval obtained for closure",
+        "All bank reconciliations complete"
+      ],
+      "postcondition": [
+        "GL period status = 'Closed'",
+        "Trial balance in balance (Dr = Cr)",
+        "Financial statements generated via FSG",
+        "Next period opened for transactions",
+        "Archive and backup complete"
+      ]
+    },
+
+    {
+      "id": "ebs:Rule_OrgId_Required",
+      "type": "Entity",
+      "name": "ORG_ID Required on All Multi-Org Tables",
+      "description": "All _ALL multi-org tables must include an AND org_id = :p_org_id filter in every SQL query to prevent cross-org data exposure and ensure correct results.",
+      "identityKey": "ruleId: COMP-001",
+      "humanRef": "ruleName",
+      "attributes": {
+        "ruleId": "COMP-001",
+        "ruleName": "ORG_ID Required",
+        "category": "COMPLIANCE",
+        "severity": "CRITICAL",
+        "codeReviewScore": -20,
+        "affectedModules": ["AP","AR","PO","INV","OM","iEXP","CM","FA"],
+        "affectedTables": [
+          "ap_invoices_all","ap_invoice_distributions_all","ap_checks_all",
+          "ap_holds_all","ap_payment_schedules_all",
+          "ra_customer_trx_all","ra_customer_trx_lines_all","ar_cash_receipts_all",
+          "po_headers_all","po_lines_all","po_line_locations_all",
+          "po_distributions_all","po_requisition_headers_all",
+          "mtl_material_transactions","mtl_onhand_quantities_detail",
+          "oe_order_headers_all","oe_order_lines_all",
+          "ap_expense_report_headers_all"
+        ],
+        "violationImpact": "Full cross-org table scan, wrong org data returned, performance degradation, data security breach, multi-org compliance failure",
+        "correctUsage": "WHERE table.org_id = :p_org_id",
+        "incorrectUsage": "Missing org_id filter entirely from WHERE clause"
+      },
+      "invariant": [
+        "org_id must be present in WHERE clause",
+        "org_id must use bind variable :p_org_id not hardcoded value",
+        "org_id must reference the correct operating unit"
+      ]
+    },
+
+    {
+      "id": "ebs:Rule_DateTrack_Required",
+      "type": "Entity",
+      "name": "DateTrack Effective Date Filter Required",
+      "description": "All HRMS/PAY/BEN DateTracked tables (with _F suffix) require BETWEEN effective_start_date AND effective_end_date filter.",
+      "identityKey": "ruleId: COMP-002",
+      "humanRef": "ruleName",
+      "attributes": {
+        "ruleId": "COMP-002",
+        "ruleName": "DateTrack Filter Required",
+        "category": "COMPLIANCE",
+        "severity": "CRITICAL",
+        "codeReviewScore": -20,
+        "affectedModules": ["HRMS","PAY","BEN"],
+        "affectedTables": [
+          "per_all_people_f","per_all_assignments_f","hr_all_positions_f",
+          "pay_payrolls_f","pay_element_types_f","pay_input_values_f",
+          "pay_element_entries_f","pay_element_entry_values_f",
+          "ben_prtt_enrt_rslt_f","ben_pgm_f","ben_pl_f","ben_pl_typ_f","ben_opt_f","ben_ler_f"
+        ],
+        "violationImpact": "Multiple rows returned per employee/element (one per change history), incorrect aggregations, wrong headcount, payroll calculation errors",
+        "correctUsage": "WHERE SYSDATE BETWEEN table.effective_start_date AND table.effective_end_date",
+        "historicalUsage": "WHERE :p_as_of_date BETWEEN table.effective_start_date AND table.effective_end_date",
+        "incorrectUsage": "Missing date filter on any DateTracked _F table"
+      }
+    },
+
+    {
+      "id": "ebs:Rule_GL_LedgerId",
+      "type": "Entity",
+      "name": "GL Tables Use ledger_id Not org_id",
+      "description": "GL module tables use ledger_id for scoping, NOT org_id. Using org_id on GL tables returns incorrect results or errors.",
+      "identityKey": "ruleId: COMP-003",
+      "humanRef": "ruleName",
+      "attributes": {
+        "ruleId": "COMP-003",
+        "ruleName": "GL Ledger ID Filter",
+        "category": "COMPLIANCE",
+        "severity": "CRITICAL",
+        "codeReviewScore": -20,
+        "affectedModules": ["GL"],
+        "affectedTables": [
+          "gl_je_headers","gl_je_lines","gl_balances",
+          "gl_ledgers","gl_period_statuses","gl_budget_versions",
+          "xla_ae_headers","xla_ae_lines"
+        ],
+        "violationImpact": "Wrong ledger data returned, cross-ledger data mixing, incorrect financial statements, reporting failures",
+        "correctUsage": "WHERE gjh.ledger_id = :p_ledger_id",
+        "incorrectUsage": "WHERE gjh.org_id = :p_org_id  -- WRONG: GL uses ledger_id"
+      }
+    },
+
+    {
+      "id": "ebs:Rule_Cancelled_Invoice_Filter",
+      "type": "Entity",
+      "name": "Exclude Cancelled AP Invoices",
+      "description": "Always exclude cancelled invoices from AP reporting by adding AND cancelled_date IS NULL.",
+      "identityKey": "ruleId: COMP-004",
+      "humanRef": "ruleName",
+      "attributes": {
+        "ruleId": "COMP-004",
+        "ruleName": "Cancelled Invoice Filter",
+        "category": "COMPLIANCE",
+        "severity": "MAJOR",
+        "codeReviewScore": -10,
+        "affectedModules": ["AP"],
+        "affectedTables": ["ap_invoices_all"],
+        "violationImpact": "Cancelled invoices appear in aging, payment runs, and outstanding balance reports — incorrect financial totals",
+        "correctUsage": "AND aia.cancelled_date IS NULL",
+        "incorrectUsage": "Missing cancelled_date IS NULL filter"
+      }
+    },
+
+    {
+      "id": "ebs:Rule_Reversal_Distribution_Filter",
+      "type": "Entity",
+      "name": "Exclude Reversal Distributions",
+      "description": "Always exclude reversal distributions from AP distribution queries: AND reversal_flag != 'Y'.",
+      "identityKey": "ruleId: COMP-005",
+      "humanRef": "ruleName",
+      "attributes": {
+        "ruleId": "COMP-005",
+        "ruleName": "Reversal Distribution Filter",
+        "category": "COMPLIANCE",
+        "severity": "MAJOR",
+        "codeReviewScore": -10,
+        "affectedModules": ["AP"],
+        "affectedTables": ["ap_invoice_distributions_all"],
+        "violationImpact": "Double counting of distribution amounts, incorrect GL reconciliation, wrong cost allocation totals",
+        "correctUsage": "AND aida.reversal_flag != 'Y'",
+        "incorrectUsage": "Missing reversal_flag filter"
+      }
+    },
+
+    {
+      "id": "ebs:Rule_Primary_Assignment_Filter",
+      "type": "Entity",
+      "name": "Primary Assignment Filter Required",
+      "description": "Always filter primary_flag = 'Y' on per_all_assignments_f to return only the primary assignment per employee.",
+      "identityKey": "ruleId: COMP-006",
+      "humanRef": "ruleName",
+      "attributes": {
+        "ruleId": "COMP-006",
+        "ruleName": "Primary Assignment Filter",
+        "category": "COMPLIANCE",
+        "severity": "MAJOR",
+        "codeReviewScore": -10,
+        "affectedModules": ["HRMS","PAY"],
+        "affectedTables": ["per_all_assignments_f"],
+        "violationImpact": "Multiple assignment rows per employee, inflated headcount, duplicate payroll processing risk",
+        "correctUsage": "AND paaf.primary_flag = 'Y'",
+        "incorrectUsage": "Missing primary_flag = 'Y' filter"
+      }
+    },
+
+    {
+      "id": "ebs:Rule_Bind_Variables",
+      "type": "Entity",
+      "name": "Bind Variables Required — No Hard-Coded Literals",
+      "description": "Always use bind variables (:p_name) in SQL queries. Hard-coded literals cause SQL injection risk, hard-parsing, and shared pool exhaustion.",
+      "identityKey": "ruleId: COMP-007",
+      "humanRef": "ruleName",
+      "attributes": {
+        "ruleId": "COMP-007",
+        "ruleName": "Bind Variables Required",
+        "category": "SECURITY",
+        "severity": "CRITICAL",
+        "codeReviewScore": -20,
+        "affectedModules": ["AP","AR","GL","PO","INV","HRMS","PAY","FA","CM","BEN","iEXP","OM"],
+        "violationImpact": "SQL injection vulnerability, hard-parsing on every execution, shared pool exhaustion, security audit failure",
+        "correctUsage": "WHERE org_id = :p_org_id AND vendor_id = :p_vendor_id",
+        "incorrectUsage": "WHERE org_id = 101 AND vendor_id = 5432  -- NEVER hardcode IDs"
+      }
+    },
+
+    {
+      "id": "ebs:Rule_No_Select_Star",
+      "type": "Entity",
+      "name": "No SELECT * in Production SQL",
+      "description": "Never use SELECT * in production Oracle EBS queries. Always name columns explicitly.",
+      "identityKey": "ruleId: COMP-008",
+      "humanRef": "ruleName",
+      "attributes": {
+        "ruleId": "COMP-008",
+        "ruleName": "No SELECT Star",
+        "category": "PERFORMANCE",
+        "severity": "MAJOR",
+        "codeReviewScore": -10,
+        "affectedModules": ["AP","AR","GL","PO","INV","HRMS","PAY"],
+        "violationImpact": "Full row fetch overhead, excess network bandwidth, index-only scan impossible, implicit conversion risks, columns shift on DDL changes",
+        "correctUsage": "SELECT invoice_num, invoice_amount, vendor_name FROM ap_invoices_all aia",
+        "incorrectUsage": "SELECT * FROM ap_invoices_all  -- NEVER use SELECT *"
+      }
+    },
+
+    {
+      "id": "ebs:Rule_No_Function_On_Index",
+      "type": "Entity",
+      "name": "No Functions on Indexed Columns",
+      "description": "Avoid wrapping indexed columns in functions (TRUNC, TO_CHAR, NVL) as this prevents index usage and forces full table scans.",
+      "identityKey": "ruleId: COMP-009",
+      "humanRef": "ruleName",
+      "attributes": {
+        "ruleId": "COMP-009",
+        "ruleName": "No Function on Indexed Column",
+        "category": "PERFORMANCE",
+        "severity": "MAJOR",
+        "codeReviewScore": -10,
+        "affectedModules": ["AP","AR","GL","PO","INV","HRMS","PAY"],
+        "violationImpact": "Index scan disabled, full table scan required, query performance 10x-100x degraded on large _ALL tables",
+        "correctUsage": "WHERE invoice_date BETWEEN :p_start_date AND :p_end_date",
+        "incorrectUsage": "WHERE TO_CHAR(invoice_date, 'YYYY') = '2025'  -- prevents index use"
+      }
+    },
+
+    {
+      "id": "ebs:Rule_HRMS_Business_Group",
+      "type": "Entity",
+      "name": "HRMS Tables Use business_group_id Not org_id",
+      "description": "Oracle HRMS people and assignment tables use business_group_id for filtering, NOT org_id.",
+      "identityKey": "ruleId: COMP-010",
+      "humanRef": "ruleName",
+      "attributes": {
+        "ruleId": "COMP-010",
+        "ruleName": "HRMS Business Group Filter",
+        "category": "COMPLIANCE",
+        "severity": "CRITICAL",
+        "codeReviewScore": -20,
+        "affectedModules": ["HRMS"],
+        "affectedTables": [
+          "per_all_people_f","per_all_assignments_f",
+          "per_periods_of_service","per_jobs","per_grades",
+          "per_business_groups","hr_all_organization_units"
+        ],
+        "violationImpact": "Cross business-group employee data, wrong employee records returned, security policy violation, HRMS data exposure",
+        "correctUsage": "WHERE papf.business_group_id = :p_business_group_id",
+        "incorrectUsage": "WHERE papf.org_id = :p_org_id  -- WRONG: HRMS uses business_group_id"
+      }
+    },
+
+    {
+      "id": "ebs:SQLPattern_AP_Invoice_Basic",
+      "type": "Entity",
+      "name": "AP Basic Invoice Query Pattern",
+      "description": "Standard Oracle EBS pattern for AP invoice queries — includes all required mandatory filters: org_id, cancelled_date, and date range.",
+      "identityKey": "patternId: SQL-AP-001",
+      "humanRef": "patternName",
+      "attributes": {
+        "patternId": "SQL-AP-001",
+        "patternName": "AP Invoice Basic Query",
+        "module": "AP",
+        "patternType": "SELECT",
+        "difficulty": "BEGINNER",
+        "requiredFilters": ["org_id filter mandatory","cancelled_date IS NULL","Date range filter recommended"],
+        "templateSQL": "SELECT aia.invoice_num, aia.invoice_date, aia.invoice_amount, aia.approval_status, aia.payment_status_flag, pv.vendor_name FROM ap_invoices_all aia, po_vendors pv WHERE aia.vendor_id = pv.vendor_id AND aia.org_id = :p_org_id AND aia.cancelled_date IS NULL AND aia.invoice_date BETWEEN :p_start_date AND :p_end_date ORDER BY aia.invoice_date DESC"
+      }
+    },
+
+    {
+      "id": "ebs:SQLPattern_GL_Journal_Basic",
+      "type": "Entity",
+      "name": "GL Basic Journal Query Pattern",
+      "description": "Standard Oracle EBS pattern for GL journal queries — uses ledger_id (NOT org_id), filters posted journals, restricts by period.",
+      "identityKey": "patternId: SQL-GL-001",
+      "humanRef": "patternName",
+      "attributes": {
+        "patternId": "SQL-GL-001",
+        "patternName": "GL Journal Basic Query",
+        "module": "GL",
+        "patternType": "SELECT",
+        "difficulty": "BEGINNER",
+        "requiredFilters": ["ledger_id filter mandatory","status = 'P' for posted journals","period_name filter recommended","summary_flag = 'N' on gl_code_combinations"],
+        "templateSQL": "SELECT gjh.name AS journal_name, gjh.je_source, gjh.je_category, gjh.period_name, gjh.status, gjh.running_total_dr, gjh.running_total_cr, gjl.je_line_num, gjl.entered_dr, gjl.entered_cr, gcc.concatenated_segments AS account FROM gl_je_headers gjh, gl_je_lines gjl, gl_code_combinations_kfv gcc WHERE gjh.je_header_id = gjl.je_header_id AND gjl.code_combination_id = gcc.code_combination_id AND gjh.ledger_id = :p_ledger_id AND gjh.period_name = :p_period_name AND gjh.status = 'P' ORDER BY gjh.je_source, gjh.name, gjl.je_line_num"
+      }
+    },
+
+    {
+      "id": "ebs:SQLPattern_HRMS_Employee_Basic",
+      "type": "Entity",
+      "name": "HRMS Employee Basic Query Pattern",
+      "description": "Standard Oracle EBS HRMS pattern — mandatory DateTrack filters on per_all_people_f AND per_all_assignments_f, primary_flag = 'Y', business_group_id filter.",
+      "identityKey": "patternId: SQL-HR-001",
+      "humanRef": "patternName",
+      "attributes": {
+        "patternId": "SQL-HR-001",
+        "patternName": "HRMS Employee Basic Query",
+        "module": "HRMS",
+        "patternType": "SELECT",
+        "difficulty": "INTERMEDIATE",
+        "requiredFilters": ["DateTrack filter on per_all_people_f","DateTrack filter on per_all_assignments_f","primary_flag = 'Y'","business_group_id filter"],
+        "templateSQL": "SELECT papf.employee_number, papf.full_name, papf.email_address, paaf.assignment_number, haou.name AS department, pj.name AS job_name, hl.location_code, ppos.date_start AS hire_date FROM per_all_people_f papf, per_all_assignments_f paaf, hr_all_organization_units haou, per_jobs pj, hr_locations_all hl, per_periods_of_service ppos WHERE paaf.person_id = papf.person_id AND paaf.organization_id = haou.organization_id AND paaf.job_id = pj.job_id(+) AND paaf.location_id = hl.location_id(+) AND ppos.person_id = papf.person_id AND SYSDATE BETWEEN papf.effective_start_date AND papf.effective_end_date AND SYSDATE BETWEEN paaf.effective_start_date AND paaf.effective_end_date AND paaf.primary_flag = 'Y' AND papf.business_group_id = :p_business_group_id ORDER BY haou.name, papf.last_name"
+      }
+    },
+
+    {
+      "id": "ebs:SQLPattern_P2P_Status",
+      "type": "Entity",
+      "name": "P2P End-to-End Status Query Pattern",
+      "description": "Complete P2P status query — traces a requisition from PR through PO → Receipt → AP Invoice → Payment in a single SQL using outer joins.",
+      "identityKey": "patternId: SQL-P2P-001",
+      "humanRef": "patternName",
+      "attributes": {
+        "patternId": "SQL-P2P-001",
+        "patternName": "P2P Complete Status Query",
+        "module": "PO",
+        "patternType": "SELECT",
+        "difficulty": "ADVANCED",
+        "requiredFilters": ["org_id filter on po_headers_all","Outer joins for optional downstream stages"],
+        "templateSQL": "SELECT prh.segment1 AS req_number, pha.segment1 AS po_number, pv.vendor_name, rsh.receipt_num, aia.invoice_num, aia.invoice_amount, aca.check_number, aca.check_date, aca.amount AS payment_amount, gcc.concatenated_segments AS charge_account FROM po_requisition_headers_all prh, po_requisition_lines_all prl, po_req_distributions_all prd, po_headers_all pha, po_lines_all pla, po_line_locations_all plla, po_distributions_all pda, po_vendors pv, rcv_shipment_headers rsh, rcv_shipment_lines rsl, rcv_transactions rt, ap_invoices_all aia, ap_invoice_distributions_all aida, ap_invoice_payments_all aipa, ap_checks_all aca, gl_code_combinations_kfv gcc WHERE prl.requisition_header_id = prh.requisition_header_id AND prd.requisition_line_id = prl.requisition_line_id AND pda.req_distribution_id = prd.distribution_id AND pda.po_header_id = pha.po_header_id AND pda.po_line_id = pla.po_line_id AND pda.line_location_id = plla.line_location_id AND pha.vendor_id = pv.vendor_id AND rsl.po_header_id(+) = pha.po_header_id AND rsh.shipment_header_id(+) = rsl.shipment_header_id AND rt.shipment_line_id(+) = rsl.shipment_line_id AND rt.transaction_type(+) = 'RECEIVE' AND aida.po_distribution_id(+) = pda.po_distribution_id AND aia.invoice_id(+) = aida.invoice_id AND aipa.invoice_id(+) = aia.invoice_id AND aca.check_id(+) = aipa.check_id AND gcc.code_combination_id = pda.code_combination_id AND pha.org_id = :p_org_id ORDER BY prh.segment1, pha.segment1"
+      }
+    },
+
+    {
+      "id": "ebs:SQLPattern_O2C_Status",
+      "type": "Entity",
+      "name": "O2C End-to-End Status Query Pattern",
+      "description": "Complete O2C status query — traces a sales order from Order → Delivery → AR Invoice → Cash Receipt in a single SQL using outer joins.",
+      "identityKey": "patternId: SQL-O2C-001",
+      "humanRef": "patternName",
+      "attributes": {
+        "patternId": "SQL-O2C-001",
+        "patternName": "O2C Complete Status Query",
+        "module": "OM",
+        "patternType": "SELECT",
+        "difficulty": "ADVANCED",
+        "requiredFilters": ["org_id filter mandatory","Outer joins for optional downstream stages","AutoInvoice interface context filter"]
+      }
+    },
+
+    {
+      "id": "ebs:SQLPattern_Payroll_Results",
+      "type": "Entity",
+      "name": "Payroll Run Results Query Pattern",
+      "description": "Standard Oracle Payroll pattern — queries payroll run results with mandatory DateTrack filters on element and assignment tables.",
+      "identityKey": "patternId: SQL-PAY-001",
+      "humanRef": "patternName",
+      "attributes": {
+        "patternId": "SQL-PAY-001",
+        "patternName": "Payroll Results Query",
+        "module": "PAY",
+        "patternType": "SELECT",
+        "difficulty": "ADVANCED",
+        "requiredFilters": ["DateTrack filters on all PAY _f tables","action_type = 'R' for payroll runs","action_status = 'C' for completed runs"]
+      }
+    },
+
+    {
+      "id": "ebs:EBSReport_InvoiceRegister",
+      "type": "RICEComponent",
+      "name": "Invoice Register (APXINREG)",
+      "description": "RDF-based AP Invoice Register report — lists all invoices for a period with vendor, amount, currency, approval status and payment status.",
+      "identityKey": "reportId: RPT-AP-001",
+      "humanRef": "reportName",
+      "attributes": {
+        "reportId": "RPT-AP-001",
+        "reportName": "Invoice Register",
+        "riceCategory": "R",
+        "reportType": "RDF",
+        "module": "AP",
+        "businessProcess": "P2P",
+        "concurrentProgramName": "APXINREG",
+        "executableMethod": "ORACLE_REPORTS",
+        "outputFormat": "PDF",
+        "orgIdRequired": true,
+        "multiOrgEnabled": true,
+        "keyTables": ["ap_invoices_all","po_vendors","po_vendor_sites_all"],
+        "parameters": ["p_org_id","p_start_date","p_end_date"],
+        "primarySQLQuery": "SELECT aia.invoice_num, aia.invoice_date, aia.invoice_amount, aia.amount_paid, aia.invoice_currency_code, pv.vendor_name, pvs.vendor_site_code, aia.description, aia.payment_status_flag, aia.approval_status FROM ap_invoices_all aia, po_vendors pv, po_vendor_sites_all pvs WHERE aia.vendor_id = pv.vendor_id AND aia.vendor_site_id = pvs.vendor_site_id AND aia.org_id = :p_org_id AND aia.invoice_date BETWEEN :p_start_date AND :p_end_date ORDER BY pv.vendor_name, aia.invoice_num"
+      },
+      "relatesTo": ["ebs:AP","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:EBSReport_PaymentRegister",
+      "type": "RICEComponent",
+      "name": "Payment Register (APXPAWKB)",
+      "description": "BIP-based AP Payment Register — shows all payment details with bank account, vendor, clearing status and void information.",
+      "identityKey": "reportId: RPT-AP-002",
+      "humanRef": "reportName",
+      "attributes": {
+        "reportId": "RPT-AP-002",
+        "reportName": "Payment Register",
+        "riceCategory": "R",
+        "reportType": "BIP",
+        "module": "AP",
+        "businessProcess": "P2P",
+        "concurrentProgramName": "APXPAWKB",
+        "dataDefinition": "AP_PAYMENT_REGISTER_DD",
+        "templateFile": "AP_PAYMENT_REGISTER_TEMPLATE.rtf",
+        "outputFormat": "PDF",
+        "orgIdRequired": true,
+        "keyTables": ["ap_checks_all","po_vendors","po_vendor_sites_all","ap_bank_accounts_all"]
+      },
+      "relatesTo": ["ebs:AP","ebs:CM","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:EBSReport_TrialBalance",
+      "type": "RICEComponent",
+      "name": "Trial Balance Report (GLXTRBAL)",
+      "description": "XML Publisher GL Trial Balance report — opening balance, period activity, and closing balance for all COA segments.",
+      "identityKey": "reportId: RPT-GL-001",
+      "humanRef": "reportName",
+      "attributes": {
+        "reportId": "RPT-GL-001",
+        "reportName": "Trial Balance Report",
+        "riceCategory": "R",
+        "reportType": "XML_PUBLISHER",
+        "module": "GL",
+        "businessProcess": "R2R",
+        "concurrentProgramName": "GLXTRBAL",
+        "dataDefinition": "GL_TRIAL_BALANCE_DD",
+        "templateFile": "GL_TRIAL_BALANCE.rtf",
+        "orgIdRequired": false,
+        "keyTables": ["gl_balances","gl_code_combinations","gl_ledgers"],
+        "parameters": ["p_ledger_id","p_period_name"]
+      },
+      "relatesTo": ["ebs:GL","ebs:R2R_Process"]
+    },
+
+    {
+      "id": "ebs:EBSInterface_APInvoiceOpenInterface",
+      "type": "RICEComponent",
+      "name": "AP Invoice Open Interface",
+      "description": "Inbound interface to load supplier invoices from external systems into Oracle AP via ap_invoices_interface staging table and Payables Open Interface Import concurrent program.",
+      "identityKey": "interfaceId: INT-AP-001",
+      "humanRef": "interfaceName",
+      "attributes": {
+        "interfaceId": "INT-AP-001",
+        "interfaceName": "AP Invoice Open Interface",
+        "riceCategory": "I",
+        "interfaceDirection": "INBOUND",
+        "interfaceMethod": "OPEN_INTERFACE",
+        "dataFormat": "CSV",
+        "frequency": "SCHEDULED",
+        "module": "AP",
+        "openInterfaceTable": "ap_invoices_interface",
+        "stagingTable": "xxcust_ap_inv_stg",
+        "importProgram": "Payables Open Interface Import",
+        "apiPackage": "AP_IMPORT_INVOICES_PKG",
+        "errorTable": "ap_interface_rejections",
+        "transformationRequired": true,
+        "volumePerRun": "Up to 10,000 records"
+      },
+      "relatesTo": ["ebs:AP","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:EBSInterface_GLJournalOpenInterface",
+      "type": "RICEComponent",
+      "name": "GL Journal Open Interface",
+      "description": "Inbound interface to load journal entries from external systems into Oracle GL via gl_interface staging table and Journal Import concurrent program.",
+      "identityKey": "interfaceId: INT-GL-001",
+      "humanRef": "interfaceName",
+      "attributes": {
+        "interfaceId": "INT-GL-001",
+        "interfaceName": "GL Journal Open Interface",
+        "riceCategory": "I",
+        "interfaceDirection": "INBOUND",
+        "interfaceMethod": "OPEN_INTERFACE",
+        "module": "GL",
+        "openInterfaceTable": "gl_interface",
+        "stagingTable": "xxcust_gl_journal_stg",
+        "importProgram": "Journal Import",
+        "transformationRequired": true
+      },
+      "relatesTo": ["ebs:GL","ebs:R2R_Process"]
+    },
+
+    {
+      "id": "ebs:EBSInterface_HREmployeeOpenInterface",
+      "type": "RICEComponent",
+      "name": "HR Employee Open Interface",
+      "description": "Inbound interface to create employees in Oracle HRMS using hr_person_api.create_person API and hr_employee_api.create_employee API.",
+      "identityKey": "interfaceId: INT-HR-001",
+      "humanRef": "interfaceName",
+      "attributes": {
+        "interfaceId": "INT-HR-001",
+        "interfaceName": "HR Employee Open Interface",
+        "riceCategory": "I",
+        "interfaceDirection": "INBOUND",
+        "interfaceMethod": "API_BASED",
+        "module": "HRMS",
+        "openInterfaceTable": "per_all_people_f",
+        "apiPackage": "HR_PERSON_API",
+        "apiProcedure": "create_person",
+        "transformationRequired": true
+      },
+      "relatesTo": ["ebs:HRMS","ebs:H2R_Process"]
+    },
+
+    {
+      "id": "ebs:EBSConversion_SupplierMaster",
+      "type": "RICEComponent",
+      "name": "Supplier Master Data Conversion",
+      "description": "Initial load conversion for Supplier Master Data using AP_VENDOR_PUB.CREATE_VENDOR API. Includes validation, staging, and reconciliation queries.",
+      "identityKey": "conversionId: CONV-AP-001",
+      "humanRef": "conversionName",
+      "attributes": {
+        "conversionId": "CONV-AP-001",
+        "conversionName": "Supplier Master Data Conversion",
+        "riceCategory": "C",
+        "conversionType": "INITIAL_LOAD",
+        "dataCategory": "MASTER_DATA",
+        "module": "AP",
+        "stagingTable": "xxcust_suppliers_stg",
+        "targetTable": "po_vendors",
+        "targetAPI": "AP_VENDOR_PUB.CREATE_VENDOR",
+        "cutoverSequence": 1,
+        "dependsOn": [],
+        "cleansingRules": ["Deduplicate vendor names","Validate tax registration number format","Ensure valid vendor type: VENDOR/EMPLOYEE/TEMPORARY","Map payment terms to EBS term IDs"]
+      },
+      "relatesTo": ["ebs:AP","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:EBSConversion_GLOpeningBalances",
+      "type": "RICEComponent",
+      "name": "GL Opening Balances Conversion",
+      "description": "Open balances conversion to load GL opening balances via gl_interface and Journal Import. Validates debit = credit before import.",
+      "identityKey": "conversionId: CONV-GL-001",
+      "humanRef": "conversionName",
+      "attributes": {
+        "conversionId": "CONV-GL-001",
+        "conversionName": "GL Opening Balances Conversion",
+        "riceCategory": "C",
+        "conversionType": "OPEN_BALANCES",
+        "dataCategory": "HISTORICAL_BALANCES",
+        "module": "GL",
+        "stagingTable": "xxcust_gl_balances_stg",
+        "targetTable": "gl_interface",
+        "targetAPI": "Journal Import",
+        "cutoverSequence": 5,
+        "dependsOn": ["CONV-AP-001"]
+      },
+      "relatesTo": ["ebs:GL","ebs:R2R_Process"]
+    },
+
+    {
+      "id": "ebs:EBSConversion_APOpenInvoices",
+      "type": "RICEComponent",
+      "name": "AP Open Invoices Conversion",
+      "description": "Open items conversion for AP open invoices using Payables Open Interface Import. Depends on Supplier Master and Supplier Sites conversions.",
+      "identityKey": "conversionId: CONV-AP-002",
+      "humanRef": "conversionName",
+      "attributes": {
+        "conversionId": "CONV-AP-002",
+        "conversionName": "AP Open Invoices Conversion",
+        "riceCategory": "C",
+        "conversionType": "OPEN_ITEMS",
+        "dataCategory": "TRANSACTIONAL",
+        "module": "AP",
+        "stagingTable": "xxcust_ap_open_inv_stg",
+        "targetTable": "ap_invoices_interface",
+        "cutoverSequence": 6,
+        "dependsOn": ["CONV-AP-001"]
+      },
+      "relatesTo": ["ebs:AP","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:EBSExtension_APInvoiceTrigger",
+      "type": "RICEComponent",
+      "name": "AP Invoice Validation Trigger (xxcust_ap_inv_biu_trg)",
+      "description": "BEFORE INSERT OR UPDATE database trigger on AP_INVOICES_ALL — validates vendor hold status, checks for duplicate invoices, enforces amount limits, and auto-populates custom attributes.",
+      "identityKey": "extensionId: EXT-AP-001",
+      "humanRef": "extensionName",
+      "attributes": {
+        "extensionId": "EXT-AP-001",
+        "extensionName": "AP Invoice Validation Trigger",
+        "riceCategory": "E",
+        "extensionType": "DATABASE_TRIGGER",
+        "module": "AP",
+        "baseObject": "AP_INVOICES_ALL",
+        "extensionObject": "xxcust_ap_inv_biu_trg",
+        "triggerPoint": "BEFORE_INSERT",
+        "purposeDescription": "Validates vendor hold, checks duplicates, enforces max invoice amount, auto-populates DFF attributes",
+        "upgradeConsiderations": "Must be reviewed and re-validated on every Oracle EBS patch application"
+      },
+      "relatesTo": ["ebs:AP","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:EBSExtension_APUtilsPackage",
+      "type": "RICEComponent",
+      "name": "XXCUST_AP_UTILS_PKG",
+      "description": "Custom AP Utility Package — provides get_vendor_name, get_terms_name, validate_invoice_for_payment, get_outstanding_amount, generate_payment_ref, and log_audit_trail functions and procedures.",
+      "identityKey": "extensionId: EXT-AP-002",
+      "humanRef": "extensionName",
+      "attributes": {
+        "extensionId": "EXT-AP-002",
+        "extensionName": "XXCUST_AP_UTILS_PKG",
+        "riceCategory": "E",
+        "extensionType": "CUSTOM_PACKAGE",
+        "module": "AP",
+        "baseObject": "AP_INVOICES_ALL",
+        "extensionObject": "xxcust_ap_utils_pkg",
+        "technicalApproach": "PL/SQL Package with autonomous transaction audit trail procedure",
+        "relatedPackages": ["xxcust_audit_trail_s"]
+      },
+      "relatesTo": ["ebs:AP","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:AMEConfig_APInvoice",
+      "type": "Entity",
+      "name": "AP Invoice Approval AME Configuration",
+      "description": "AME configuration for AP Invoice approval routing — uses SUPERVISORY approval type with conditions on invoice amount ($10K, $50K, $100K thresholds), vendor type, and invoice type.",
+      "identityKey": "ameId: AME-AP-001",
+      "humanRef": "ameName",
+      "attributes": {
+        "ameId": "AME-AP-001",
+        "ameName": "AP Invoice Approval",
+        "transactionType": "APINVOICE",
+        "module": "AP",
+        "approvalType": "SUPERVISORY",
+        "businessPurpose": "Controls approval routing for AP invoices based on invoice amount, vendor type, and cost center ownership",
+        "conditions": [
+          {"conditionName": "Invoice Amount GT 10000", "attributeName": "INVOICE_AMOUNT", "operator": "GREATER_THAN", "conditionValue": "10000"},
+          {"conditionName": "Invoice Amount GT 50000", "attributeName": "INVOICE_AMOUNT", "operator": "GREATER_THAN", "conditionValue": "50000"},
+          {"conditionName": "Invoice Amount GT 100000", "attributeName": "INVOICE_AMOUNT", "operator": "GREATER_THAN", "conditionValue": "100000"},
+          {"conditionName": "Vendor Type is Employee", "attributeName": "VENDOR_TYPE", "operator": "EQUALS", "conditionValue": "EMPLOYEE"},
+          {"conditionName": "Invoice Type is Credit Memo", "attributeName": "INVOICE_TYPE", "operator": "EQUALS", "conditionValue": "CREDIT"}
+        ],
+        "rules": [
+          {"ruleName": "Standard Invoice Approval", "ruleType": "AUTHORIZATION", "priority": 50, "conditions": ["Invoice Amount GT 10000"], "actionType": "REQUIRE_APPROVAL", "approverType": "SUPERVISOR"},
+          {"ruleName": "Senior Manager Approval", "ruleType": "AUTHORIZATION", "priority": 40, "conditions": ["Invoice Amount GT 50000"], "actionType": "REQUIRE_APPROVAL", "approverType": "JOB_LEVEL", "approverValue": "SENIOR_MANAGER"},
+          {"ruleName": "Executive Approval Required", "ruleType": "AUTHORIZATION", "priority": 30, "conditions": ["Invoice Amount GT 100000"], "actionType": "REQUIRE_APPROVAL", "approverType": "POSITION", "approverValue": "CFO_POSITION"},
+          {"ruleName": "Employee Expense Exception", "ruleType": "EXCEPTION", "priority": 10, "conditions": ["Vendor Type is Employee"], "actionType": "SKIP_APPROVER", "approverType": "SUPERVISOR"}
+        ]
+      },
+      "relatesTo": ["ebs:AP","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:AMEConfig_PO",
+      "type": "Entity",
+      "name": "PO Approval AME Configuration",
+      "description": "AME configuration for Purchase Order approval routing — uses POSITION-based approval with conditions on PO total amount and expenditure type (capital vs operational).",
+      "identityKey": "ameId: AME-PO-001",
+      "humanRef": "ameName",
+      "attributes": {
+        "ameId": "AME-PO-001",
+        "ameName": "PO Approval",
+        "transactionType": "PURCHASE_ORDER",
+        "module": "PO",
+        "approvalType": "POSITION",
+        "conditions": [
+          {"conditionName": "PO Amount GT 25000", "attributeName": "PO_TOTAL_AMOUNT", "operator": "GREATER_THAN", "conditionValue": "25000"},
+          {"conditionName": "PO Amount GT 100000", "attributeName": "PO_TOTAL_AMOUNT", "operator": "GREATER_THAN", "conditionValue": "100000"},
+          {"conditionName": "Capital Expenditure", "attributeName": "EXPENDITURE_TYPE", "operator": "EQUALS", "conditionValue": "CAPITAL"}
+        ],
+        "rules": [
+          {"ruleName": "Standard PO Approval", "ruleType": "AUTHORIZATION", "priority": 50, "conditions": ["PO Amount GT 25000"], "actionType": "REQUIRE_APPROVAL", "approverType": "SUPERVISOR"},
+          {"ruleName": "Capital PO Approval", "ruleType": "AUTHORIZATION", "priority": 20, "conditions": ["PO Amount GT 100000","Capital Expenditure"], "actionType": "REQUIRE_APPROVAL", "approverType": "POSITION", "approverValue": "VP_PROCUREMENT"}
+        ]
+      },
+      "relatesTo": ["ebs:PO","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:Workflow_APInvoiceApproval",
+      "type": "Entity",
+      "name": "AP Invoice Approval Workflow",
+      "description": "Oracle Workflow for AP Invoice Approval — item type APINVOICE, routes invoices through AME-driven approval chain with notifications, reminders, escalations, and rejection handling.",
+      "identityKey": "workflowId: WF-AP-001",
+      "humanRef": "workflowName",
+      "attributes": {
+        "workflowId": "WF-AP-001",
+        "workflowName": "AP Invoice Approval Workflow",
+        "itemType": "APINVOICE",
+        "processName": "AP_INVOICE_APPROVAL",
+        "module": "AP",
+        "workflowType": "APPROVAL",
+        "triggerEvent": "AP Invoice Validation",
+        "commonIssues": [
+          "Notification not received — check wf_roles email_address",
+          "Workflow stuck in ERROR — use wf_engine.handleerror to retry",
+          "Approver role not found — verify AME configuration",
+          "Workflow not starting — check invoice validation status"
+        ],
+        "diagnosticTables": ["wf_item_activity_statuses_v","wf_notifications","wf_errors","wf_roles"]
+      },
+      "relatesTo": ["ebs:AP","ebs:AMEConfig_APInvoice"]
+    },
+
+    {
+      "id": "ebs:Workflow_POApproval",
+      "type": "Entity",
+      "name": "PO Approval Workflow",
+      "description": "Oracle Workflow for Purchase Order Approval — item type POAPPRV, routes POs through approval hierarchy. Diagnostic queries check authorization_status and wf_item_activity_statuses.",
+      "identityKey": "workflowId: WF-PO-001",
+      "humanRef": "workflowName",
+      "attributes": {
+        "workflowId": "WF-PO-001",
+        "workflowName": "PO Approval Workflow",
+        "itemType": "POAPPRV",
+        "processName": "PO_APPROVAL",
+        "module": "PO",
+        "workflowType": "APPROVAL",
+        "triggerEvent": "PO Submission for Approval",
+        "diagnosticTables": ["po_headers_all","wf_item_activity_statuses","wf_activities_vl","po_action_history","per_all_people_f"]
+      },
+      "relatesTo": ["ebs:PO","ebs:AMEConfig_PO"]
+    },
+
+    {
+      "id": "ebs:Workflow_HRNewHire",
+      "type": "Entity",
+      "name": "HR New Hire Notification Workflow",
+      "description": "Oracle Workflow for HR New Hire notifications — item type HRSSA, process HR_HIRE_PROCESS. Notifies IT provisioning, payroll, and benefits teams on employee hire.",
+      "identityKey": "workflowId: WF-HR-001",
+      "humanRef": "workflowName",
+      "attributes": {
+        "workflowId": "WF-HR-001",
+        "workflowName": "HR New Hire Notification",
+        "itemType": "HRSSA",
+        "processName": "HR_HIRE_PROCESS",
+        "module": "HRMS",
+        "workflowType": "NOTIFICATION",
+        "triggerEvent": "Employee Hire Date"
+      },
+      "relatesTo": ["ebs:HRMS","ebs:H2R_Process"]
+    },
+
+    {
+      "id": "ebs:OAF_APInvoicePage",
+      "type": "Entity",
+      "name": "AP Invoice Entry Page OAF Extension",
+      "description": "OAF Controller Extension for AP Invoice Entry Page — adds custom reference number field, mandatory enforcement per org, and custom validation via AM method invocation.",
+      "identityKey": "oafId: OAF-AP-001",
+      "humanRef": "componentName",
+      "attributes": {
+        "oafId": "OAF-AP-001",
+        "componentName": "AP Invoice Entry Page Extension",
+        "componentType": "PAGE",
+        "module": "AP",
+        "javaControllerClass": "xxcust.oracle.apps.ap.invoice.webui.XXCUSTInvoiceEntryPageCO",
+        "basePagePath": "/oracle/apps/ap/invoice/webui/InvoiceEntryPG",
+        "extensionType": "CONTROLLER_EXTENSION",
+        "businessPurpose": "Add custom reference number field, apply ORG-specific mandatory rules, invoke custom validation"
+      },
+      "relatesTo": ["ebs:AP","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:SOA_APInvoiceComposite",
+      "type": "Entity",
+      "name": "AP Invoice SOA Composite Service",
+      "description": "BPEL-based SOA composite for AP Invoice creation — validates invoice, creates via AP interface, sends success/failure notifications. Namespace: http://xmlns.oracle.com/xxcust/APInvoiceComposite.",
+      "identityKey": "soaId: SOA-AP-001",
+      "humanRef": "serviceName",
+      "attributes": {
+        "soaId": "SOA-AP-001",
+        "serviceName": "APInvoiceCompositeService",
+        "serviceType": "BPEL_PROCESS",
+        "module": "AP",
+        "namespace": "http://xmlns.oracle.com/xxcust/APInvoiceComposite",
+        "integrationPattern": "SYNC_REQUEST_REPLY",
+        "errorHandling": "Fault policy with retry and email notification",
+        "securityPolicy": "oracle/wss_username_token_service_policy"
+      },
+      "relatesTo": ["ebs:AP","ebs:EBSInterface_APInvoiceOpenInterface"]
+    },
+
+    {
+      "id": "ebs:APEX_APInvoiceDashboard",
+      "type": "Entity",
+      "name": "AP Invoice Management APEX Application",
+      "description": "APEX 23.x application for AP Invoice approval and monitoring — Interactive Report with approval status filters, bulk approve functionality, invoice amount by month chart, and EBS SSO authentication.",
+      "identityKey": "apexId: APEX-AP-001",
+      "humanRef": "appName",
+      "attributes": {
+        "apexId": "APEX-AP-001",
+        "appName": "AP Invoice Management",
+        "appAlias": "AP_INV_MGMT",
+        "module": "AP",
+        "authenticationScheme": "EBS_SSO",
+        "businessPurpose": "AP Invoice approval and monitoring dashboard integrated with Oracle EBS R12",
+        "pages": [
+          {"pageId": 1, "pageName": "Invoice Approval Dashboard", "pageType": "DASHBOARD", "dataSource": "ap_invoices_all JOIN po_vendors"},
+          {"pageId": 2, "pageName": "Invoice Detail", "pageType": "FORM", "dataSource": "ap_invoices_all"},
+          {"pageId": 3, "pageName": "Invoice Amount by Month", "pageType": "CHART", "dataSource": "ap_invoices_all GROUP BY month"}
+        ]
+      },
+      "relatesTo": ["ebs:AP","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:ADF_APInvoiceApp",
+      "type": "Entity",
+      "name": "AP Invoice ADF Application",
+      "description": "ADF 12.2.1.4 application for AP Invoice management — includes APInvoiceEO entity object with custom validations (amount range, date, duplicate check), AuditTrail via doDML override, and APInvoiceSearchVO view object.",
+      "identityKey": "adfId: ADF-AP-001",
+      "humanRef": "appName",
+      "attributes": {
+        "adfId": "ADF-AP-001",
+        "appName": "AP Invoice ADF App",
+        "module": "AP",
+        "adfVersion": "12.2.1.4",
+        "deploymentTarget": "WEBLOGIC",
+        "businessComponents": [
+          {"componentType": "ENTITY_OBJECT", "componentName": "APInvoiceEO", "baseTable": "AP_INVOICES_ALL"},
+          {"componentType": "VIEW_OBJECT", "componentName": "APInvoiceSearchVO", "sqlQuery": "SELECT aia.*, pv.vendor_name FROM ap_invoices_all aia, po_vendors pv WHERE aia.vendor_id = pv.vendor_id AND aia.org_id = :pOrgId AND aida.reversal_flag != 'Y'"}
+        ]
+      },
+      "relatesTo": ["ebs:AP","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:Redwood_APInvoiceApp",
+      "type": "Entity",
+      "name": "AP Invoice Redwood Application",
+      "description": "Oracle JET 14.0 / VBCS 23.2 Redwood application for AP Invoice management — KPI cards (total, pending, overdue, amount), date filter, status filter, table with multi-row selection, bulk approve, export to Excel.",
+      "identityKey": "redwoodId: RED-AP-001",
+      "humanRef": "componentName",
+      "attributes": {
+        "redwoodId": "RED-AP-001",
+        "componentName": "AP Invoice Redwood App",
+        "componentType": "PAGE",
+        "module": "AP",
+        "oracleJETVersion": "14.0",
+        "vbcsVersion": "23.2",
+        "deploymentTarget": "VBCS",
+        "dataSourceType": "REST_API",
+        "restEndpoint": "/xxcust/rest/v1/invoices",
+        "businessPurpose": "Modern Redwood UI for AP Invoice management with real-time analytics and mobile-responsive design",
+        "kpiComponents": ["Total Invoices","Pending Approval","Overdue Invoices","Total Amount USD"]
+      },
+      "relatesTo": ["ebs:AP","ebs:SOA_APInvoiceComposite"]
+    },
+
+    {
+      "id": "ebs:ModuleKnowledge_AP_Setup",
+      "type": "ModuleKnowledge",
+      "name": "AP Complete Functional Setup Guide",
+      "description": "Complete step-by-step guide for Oracle AP functional setup — Financial Options, Payables Options, Payment Terms, Supplier Master, Banks & Payment Documents. Includes common mistakes and best practices.",
+      "identityKey": "knowledgeId: AP-FUNC-001",
+      "humanRef": "topicName",
+      "attributes": {
+        "knowledgeId": "AP-FUNC-001",
+        "moduleCode": "AP",
+        "topicName": "Accounts Payable Complete Functional Setup",
+        "topicCategory": "SETUP",
+        "difficulty": "INTERMEDIATE",
+        "businessProcess": "P2P"
+      },
+      "learningObjectives": [
+        "Configure AP Financial Options and Payables Options",
+        "Set up payment terms (NET30, 2/10NET30, IMMEDIATE)",
+        "Create Supplier Master with sites and bank accounts",
+        "Configure payment methods (CHECK, EFT, WIRE, CLEARING)",
+        "Understand Multi-Org setup for AP",
+        "Configure AP approval workflows via AME",
+        "Set up AP accounting options and GL accounts"
+      ],
+      "troubleshootingGuide": "Common AP Setup Issues: (1) Supplier site not assigned to correct ORG_ID — navigate to Supplier Sites and assign operating unit. (2) Missing liability account in Financial Options — check Payables > Setup > Options > Financial. (3) Payment terms mismatch between PO and invoice — verify terms ID in ap_terms vs po_headers_all. (4) Bank account not linked to payment document — navigate to Setup > Banks > Payment Documents. (5) GL date basis set incorrectly — check Payables Options > Invoice Options > GL Date Basis.",
+      "relatesTo": ["ebs:AP","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:ModuleKnowledge_AP_InvoiceProcessing",
+      "type": "ModuleKnowledge",
+      "name": "AP Invoice Processing End-to-End Guide",
+      "description": "Complete guide for AP invoice processing — invoice types (Standard/Credit/Debit/Prepayment/Expense/Interest/Mixed), matching types (2-way/3-way/4-way), system holds, approval statuses, and step-by-step entry/validation/posting workflow.",
+      "identityKey": "knowledgeId: AP-FUNC-002",
+      "humanRef": "topicName",
+      "attributes": {
+        "knowledgeId": "AP-FUNC-002",
+        "moduleCode": "AP",
+        "topicName": "AP Invoice Processing End-to-End",
+        "topicCategory": "FUNCTIONAL",
+        "difficulty": "INTERMEDIATE",
+        "businessProcess": "P2P",
+        "invoiceTypes": ["STANDARD","CREDIT","DEBIT","PREPAYMENT","EXPENSE REPORT","INTEREST","MIXED","QUICKDEFAULT"],
+        "matchingTypes": ["2-WAY: Invoice to PO","3-WAY: Invoice to PO + Receipt","4-WAY: Invoice to PO + Receipt + Inspection"],
+        "systemHolds": ["AMOUNT RANGE","DIST VARIANCE","DUPLICATE INVOICE","FUTURE PERIOD","INVALID PO","MATCHING REQUIRED","MAX AMOUNT","NO RATE","PO NOT APPROVED","PRICE","QTY ORD","QTY REC","VENDOR"],
+        "approvalStatuses": ["NEVER APPROVED","NEEDS REAPPROVAL","APPROVED","CANCELLED","UNPAID","AVAILABLE"]
+      },
+      "learningObjectives": [
+        "Understand all AP invoice types and when to use each",
+        "Enter and validate standard invoices",
+        "Process credit memos, debit memos, and prepayments",
+        "Understand 2-way, 3-way, 4-way matching",
+        "Handle invoice holds and release strategies",
+        "Approve invoices and manage approval workflow",
+        "Post invoices to GL via Create Accounting",
+        "Transfer AP to GL and reconcile"
+      ],
+      "relatesTo": ["ebs:AP","ebs:P2P_Process","ebs:Workflow_APInvoiceApproval"]
+    },
+
+    {
+      "id": "ebs:ModuleKnowledge_GL_Setup",
+      "type": "ModuleKnowledge",
+      "name": "General Ledger Complete Functional Setup Guide",
+      "description": "Complete GL setup guide — Chart of Accounts (Key Flexfield GL#), Ledger configuration (Primary/Secondary/Reporting Currency), Accounting Calendar, Journal Sources/Categories, Subledger Accounting (XLA flow), Period Close process (10-step sequence).",
+      "identityKey": "knowledgeId: GL-FUNC-001",
+      "humanRef": "topicName",
+      "attributes": {
+        "knowledgeId": "GL-FUNC-001",
+        "moduleCode": "GL",
+        "topicName": "General Ledger Complete Functional Setup",
+        "topicCategory": "SETUP",
+        "difficulty": "ADVANCED",
+        "businessProcess": "R2R",
+        "coaSegments": {"segment1": "Company/Entity (4 chars)","segment2": "Cost Center (4 chars)","segment3": "Account (6 chars)","segment4": "Sub-Account (4 chars)","segment5": "Product/Project (4 chars)"},
+        "accountTypes": {"A": "Asset","L": "Liability","O": "Owner Equity","R": "Revenue","E": "Expense"},
+        "periodCloseSequence": ["Step 1: Close AP Period","Step 2: Close AR Period","Step 3: Close FA Period","Step 4: Close Payroll Period","Step 5: GL Foreign Currency Revaluation","Step 6: GL Allocation Journals","Step 7: GL Intercompany Eliminations","Step 8: Review Trial Balance","Step 9: Clear Suspense Account","Step 10: Close GL Period"],
+        "xlaFlow": "Subledger Transaction → Create Accounting (XLA) → xla_ae_lines → Transfer to GL → gl_je_lines → gl_balances"
+      },
+      "learningObjectives": [
+        "Design and configure Chart of Accounts structure",
+        "Set up Primary and Secondary Ledgers",
+        "Configure Accounting Calendar with adjustment periods",
+        "Understand Subledger Accounting (SLA/XLA) flow",
+        "Set up Journal Sources and Categories",
+        "Execute complete 10-step period close sequence",
+        "Configure FSG Financial Statement Generator",
+        "Set up GL Security Rules and Cross Validation Rules"
+      ],
+      "relatesTo": ["ebs:GL","ebs:R2R_Process"]
+    },
+
+    {
+      "id": "ebs:ModuleKnowledge_AR_Setup",
+      "type": "ModuleKnowledge",
+      "name": "Accounts Receivable Complete Functional Setup Guide",
+      "description": "Complete AR setup — AR System Options, Customer Master (Header/Sites/Profile Class), Transaction Types (INV/CM/DM/DEP/GUAR), Receipt Classes/Methods, AutoAccounting Rules (6 account types), AutoInvoice setup, Revenue Recognition (ASC 606 contingencies), Lockbox processing, AR Aging buckets.",
+      "identityKey": "knowledgeId: AR-FUNC-001",
+      "humanRef": "topicName",
+      "attributes": {
+        "knowledgeId": "AR-FUNC-001",
+        "moduleCode": "AR",
+        "topicName": "Accounts Receivable Complete Functional Setup",
+        "topicCategory": "SETUP",
+        "difficulty": "INTERMEDIATE",
+        "businessProcess": "O2C",
+        "transactionTypes": ["INV: Invoice (positive)","CM: Credit Memo (negative)","DM: Debit Memo (positive)","DEP: Deposit","GUAR: Guarantee"],
+        "agingBuckets": ["Current (0-30 days)","31-60 days","61-90 days","91-120 days","Over 120 days"],
+        "lockboxFormats": ["BAI","BAI2"],
+        "autoInvoiceTables": ["ra_interface_lines_all","ra_interface_distributions_all","ra_interface_salescredits_all","ra_interface_errors_all"]
+      },
+      "learningObjectives": [
+        "Configure AR System Options and AutoCash rules",
+        "Create Customer Master with Bill-To and Ship-To sites",
+        "Set up Transaction Types and Receipt Classes",
+        "Configure AutoAccounting rules for account derivation",
+        "Set up AutoInvoice for OM and project invoicing",
+        "Understand Revenue Recognition and ASC 606 contingencies",
+        "Process Lockbox for automated cash application",
+        "Configure AR aging and dunning"
+      ],
+      "relatesTo": ["ebs:AR","ebs:O2C_Process"]
+    },
+
+    {
+      "id": "ebs:ModuleKnowledge_O2C_Process",
+      "type": "ModuleKnowledge",
+      "name": "Order-to-Cash Complete Process Guide",
+      "description": "Complete O2C cycle — Sales Order (ENTERED→BOOKED→AWAITING SHIPPING→PICKED→SHIPPED→CLOSED), credit check, ATP check, Pick Release, Ship Confirm, AutoInvoice trigger, receipt application, GL transfer. Full accounting entries at each step.",
+      "identityKey": "knowledgeId: O2C-PROC-001",
+      "humanRef": "topicName",
+      "attributes": {
+        "knowledgeId": "O2C-PROC-001",
+        "moduleCode": "OM",
+        "topicName": "Order-to-Cash Complete Process",
+        "topicCategory": "FUNCTIONAL",
+        "difficulty": "ADVANCED",
+        "businessProcess": "O2C",
+        "orderTypes": ["Standard Orders","Return Orders (RMA)","Internal Orders","Drop Shipment","Back-to-Back"],
+        "orderStatusFlow": ["ENTERED","BOOKED","AWAITING SHIPPING","PICKED","SHIPPED","CLOSED"],
+        "accountingEntries": {
+          "shipConfirm": "DR: COGS Account / CR: Inventory Valuation",
+          "autoInvoice": "DR: Accounts Receivable / CR: Revenue Account",
+          "receiptApplication": "DR: Bank/Cash Account / CR: Accounts Receivable",
+          "discountTaken": "DR: Discount Expense / CR: Accounts Receivable"
+        }
+      },
+      "learningObjectives": [
+        "Understand complete O2C 8-step cycle with accounting entries",
+        "Create and book Sales Orders with credit check",
+        "Process Pick Release and Ship Confirm",
+        "Generate AR Invoice via AutoInvoice",
+        "Apply customer receipts and handle discounts",
+        "Handle order exceptions, holds, and returns",
+        "Query O2C status end-to-end across OM, WMS, AR tables"
+      ],
+      "relatesTo": ["ebs:OM","ebs:AR","ebs:INV","ebs:O2C_Process"]
+    },
+
+    {
+      "id": "ebs:ModuleKnowledge_P2P_Process",
+      "type": "ModuleKnowledge",
+      "name": "Procure-to-Pay Complete Process Guide",
+      "description": "Complete P2P cycle — PR creation/approval, PO types (Standard/Blanket/Contract/Planned), approval workflow, goods receipt (RCV transactions), 3-way matching, invoice validation/approval, payment batch, bank reconciliation. Full accounting journal entries at each step.",
+      "identityKey": "knowledgeId: P2P-PROC-001",
+      "humanRef": "topicName",
+      "attributes": {
+        "knowledgeId": "P2P-PROC-001",
+        "moduleCode": "PO",
+        "topicName": "Procure-to-Pay Complete Process",
+        "topicCategory": "FUNCTIONAL",
+        "difficulty": "ADVANCED",
+        "businessProcess": "P2P",
+        "poTypes": ["STANDARD","BLANKET","CONTRACT","PLANNED"],
+        "poStatusFlow": ["INCOMPLETE","IN PROCESS","PRE-APPROVED","APPROVED","CLOSED FOR RECEIVING","CLOSED FOR INVOICING","FINALLY CLOSED"],
+        "accountingEntries": {
+          "prApproval": "DR: Requisition Encumbrance / CR: Budgetary Control",
+          "poApproval": "DR: Obligation / CR: Requisition Encumbrance",
+          "goodsReceipt": "DR: Receiving Inspection / CR: AP Accrual",
+          "delivery": "DR: Inventory/Expense / CR: Receiving Inspection",
+          "invoiceMatch": "DR: AP Accrual / CR: AP Liability",
+          "payment": "DR: AP Liability / CR: Cash Clearing",
+          "bankClear": "DR: Cash Clearing / CR: Bank Account"
+        }
+      },
+      "learningObjectives": [
+        "Understand complete P2P cycle with accounting entries at each step",
+        "Create and approve Purchase Requisitions and Purchase Orders",
+        "Process goods receipt and 3-way matching",
+        "Handle AP invoice validation, holds, and approval",
+        "Process payment batches and bank reconciliation",
+        "Query P2P status end-to-end across PO, RCV, AP, CM tables"
+      ],
+      "relatesTo": ["ebs:PO","ebs:AP","ebs:INV","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:ModuleKnowledge_HRMS",
+      "type": "ModuleKnowledge",
+      "name": "HRMS Complete Setup and Processing Guide",
+      "description": "Complete HRMS guide — Enterprise Structure (Business Group → Legal Entity → Operating Unit → HR Organization → Department → Location), DateTrack mechanism (CORRECTION/UPDATE/UPDATE_OVERRIDE modes), Employee Master (person types, assignment structure, primary_flag), Hire/Transfer/Termination processes, API reference.",
+      "identityKey": "knowledgeId: HRMS-FUNC-001",
+      "humanRef": "topicName",
+      "attributes": {
+        "knowledgeId": "HRMS-FUNC-001",
+        "moduleCode": "HRMS",
+        "topicName": "HRMS Complete Setup and Processing",
+        "topicCategory": "FUNCTIONAL",
+        "difficulty": "ADVANCED",
+        "businessProcess": "H2R",
+        "dateTrackModes": ["CORRECTION: Fix current record only","UPDATE: Insert new record from today, preserve history","UPDATE_OVERRIDE: Override all future changes","UPDATE_CHANGE_INSERT: Complex history management"],
+        "assignmentStatusTypes": ["ACTIVE_ASSIGN","SUSPEND_ASSIGN","TERM_ASSIGN","END"],
+        "terminationReasons": ["RESIGNATION","RETIREMENT","REDUNDANCY","DISMISSAL","END_OF_CONTRACT","DECEASED"],
+        "keyAPIs": ["hr_employee_api.create_employee","hr_assignment_api.update_emp_asg","pay_proposal_api.create_salary_proposal","hr_ex_employee_api.actual_termination_emp"]
+      },
+      "learningObjectives": [
+        "Configure HRMS Enterprise Structure (Business Group to Location)",
+        "Understand and apply DateTrack mechanism correctly",
+        "Hire employees using hr_employee_api.create_employee",
+        "Process transfers with hr_assignment_api.update_emp_asg",
+        "Process terminations with hr_ex_employee_api.actual_termination_emp",
+        "Write correct HRMS SQL with mandatory DateTrack filters",
+        "Query HRMS supervisor hierarchy using CONNECT BY"
+      ],
+      "relatesTo": ["ebs:HRMS","ebs:H2R_Process"]
+    },
+
+    {
+      "id": "ebs:ModuleKnowledge_Payroll",
+      "type": "ModuleKnowledge",
+      "name": "Oracle Payroll Complete Setup and Processing Guide",
+      "description": "Complete Payroll guide — Payroll structure, Element classifications (Earnings/Deductions/Information), Fast Formulas, 8-step processing cycle (Pre-Payroll → Run → Pre-Payment Verification → Pre-Payments → EFT → Costing → GL Transfer → Post-Payroll), retroactive processing, balance architecture.",
+      "identityKey": "knowledgeId: PAY-FUNC-001",
+      "humanRef": "topicName",
+      "attributes": {
+        "knowledgeId": "PAY-FUNC-001",
+        "moduleCode": "PAY",
+        "topicName": "Oracle Payroll Complete Setup and Processing",
+        "topicCategory": "FUNCTIONAL",
+        "difficulty": "EXPERT",
+        "businessProcess": "H2R",
+        "payrollCycle": ["1. Pre-Payroll Activities","2. Payroll Run","3. Pre-Payment Verification","4. Pre-Payments","5. EFT/Checks generation","6. Costing","7. Transfer to GL","8. Post-Payroll (payslips, year-end)"],
+        "elementCategories": ["REGULAR_EARNINGS","SUPPLEMENTAL_EARNINGS","IMPUTED_EARNINGS","PRE_TAX_DEDUCTIONS","INVOLUNTARY_DEDUCTIONS","VOLUNTARY_DEDUCTIONS","EMPLOYER_CHARGES"],
+        "costingTypes": ["STANDARD","DISTRIBUTED","DYNAMIC_DISTRIBUTED","MANUAL"],
+        "keyBalances": ["GROSS_EARNINGS","NET_ASG_RUN","REGULAR_EARNINGS","FEDERAL_INCOME_TAX","STATE_INCOME_TAX","SOCIAL_SECURITY_EE","MEDICARE_EE"]
+      },
+      "learningObjectives": [
+        "Set up payroll definitions and calendars",
+        "Configure element classifications, links and entries",
+        "Write Fast Formula for custom payroll calculations",
+        "Execute complete 8-step payroll processing cycle",
+        "Process retroactive pay (RetroPay and RetroCosting)",
+        "Configure payroll costing and GL transfer",
+        "Query payroll run results with mandatory DateTrack filters"
+      ],
+      "relatesTo": ["ebs:PAY","ebs:HRMS","ebs:H2R_Process"]
+    },
+
+    {
+      "id": "ebs:ModuleKnowledge_CashManagement",
+      "type": "ModuleKnowledge",
+      "name": "Oracle Cash Management Complete Guide",
+      "description": "Complete CM guide — Bank Setup hierarchy (Bank→Branch→Account→Uses), Bank Statement import (BAI2 format records 01/02/03/16/49/98/99), Automatic/Manual reconciliation, Cash Forecasting (AP due + AR expected - outstanding payments), integration with AP and AR.",
+      "identityKey": "knowledgeId: CM-FUNC-001",
+      "humanRef": "topicName",
+      "attributes": {
+        "knowledgeId": "CM-FUNC-001",
+        "moduleCode": "CM",
+        "topicName": "Oracle Cash Management Complete Setup",
+        "topicCategory": "FUNCTIONAL",
+        "difficulty": "ADVANCED",
+        "businessProcess": "R2R",
+        "statementFormats": ["BAI2 (Bank Administration Institute format 2)","SWIFT MT940","SWIFT MT942","Manual Entry"],
+        "reconciliationSources": ["AP: ap_checks_all (check number match)","AR: ar_cash_receipts_all (receipt number match)","GL: Journal entries and manual transactions"],
+        "cashPositionFormula": "Opening Balance + Expected Receipts (AR due 7/30 days) - Expected Payments (AP due 7/30 days) - Outstanding Uncleared = Net Cash Position"
+      },
+      "learningObjectives": [
+        "Configure Bank and Bank Account hierarchy",
+        "Import and validate bank statements (BAI2/SWIFT)",
+        "Execute automatic and manual bank reconciliation",
+        "Set up cash forecasting from AP/AR/PO/OM sources",
+        "Query unreconciled transactions for period-end review",
+        "Troubleshoot reconciliation discrepancies"
+      ],
+      "relatesTo": ["ebs:CM","ebs:AP","ebs:AR","ebs:R2R_Process"]
+    },
+
+    {
+      "id": "ebs:ModuleKnowledge_iExpense",
+      "type": "ModuleKnowledge",
+      "name": "Oracle iExpense Complete Guide",
+      "description": "Complete iExpense guide — System Options, Expense Categories (Airfare/Hotel/Meals/Transport/Entertainment), Policy configuration (amount limits per transaction/day/trip, receipt requirements, booking rules, itemization), Expense Report submission flow, Corporate Card integration (Individual/Corporate Liability), Advances processing.",
+      "identityKey": "knowledgeId: iEXP-FUNC-001",
+      "humanRef": "topicName",
+      "attributes": {
+        "knowledgeId": "iEXP-FUNC-001",
+        "moduleCode": "iEXP",
+        "topicName": "Oracle iExpense Complete Setup and Processing",
+        "topicCategory": "FUNCTIONAL",
+        "difficulty": "INTERMEDIATE",
+        "businessProcess": "P2P",
+        "expenseCategories": ["AIRFARE","HOTEL","MEALS","CAR RENTAL","GROUND TRANSPORT","ENTERTAINMENT","COMMUNICATION","MISCELLANEOUS"],
+        "submissionFlow": "Employee Login → Create Report → Add Lines (category/date/amount/receipt) → Add Attendees → Submit → Supervisor Approval → Finance Review → Expense Report Export → AP Invoice → Payment",
+        "sourceFilter": "NonValidatedWebExpense (distinguishes iExpense from direct AP entries in ap_invoices_all)"
+      },
+      "learningObjectives": [
+        "Configure iExpense System Options and expense categories",
+        "Set up expense policies (amount limits, receipt requirements)",
+        "Process expense report submission and approval workflow",
+        "Integrate corporate card transactions",
+        "Process cash advances and apply to expense reports",
+        "Query expense reports with policy violations",
+        "Troubleshoot expense reimbursement issues"
+      ],
+      "relatesTo": ["ebs:iEXP","ebs:AP","ebs:HRMS","ebs:P2P_Process"]
+    },
+
+    {
+      "id": "ebs:ModuleKnowledge_FixedAssets",
+      "type": "ModuleKnowledge",
+      "name": "Oracle Fixed Assets Complete Guide",
+      "description": "Complete FA guide — Asset Book Types (Corporate/Tax/Budget), Depreciation Methods (STL/DDB/SYD/ACRS/MACRS/UNIT_PROD), Asset Lifecycle (Add→Depreciate→Transfer→Retire), CIP assets, Mass Additions from AP, Retirement accounting entries.",
+      "identityKey": "knowledgeId: FA-FUNC-001",
+      "humanRef": "topicName",
+      "attributes": {
+        "knowledgeId": "FA-FUNC-001",
+        "moduleCode": "FA",
+        "topicName": "Oracle Fixed Assets Complete Setup and Processing",
+        "topicCategory": "FUNCTIONAL",
+        "difficulty": "ADVANCED",
+        "businessProcess": "R2R",
+        "depreciationMethods": ["STL: Straight Line","DDB: Double Declining Balance","SYD: Sum of Years Digits","ACRS: Accelerated Cost Recovery","MACRS: Modified ACRS","UNIT_PROD: Units of Production","NBV_RSL: Net Book Value Remaining Life"],
+        "assetTypes": ["CAPITALIZED: Active depreciating asset","CIP: Construction in Progress (no depreciation)","EXPENSED: Below capitalize threshold"],
+        "massAdditionsFlow": "AP Invoice for capital item → Create Accounting in AP → Run Mass Additions Create → Review in FA_MASS_ADDITIONS → Post Mass Additions → Assets created in FA",
+        "retirementAccounting": "DR: Accumulated Depreciation / DR: Proceeds of Sale / CR: Asset Cost Account / CR/DR: Gain or Loss on Disposal"
+      },
+      "learningObjectives": [
+        "Configure asset books, categories, and depreciation methods",
+        "Add assets manually and via Mass Additions from AP",
+        "Execute monthly depreciation (FADPRUN) and create journals",
+        "Process asset transfers between departments/locations",
+        "Retire assets (full, partial, mass) with gain/loss calculation",
+        "Track CIP assets and capitalize on completion",
+        "Query asset register with NBV and remaining life"
+      ],
+      "relatesTo": ["ebs:FA","ebs:AP","ebs:GL","ebs:R2R_Process"]
+    },
+
+    {
+      "id": "ebs:ModuleKnowledge_AdvancedPLSQL",
+      "type": "ModuleKnowledge",
+      "name": "Advanced PL/SQL Patterns for Oracle EBS",
+      "description": "Advanced PL/SQL guide — BULK COLLECT and FORALL for high-performance batch processing, UTL_FILE for CSV/log file processing, DBMS_SCHEDULER for job automation, autonomous transactions for audit trails, dynamic SQL with bind variables, pipelined functions for large result sets.",
+      "identityKey": "knowledgeId: PLSQL-ADV-001",
+      "humanRef": "topicName",
+      "attributes": {
+        "knowledgeId": "PLSQL-ADV-001",
+        "moduleCode": "TECH",
+        "topicName": "Advanced PL/SQL Patterns for Oracle EBS",
+        "topicCategory": "TECHNICAL",
+        "difficulty": "EXPERT",
+        "keyPatterns": [
+          "BULK COLLECT / FORALL: Process 1000+ rows per batch for maximum performance",
+          "UTL_FILE: Read/write flat files from EBS server directories",
+          "DBMS_SCHEDULER: Schedule concurrent-like jobs with logging",
+          "AUTONOMOUS_TRANSACTION: Audit trail without rollback risk",
+          "EXECUTE IMMEDIATE with USING: Dynamic SQL with bind variables",
+          "PIPELINED FUNCTION: Stream large result sets without memory overflow"
+        ]
+      },
+      "learningObjectives": [
+        "Implement BULK COLLECT / FORALL for high-performance batch processing",
+        "Use UTL_FILE for flat file processing with proper error handling",
+        "Implement error handling with PRAGMA AUTONOMOUS_TRANSACTION for audit trails",
+        "Write safe dynamic SQL using EXECUTE IMMEDIATE with bind variables",
+        "Create pipelined functions for streaming large data sets",
+        "Implement DBMS_SCHEDULER jobs with logging and retry logic"
+      ],
+      "relatesTo": ["ebs:AP","ebs:GL","ebs:HRMS","ebs:EBSExtension_APUtilsPackage"]
+    },
+
+    {
+      "id": "ebs:ModuleKnowledge_Troubleshooting",
+      "type": "ModuleKnowledge",
+      "name": "Oracle EBS Complete Troubleshooting Guide",
+      "description": "Complete troubleshooting guide for Oracle EBS — 8 issue types: (1) AP Invoice Stuck on Hold with diagnosis queries and resolution matrix, (2) GL Journal Not Posting, (3) Workflow Stuck Notification, (4) Concurrent Program Failure, (5) Interface Import Failures, (6) Performance Issues, (7) HRMS DateTrack Errors, (8) Inventory Negative Balance.",
+      "identityKey": "knowledgeId: TROUBLE-001",
+      "humanRef": "topicName",
+      "attributes": {
+        "knowledgeId": "TROUBLE-001",
+        "moduleCode": "TECH",
+        "topicName": "Oracle EBS Complete Troubleshooting Guide",
+        "topicCategory": "TROUBLESHOOTING",
+        "difficulty": "EXPERT",
+        "issueTypes": [
+          "AP Invoice Stuck on Hold (QTY ORD, PRICE, DIST VARIANCE, NO RATE, INVALID ACCOUNT, FUTURE PERIOD)",
+          "GL Journal Not Posting (Period Closed, Debit/Credit Imbalance, Invalid Account, Budget Control, CVR Failure)",
+          "Workflow Stuck Notification (Email missing, ERROR status retry, Reassign, Cancel and restart)",
+          "Concurrent Program Failure (ORA-01555 Snapshot Too Old, ORA-04031 Shared Pool, ORA-01652 Temp Space)",
+          "Interface Import Failures (AP Invoice Interface, GL Interface, AR AutoInvoice Interface errors)",
+          "Performance Issues (Slow SQL, Missing org_id, Functions on indexes, Stale statistics, DBMS_STATS)",
+          "HRMS DateTrack Errors (Multiple rows, incorrect aggregations, wrong headcount)",
+          "Inventory Negative Balance (Pending transactions, cycle count, parameter check)"
+        ],
+        "keyDiagnosticTables": ["ap_holds_all","gl_posting_interim","wf_errors","fnd_concurrent_requests","ap_interface_rejections","v$sql","mtl_material_transactions_temp"]
+      },
+      "troubleshootingGuide": "For AP Invoice Hold: Query ap_holds_all WHERE release_lookup_code IS NULL. For GL Not Posting: Check gl_period_statuses closing_status and verify running_total_dr = running_total_cr. For Workflow Stuck: Query wf_item_activity_statuses_v WHERE activity_status IN ('NOTIFIED','ERROR','ACTIVE') — use wf_engine.handleerror for retry. For Concurrent Failure: Check fnd_concurrent_requests logfile_name and review ORA error in log. For Performance: Always include org_id, use bind variables, avoid TO_CHAR/TRUNC on indexed columns.",
+      "relatesTo": ["ebs:AP","ebs:GL","ebs:HRMS","ebs:INV","ebs:Workflow_APInvoiceApproval"]
+    },
+
+    {
+      "id": "ebs:ModuleKnowledge_InterviewQuestions",
+      "type": "ModuleKnowledge",
+      "name": "Oracle EBS Complete Interview Questions Guide",
+      "description": "Comprehensive Oracle EBS interview question bank — AP (10 questions: invoice types, matching, period close, payment batch, holds), GL (8 questions: Primary vs Secondary Ledger, XLA, FSG, cross validation, suspense), AR (6 questions: AutoInvoice, AutoCash, Lockbox, revenue recognition), P2P (3 questions: complete cycle, Blanket PO, Finally Closed), O2C (3 questions), HRMS (5+ questions: DateTrack, enterprise structure, APIs), Technical (10+ questions: FND_GLOBAL, WHO columns, FNDLOAD, Flexfields, Patching).",
+      "identityKey": "knowledgeId: INTERVIEW-001",
+      "humanRef": "topicName",
+      "attributes": {
+        "knowledgeId": "INTERVIEW-001",
+        "moduleCode": "ALL",
+        "topicName": "Complete Oracle EBS Interview Questions",
+        "topicCategory": "LEARNING",
+        "difficulty": "ALL_LEVELS"
+      },
+      "interviewQuestions": [
+        "Q: What are the different invoice types in Oracle AP? A: Standard, Credit Memo, Debit Memo, Prepayment, Expense Report, Interest, Mixed, QuickDefault",
+        "Q: Explain 2-way, 3-way, 4-way PO matching. A: 2-way=Invoice+PO only; 3-way=Invoice+PO+Receipt; 4-way=Invoice+PO+Receipt+Inspection",
+        "Q: What is the difference between Primary and Secondary Ledger? A: Primary is the main GAAP ledger; Secondary is for reporting in different currency/COA/SLA method (e.g. IFRS vs Local GAAP)",
+        "Q: Explain Subledger Accounting (SLA/XLA) flow. A: Subledger Transaction → xla_events → xla_ae_headers → xla_ae_lines → GL Transfer → gl_je_headers/lines → gl_balances",
+        "Q: What is DateTrack and what filter is mandatory? A: HRMS mechanism to preserve all history. Mandatory filter: SYSDATE BETWEEN effective_start_date AND effective_end_date",
+        "Q: What is AutoInvoice and how does it work? A: Imports invoices from OM/PA/custom into AR via ra_interface_lines_all → AutoInvoice Import → ra_customer_trx_all",
+        "Q: What is ATP in Order Management? A: Available to Promise — checks On-hand + Supply - Demand = Available Qty for customer delivery date promise",
+        "Q: Explain complete P2P accounting entries. A: PR Approval: DR Requisition Encumb/CR Budgetary; PO: DR Obligation/CR Encumb; Receipt: DR Recv Inspection/CR AP Accrual; Invoice Match: DR AP Accrual/CR AP Liability; Payment: DR AP Liability/CR Cash Clearing; Bank Clear: DR Cash Clearing/CR Bank",
+        "Q: What is FND_GLOBAL and its key functions? A: Session context package — USER_ID, LOGIN_ID, RESP_ID, ORG_ID, EMPLOYEE_ID, CONC_REQUEST_ID",
+        "Q: What are WHO columns and why are they required? A: CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE, LAST_UPDATE_LOGIN — required for Oracle support and audit compliance"
+      ],
+      "relatesTo": ["ebs:AP","ebs:GL","ebs:AR","ebs:HRMS","ebs:PO","ebs:OM"]
+    },
+
+    {
+      "id": "ebs:ContextStudioUploadStrategy",
+      "type": "Entity",
+      "name": "ICA Context Studio Upload Strategy",
+      "description": "Recommended document upload order and strategy for Oracle EBS Intelligence Context Studio — 5 priority tiers covering core ontology, business rules, SQL compliance rules, module functional guides, and technical reference guide.",
+      "identityKey": "strategyId: UPLOAD-001",
+      "humanRef": "strategyName",
+      "attributes": {
+        "strategyId": "UPLOAD-001",
+        "strategyName": "ICA Context Studio Upload Strategy",
+        "priorityTier1": "ebs-complete-ontology.jsonld — Core entity relationship model (modules, RICE, processes, compliance rules, SQL patterns, ModuleKnowledge)",
+        "priorityTier2": "ebs-business-rules.md — ORG_ID rules per module, DateTrack rules, MOAC/VPD setup, table types (_ALL vs views)",
+        "priorityTier3": "ebs-sql-compliance-rules.md — 10 compliance rules with BAD/GOOD examples",
+        "priorityTier4": "Module functional guides — ap/ar/gl/po/hrms/payroll/iexpense-functional-guide.md",
+        "priorityTier5": "ebs-technical-reference.md — Key tables by module (200+ tables), key views, concurrent programs",
+        "orgIdRulesPerModule": {
+          "AP": ["ap_invoices_all","ap_invoice_distributions_all","ap_checks_all","ap_holds_all","ap_payment_schedules_all","ap_expense_report_headers_all"],
+          "AR": ["ra_customer_trx_all","ra_customer_trx_lines_all","ar_cash_receipts_all","ar_receivable_applications_all","hz_cust_site_uses_all"],
+          "PO": ["po_headers_all","po_lines_all","po_line_locations_all","po_distributions_all","po_requisition_headers_all"],
+          "INV": ["mtl_material_transactions","mtl_onhand_quantities_detail","mtl_system_items_b","mtl_parameters"],
+          "GL": "Uses ledger_id NOT org_id — gl_je_headers, gl_balances, gl_ledgers",
+          "HRMS": "Uses business_group_id NOT org_id — per_all_people_f, per_all_assignments_f"
+        }
+      },
+      "relatesTo": ["ebs:AP","ebs:AR","ebs:GL","ebs:PO","ebs:HRMS","ebs:PAY","ebs:INV"]
+    }
+
+  ]
+}

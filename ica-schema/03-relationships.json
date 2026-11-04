@@ -1,0 +1,270 @@
+{
+  "schema_name": "oracle_ebs_intelligence_hub_v5_relationships",
+  "description": "Relationship definitions between nodes in Oracle EBS Intelligence Hub v5.2 — modules, reports, tables, compliance rules (COMP-001 to COMP-010), SQL patterns, business processes (P2P/O2C/H2R/R2R), RICE components (Reports/Interfaces/Conversions/Extensions), AME approval configs, Oracle Workflows, OAF/SOA/APEX/ADF/Redwood components, ModuleKnowledge topics, roles, tabs, academy, SQL lab, data connect mappings",
+  "version": "5.2",
+  "relationships": [
+    {
+      "relationship_id": "REL_001",
+      "relationship_name": "MODULE_HAS_REPORT",
+      "relationship_type": "one-to-many",
+      "source_node_type": "OracleModule",
+      "target_node_type": "EBSReport",
+      "cardinality": "1:N",
+      "description": "An Oracle EBS module owns one or more pre-built reports",
+      "properties": { "required": true },
+      "examples": [
+        { "source": "MOD_AP", "target": "RPT_SUPPLIERS" },
+        { "source": "MOD_GL", "target": "RPT_GL_JNL" }
+      ]
+    },
+    {
+      "relationship_id": "REL_002",
+      "relationship_name": "REPORT_USES_TABLE",
+      "relationship_type": "many-to-many",
+      "source_node_type": "EBSReport",
+      "target_node_type": "OracleTable",
+      "cardinality": "N:M",
+      "description": "A report queries one or more Oracle EBS base tables in its SQL",
+      "properties": { "join_type": "INNER JOIN | LEFT JOIN", "required": true },
+      "examples": [
+        { "source": "RPT_AGED_AP", "target": "TBL_APIA", "join": "INNER JOIN" },
+        { "source": "RPT_IEXP", "target": "TBL_AERH", "join": "INNER JOIN" }
+      ]
+    },
+    {
+      "relationship_id": "REL_003",
+      "relationship_name": "TABLE_HAS_RULE",
+      "relationship_type": "many-to-many",
+      "source_node_type": "OracleTable",
+      "target_node_type": "BusinessRule",
+      "cardinality": "N:M",
+      "description": "An Oracle EBS base table is subject to one or more business/compliance rules",
+      "properties": { "severity": "Critical | Major | Minor", "required": "varies" },
+      "examples": [
+        { "source": "TBL_APIA", "target": "RULE_ORGID" },
+        { "source": "TBL_PPF", "target": "RULE_DT_PPF" }
+      ]
+    },
+    {
+      "relationship_id": "REL_004",
+      "relationship_name": "ROLE_CAN_ACCESS_TAB",
+      "relationship_type": "many-to-many",
+      "source_node_type": "UserRole",
+      "target_node_type": "AppTab",
+      "cardinality": "N:M",
+      "description": "A user role has access to specific application tabs",
+      "properties": { "required": true },
+      "examples": [
+        { "source": "ROLE_EMPLOYEE", "target": "TAB_CHAT" },
+        { "source": "ROLE_EMPLOYEE", "target": "TAB_REPORTS" },
+        { "source": "ROLE_EMPLOYEE", "target": "TAB_DATACONNECT" },
+        { "source": "ROLE_TECHNICAL", "target": "TAB_SQL" },
+        { "source": "ROLE_TECHNICAL", "target": "TAB_ACADEMY" }
+      ]
+    },
+    {
+      "relationship_id": "REL_005",
+      "relationship_name": "TAB_HOSTS_FEATURE",
+      "relationship_type": "one-to-many",
+      "source_node_type": "AppTab",
+      "target_node_type": "EBSReport | AcademyModule | SQLCategory | DataConnectSource | DeleteRequest",
+      "cardinality": "1:N",
+      "description": "An application tab is the host for one or more content nodes",
+      "examples": [
+        { "source": "TAB_REPORTS", "target": "RPT_SUPPLIERS" },
+        { "source": "TAB_ACADEMY", "target": "ACAD_01" },
+        { "source": "TAB_SQLLAB", "target": "SQLCAT_AP" },
+        { "source": "TAB_DATACONNECT", "target": "DC_EXCEL" }
+      ]
+    },
+    {
+      "relationship_id": "REL_006",
+      "relationship_name": "ACADEMY_MODULE_COVERS_ORACLE_MODULE",
+      "relationship_type": "one-to-one",
+      "source_node_type": "AcademyModule",
+      "target_node_type": "OracleModule",
+      "cardinality": "1:1",
+      "description": "An Academy learning module maps to an Oracle EBS functional module (for AP/AR/GL/PO/HRMS/INV/iExpense)",
+      "examples": [
+        { "source": "ACAD_01", "target": "MOD_AP" },
+        { "source": "ACAD_03", "target": "MOD_GL" }
+      ]
+    },
+    {
+      "relationship_id": "REL_007",
+      "relationship_name": "SQL_CATEGORY_COVERS_MODULE",
+      "relationship_type": "many-to-one",
+      "source_node_type": "SQLCategory",
+      "target_node_type": "OracleModule",
+      "cardinality": "N:1",
+      "description": "A SQL Library category groups queries for a specific Oracle EBS module",
+      "examples": [
+        { "source": "SQLCAT_AP", "target": "MOD_AP" },
+        { "source": "SQLCAT_GL", "target": "MOD_GL" }
+      ]
+    },
+    {
+      "relationship_id": "REL_008",
+      "relationship_name": "DATACONNECT_MAPS_TO_REPORT",
+      "relationship_type": "many-to-one",
+      "source_node_type": "DataConnectSource",
+      "target_node_type": "EBSReport",
+      "cardinality": "N:1",
+      "description": "Data Connect imports (Excel/DB) are fuzzy-mapped to an existing EBS report template",
+      "properties": { "mapping_function": "dcAutoMap()", "fuzzy_threshold": 0.6 },
+      "examples": [
+        { "source": "DC_EXCEL", "target": "RPT_SUPPLIERS" },
+        { "source": "DC_SIMULATED", "target": "RPT_ACTIEMP" }
+      ]
+    },
+    {
+      "relationship_id": "REL_009",
+      "relationship_name": "EMPLOYEE_SUBMITS_DELETE_REQUEST",
+      "relationship_type": "one-to-many",
+      "source_node_type": "UserRole",
+      "target_node_type": "DeleteRequest",
+      "cardinality": "1:N",
+      "description": "Employee role can submit delete requests; Technical role can approve/reject them",
+      "properties": {
+        "initiator": "ROLE_EMPLOYEE",
+        "approver": "ROLE_TECHNICAL",
+        "store": "window.DELETE_REQUESTS"
+      }
+    },
+    {
+      "relationship_id": "REL_010",
+      "relationship_name": "DELETE_REQUEST_TARGETS_REPORT",
+      "relationship_type": "many-to-one",
+      "source_node_type": "DeleteRequest",
+      "target_node_type": "EBSReport",
+      "cardinality": "N:1",
+      "description": "Each delete request targets exactly one EBS report for removal"
+    },
+    {
+      "relationship_id": "REL_011",
+      "relationship_name": "REPORT_MOVED_TO_RECYCLE_BIN",
+      "relationship_type": "one-to-one",
+      "source_node_type": "EBSReport",
+      "target_node_type": "DeleteRequest",
+      "cardinality": "1:1",
+      "description": "When Technical approves a delete request, the report snapshot is stored in window.RECYCLE_BIN and can be restored",
+      "properties": {
+        "restore_store": "window.RECYCLE_BIN",
+        "block_store": "window.DELETED_REPORTS"
+      }
+    },
+    {
+      "relationship_id": "REL_012",
+      "relationship_name": "REPORT_HAS_SQL",
+      "relationship_type": "one-to-one",
+      "source_node_type": "EBSReport",
+      "target_node_type": "SQLQuery",
+      "cardinality": "1:1",
+      "description": "Most EBS reports have an associated SQL query viewable in SQL tab; stored in EBS_SQL_LIBRARY",
+      "properties": { "sql_library": "EBS_SQL_LIBRARY", "tab": "tab-sql" }
+    },
+    {
+      "relationship_id": "REL_013",
+      "relationship_name": "CHAT_RESOLVES_INTENT",
+      "relationship_type": "one-to-many",
+      "source_node_type": "AppTab",
+      "target_node_type": "EBSReport | SQLQuery | AcademyModule",
+      "cardinality": "1:N",
+      "description": "Chat Assistant uses NL query intent matching to resolve user requests to a specific report, SQL query, or Academy topic",
+      "properties": {
+        "matching_function": "generateAsstResponse()",
+        "min_confidence": 0.70,
+        "fallback": "show_help_menu"
+      }
+    },
+    {
+      "relationship_id": "REL_014",
+      "relationship_name": "SQL_ADVISOR_REVIEWS_QUERY",
+      "relationship_type": "one-to-many",
+      "source_node_type": "AppTab",
+      "target_node_type": "BusinessRule",
+      "cardinality": "1:N",
+      "description": "SQL Advisor tab checks user-submitted SQL against 27 business/compliance rules and returns violations",
+      "properties": {
+        "tab": "tab-sql",
+        "check_count": 27,
+        "ontology_rule_ids": ["COMP-001","COMP-002","COMP-003","COMP-004","COMP-005","COMP-006","COMP-007","COMP-008","COMP-009","COMP-010"],
+        "review_function": "runCodeReview()"
+      }
+    },
+    {
+      "relationship_id": "REL_015",
+      "relationship_name": "DOC_GENERATOR_DOCUMENTS_REPORT",
+      "relationship_type": "one-to-many",
+      "source_node_type": "AppTab",
+      "target_node_type": "EBSReport",
+      "cardinality": "1:N",
+      "description": "Doc Generator tab produces PDF/Word-style documentation for any selected EBS report",
+      "properties": { "tab": "tab-docgen", "role_required": "ROLE_TECHNICAL" }
+    },
+    {
+      "relationship_id": "REL_016",
+      "relationship_name": "BUSINESS_PROCESS_HAS_MODULE",
+      "relationship_type": "many-to-many",
+      "source_node_type": "BusinessProcess",
+      "target_node_type": "OracleModule",
+      "cardinality": "N:M",
+      "description": "A business process (P2P/O2C/H2R/R2R) spans multiple primary and secondary Oracle EBS modules",
+      "examples": [
+        { "source": "proc_p2p", "target": "MOD_PO", "role": "primary" },
+        { "source": "proc_p2p", "target": "MOD_AP", "role": "primary" },
+        { "source": "proc_o2c", "target": "MOD_OM", "role": "primary" },
+        { "source": "proc_h2r", "target": "MOD_HRMS", "role": "primary" },
+        { "source": "proc_r2r", "target": "MOD_GL", "role": "primary" }
+      ]
+    },
+    {
+      "relationship_id": "REL_017",
+      "relationship_name": "COMPLIANCE_RULE_APPLIES_TO_MODULE",
+      "relationship_type": "many-to-many",
+      "source_node_type": "ComplianceRule",
+      "target_node_type": "OracleModule",
+      "cardinality": "N:M",
+      "description": "A SQL compliance rule (COMP-001 to COMP-010) applies to one or more Oracle EBS modules",
+      "examples": [
+        { "source": "comp_001", "target": "MOD_AP", "note": "org_id required on all AP _ALL tables" },
+        { "source": "comp_002", "target": "MOD_HRMS", "note": "DateTrack on per_all_people_f/per_all_assignments_f" },
+        { "source": "comp_003", "target": "MOD_GL", "note": "ledger_id not org_id on GL tables" },
+        { "source": "comp_007", "target": "ALL_MODULES", "note": "bind variables apply to all modules" }
+      ]
+    },
+    {
+      "relationship_id": "REL_018",
+      "relationship_name": "SQL_PATTERN_FOR_MODULE",
+      "relationship_type": "many-to-one",
+      "source_node_type": "SQLPattern",
+      "target_node_type": "OracleModule",
+      "cardinality": "N:1",
+      "description": "A SQL query pattern provides the compliant template for a specific module",
+      "examples": [
+        { "source": "sqlpat_ap_001", "target": "MOD_AP" },
+        { "source": "sqlpat_gl_001", "target": "MOD_GL" },
+        { "source": "sqlpat_hr_001", "target": "MOD_HRMS" },
+        { "source": "sqlpat_p2p_001", "target": "MOD_PO" },
+        { "source": "sqlpat_o2c_001", "target": "MOD_OM" },
+        { "source": "sqlpat_pay_001", "target": "MOD_PAY" }
+      ]
+    },
+    {
+      "relationship_id": "REL_019",
+      "relationship_name": "DATACONNECT_COLUMN_MAPS_TO_EBS_COLUMN",
+      "relationship_type": "many-to-one",
+      "source_node_type": "ColumnMapping",
+      "target_node_type": "EBSReport",
+      "cardinality": "N:1",
+      "description": "A ColumnMapping (Excel column → EBS report column) is created by dcAutoMap() for each matched column during Data Connect import",
+      "properties": {
+        "mapping_function": "dcAutoMap()",
+        "confidence_threshold": 0.70,
+        "normalization": "toLowerCase().replace(/[\\s_\\/\\-\\.#]/g, '')",
+        "match_strategy": "exact OR includes()",
+        "transforms": ["trim", "upper", "lower", "title", "date_fmt", "num_fmt"]
+      }
+    }
+  ]
+}

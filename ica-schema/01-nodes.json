@@ -1,0 +1,1537 @@
+{
+  "schema_name": "oracle_ebs_intelligence_hub_v5",
+  "description": "Node definitions for Oracle EBS Intelligence Hub v5.2 — roles, tabs, 13 Oracle EBS modules (AP, AR, GL, PO, HRMS, PAY, INV, OM, FA, CM, BEN, iEXP, FND), 4 business processes (P2P, O2C, H2R, R2R), 10 SQL compliance rules (COMP-001 to COMP-010), 28 SQL code review checks (RULE_001–RULE_028), 6 SQL patterns, 26 reports, 15 academy modules, 500+ SQL queries, RICE taxonomy (Reports/Interfaces/Conversions/Extensions/AME/WF/OAF/SOA/APEX/ADF/Redwood), 15 ModuleKnowledge topics, Data Connect (Excel/DB/Live), delete workflow",
+  "version": "5.2",
+  "nodes": [
+    {
+      "node_id": "role_employee",
+      "node_name": "UserRole",
+      "node_type": "UserRole",
+      "description": "Employee login role — sees Chat, Reports, Data Connect only",
+      "properties": {
+        "role_id": "employee",
+        "role_name": "Employee",
+        "visible_tabs": [
+          "tab-chat",
+          "tab-reports",
+          "tab-dataconnect"
+        ],
+        "can_delete_direct": false,
+        "has_notification_bell": false,
+        "delete_action": "submit_request"
+      }
+    },
+    {
+      "node_id": "role_technical",
+      "node_name": "UserRole",
+      "node_type": "UserRole",
+      "description": "Technical login role — sees all 7 tabs",
+      "properties": {
+        "role_id": "technical",
+        "role_name": "Technical",
+        "visible_tabs": [
+          "tab-chat",
+          "tab-reports",
+          "tab-dataconnect",
+          "tab-sql",
+          "tab-academy",
+          "tab-sqllab",
+          "tab-docgen"
+        ],
+        "can_delete_direct": true,
+        "has_notification_bell": true,
+        "delete_action": "direct_delete_with_confirm"
+      }
+    },
+    {
+      "node_id": "tab_chat",
+      "node_name": "AppTab",
+      "node_type": "AppTab",
+      "properties": {
+        "tab_id": "tab-chat",
+        "tab_name": "Chat Assistant",
+        "icon": "🤖",
+        "visible_to_roles": [
+          "employee",
+          "technical"
+        ],
+        "lazy_init": false,
+        "description": "AI chat assistant for plain-English EBS report queries"
+      }
+    },
+    {
+      "node_id": "tab_reports",
+      "node_name": "AppTab",
+      "node_type": "AppTab",
+      "properties": {
+        "tab_id": "tab-reports",
+        "tab_name": "EBS Reports",
+        "icon": "📊",
+        "visible_to_roles": [
+          "employee",
+          "technical"
+        ],
+        "lazy_init": false,
+        "description": "Browse 26 pre-built Oracle EBS reports with filters, charts, downloads"
+      }
+    },
+    {
+      "node_id": "tab_dataconnect",
+      "node_name": "AppTab",
+      "node_type": "AppTab",
+      "properties": {
+        "tab_id": "tab-dataconnect",
+        "tab_name": "Data Connect",
+        "icon": "🔌",
+        "visible_to_roles": [
+          "employee",
+          "technical"
+        ],
+        "lazy_init": true,
+        "description": "Import Excel/CSV or query Oracle DB, map columns, push to reports"
+      }
+    },
+    {
+      "node_id": "tab_sql",
+      "node_name": "AppTab",
+      "node_type": "AppTab",
+      "properties": {
+        "tab_id": "tab-sql",
+        "tab_name": "SQL Advisor",
+        "icon": "🔍",
+        "visible_to_roles": [
+          "technical"
+        ],
+        "lazy_init": false,
+        "description": "Performance Advisor + 27-check Code Review + Code Formatter",
+        "sub_tabs": [
+          "sql-perf-tab",
+          "sql-codereview-tab",
+          "sql-formatter-tab"
+        ]
+      }
+    },
+    {
+      "node_id": "tab_academy",
+      "node_name": "AppTab",
+      "node_type": "AppTab",
+      "properties": {
+        "tab_id": "tab-academy",
+        "tab_name": "EBS Academy",
+        "icon": "🎓",
+        "visible_to_roles": [
+          "technical"
+        ],
+        "lazy_init": true,
+        "description": "15 learning modules covering all EBS roles with AI assistant"
+      }
+    },
+    {
+      "node_id": "tab_sqllab",
+      "node_name": "AppTab",
+      "node_type": "AppTab",
+      "properties": {
+        "tab_id": "tab-sqllab",
+        "tab_name": "SQL Lab",
+        "icon": "🔬",
+        "visible_to_roles": [
+          "technical"
+        ],
+        "lazy_init": true,
+        "description": "500+ SQL Library queries + AI prompt-to-SQL with out-of-scope detection"
+      }
+    },
+    {
+      "node_id": "tab_docgen",
+      "node_name": "AppTab",
+      "node_type": "AppTab",
+      "properties": {
+        "tab_id": "tab-docgen",
+        "tab_name": "Doc Generator",
+        "icon": "📄",
+        "visible_to_roles": [
+          "technical"
+        ],
+        "lazy_init": false,
+        "description": "Generate TDD / FSD documents with SVG diagrams from a form"
+      }
+    },
+    {
+      "node_id": "acad_01",
+      "node_name": "AcademyModule",
+      "node_type": "AcademyModule",
+      "properties": {
+        "module_id": "acad_ap",
+        "module_number": 1,
+        "title": "Accounts Payable",
+        "target_roles": [
+          "AP Clerks",
+          "Finance Consultants"
+        ],
+        "topic_count": 5,
+        "has_ai_assistant": true,
+        "has_flowchart": true,
+        "has_sql_examples": true,
+        "key_topics": [
+          "Invoice Lifecycle",
+          "3-Way Match",
+          "Invoice Holds",
+          "Payment Processing",
+          "Supplier Setup"
+        ]
+      }
+    },
+    {
+      "node_id": "acad_02",
+      "node_name": "AcademyModule",
+      "node_type": "AcademyModule",
+      "properties": {
+        "module_id": "acad_ar",
+        "module_number": 2,
+        "title": "Accounts Receivable",
+        "target_roles": [
+          "AR Analysts"
+        ],
+        "topic_count": 4,
+        "has_ai_assistant": true,
+        "has_flowchart": true,
+        "has_sql_examples": true,
+        "key_topics": [
+          "Customer Setup",
+          "Invoicing",
+          "Cash Application",
+          "AR Aging"
+        ]
+      }
+    },
+    {
+      "node_id": "acad_03",
+      "node_name": "AcademyModule",
+      "node_type": "AcademyModule",
+      "properties": {
+        "module_id": "acad_gl",
+        "module_number": 3,
+        "title": "General Ledger",
+        "target_roles": [
+          "GL Accountants"
+        ],
+        "topic_count": 4,
+        "has_ai_assistant": true,
+        "has_flowchart": true,
+        "has_sql_examples": true,
+        "key_topics": [
+          "Chart of Accounts",
+          "Journal Entries",
+          "Period Close",
+          "Reporting"
+        ]
+      }
+    },
+    {
+      "node_id": "acad_04",
+      "node_name": "AcademyModule",
+      "node_type": "AcademyModule",
+      "properties": {
+        "module_id": "acad_iexp",
+        "module_number": 4,
+        "title": "iExpense",
+        "target_roles": [
+          "Finance Users",
+          "Approvers"
+        ],
+        "topic_count": 4,
+        "has_ai_assistant": true,
+        "has_flowchart": true,
+        "has_sql_examples": true,
+        "key_topics": [
+          "Expense Reports",
+          "Approval Workflow",
+          "Credit Cards",
+          "Policies"
+        ]
+      }
+    },
+    {
+      "node_id": "acad_05",
+      "node_name": "AcademyModule",
+      "node_type": "AcademyModule",
+      "properties": {
+        "module_id": "acad_hrms",
+        "module_number": 5,
+        "title": "HRMS",
+        "target_roles": [
+          "HR Analysts",
+          "Payroll"
+        ],
+        "topic_count": 5,
+        "has_ai_assistant": true,
+        "has_flowchart": true,
+        "has_sql_examples": true,
+        "key_topics": [
+          "Employee Records",
+          "Assignments",
+          "DateTrack",
+          "Payroll",
+          "Terminations"
+        ]
+      }
+    },
+    {
+      "node_id": "acad_06",
+      "node_name": "AcademyModule",
+      "node_type": "AcademyModule",
+      "properties": {
+        "module_id": "acad_po",
+        "module_number": 6,
+        "title": "Purchasing / PO",
+        "target_roles": [
+          "Buyers",
+          "Procurement"
+        ],
+        "topic_count": 4,
+        "has_ai_assistant": true,
+        "has_flowchart": true,
+        "has_sql_examples": true,
+        "key_topics": [
+          "Requisitions",
+          "PO Types",
+          "Receipts",
+          "3-Way Match"
+        ]
+      }
+    },
+    {
+      "node_id": "acad_07",
+      "node_name": "AcademyModule",
+      "node_type": "AcademyModule",
+      "properties": {
+        "module_id": "acad_inv",
+        "module_number": 7,
+        "title": "Inventory",
+        "target_roles": [
+          "Warehouse",
+          "Inventory Analysts"
+        ],
+        "topic_count": 4,
+        "has_ai_assistant": true,
+        "has_flowchart": false,
+        "has_sql_examples": true,
+        "key_topics": [
+          "Items",
+          "Transactions",
+          "Valuations",
+          "Cycle Count"
+        ]
+      }
+    },
+    {
+      "node_id": "acad_08",
+      "node_name": "AcademyModule",
+      "node_type": "AcademyModule",
+      "properties": {
+        "module_id": "acad_concurrent",
+        "module_number": 8,
+        "title": "Concurrent Programs",
+        "target_roles": [
+          "All Technical Users"
+        ],
+        "topic_count": 3,
+        "has_ai_assistant": true,
+        "has_flowchart": false,
+        "has_sql_examples": true,
+        "key_topics": [
+          "Request Submission",
+          "Parameters",
+          "Output",
+          "FND_CONCURRENT_REQUESTS"
+        ]
+      }
+    },
+    {
+      "node_id": "acad_09",
+      "node_name": "AcademyModule",
+      "node_type": "AcademyModule",
+      "properties": {
+        "module_id": "acad_dba",
+        "module_number": 9,
+        "title": "DBA & System Admin",
+        "target_roles": [
+          "DBAs",
+          "System Admins"
+        ],
+        "topic_count": 5,
+        "has_ai_assistant": true,
+        "has_flowchart": false,
+        "has_sql_examples": true,
+        "key_topics": [
+          "Patching (adop)",
+          "Cloning",
+          "Performance Tuning",
+          "RMAN Backup",
+          "Upgrades"
+        ]
+      }
+    },
+    {
+      "node_id": "acad_10",
+      "node_name": "AcademyModule",
+      "node_type": "AcademyModule",
+      "properties": {
+        "module_id": "acad_arch",
+        "module_number": 10,
+        "title": "EBS Architecture",
+        "target_roles": [
+          "Architects",
+          "Senior Consultants"
+        ],
+        "topic_count": 3,
+        "has_ai_assistant": true,
+        "has_flowchart": false,
+        "has_sql_examples": true,
+        "key_topics": [
+          "Three-Tier Architecture",
+          "Multi-Org (MOAC)",
+          "ORG_ID Deep Dive"
+        ]
+      }
+    },
+    {
+      "node_id": "acad_11",
+      "node_name": "AcademyModule",
+      "node_type": "AcademyModule",
+      "properties": {
+        "module_id": "acad_soa",
+        "module_number": 11,
+        "title": "SOA & Integration",
+        "target_roles": [
+          "Integration Developers"
+        ],
+        "topic_count": 5,
+        "has_ai_assistant": true,
+        "has_flowchart": false,
+        "has_sql_examples": true,
+        "key_topics": [
+          "SOA Suite",
+          "OIC",
+          "Open Interfaces",
+          "Business Events",
+          "REST/SOAP/EDI"
+        ]
+      }
+    },
+    {
+      "node_id": "acad_12",
+      "node_name": "AcademyModule",
+      "node_type": "AcademyModule",
+      "properties": {
+        "module_id": "acad_apex",
+        "module_number": 12,
+        "title": "Oracle APEX & Modernisation",
+        "target_roles": [
+          "Developers",
+          "Modernisation Leads"
+        ],
+        "topic_count": 4,
+        "has_ai_assistant": true,
+        "has_flowchart": false,
+        "has_sql_examples": true,
+        "key_topics": [
+          "APEX Foundation",
+          "EBS-to-APEX Migration",
+          "EBS to Fusion Roadmap",
+          "Modernisation Patterns"
+        ]
+      }
+    },
+    {
+      "node_id": "acad_13",
+      "node_name": "AcademyModule",
+      "node_type": "AcademyModule",
+      "properties": {
+        "module_id": "acad_testing",
+        "module_number": 13,
+        "title": "Testing & QA",
+        "target_roles": [
+          "QA Engineers",
+          "Test Leads"
+        ],
+        "topic_count": 4,
+        "has_ai_assistant": true,
+        "has_flowchart": false,
+        "has_sql_examples": true,
+        "key_topics": [
+          "Unit/SIT/UAT/Regression",
+          "OATS",
+          "SQL Validation",
+          "Test Data Management"
+        ]
+      }
+    },
+    {
+      "node_id": "acad_14",
+      "node_name": "AcademyModule",
+      "node_type": "AcademyModule",
+      "properties": {
+        "module_id": "acad_security",
+        "module_number": 14,
+        "title": "Security & Access Control",
+        "target_roles": [
+          "Security Admins",
+          "Auditors"
+        ],
+        "topic_count": 4,
+        "has_ai_assistant": true,
+        "has_flowchart": false,
+        "has_sql_examples": true,
+        "key_topics": [
+          "Users & Responsibilities",
+          "Menus & Functions",
+          "Audit Trail",
+          "SOD Controls"
+        ]
+      }
+    },
+    {
+      "node_id": "acad_15",
+      "node_name": "AcademyModule",
+      "node_type": "AcademyModule",
+      "properties": {
+        "module_id": "acad_pm",
+        "module_number": 15,
+        "title": "Project Manager Guide",
+        "target_roles": [
+          "Project Managers",
+          "Delivery Leads"
+        ],
+        "topic_count": 5,
+        "has_ai_assistant": true,
+        "has_flowchart": false,
+        "has_sql_examples": false,
+        "key_topics": [
+          "OUM/AIM Methodology",
+          "CRP Sessions",
+          "Cutover Planning",
+          "Hypercare",
+          "Team Roles"
+        ]
+      }
+    },
+    {
+      "node_id": "dc_excel",
+      "node_name": "DataConnectSource",
+      "node_type": "DataConnectSource",
+      "properties": {
+        "source_id": "dc_excel",
+        "source_type": "Excel/CSV",
+        "description": "Drag-and-drop .xlsx or .csv file import with auto column-type detection",
+        "requires_proxy": false,
+        "file_formats": [
+          ".xlsx",
+          ".csv"
+        ],
+        "max_rows": 5000,
+        "auto_map": true,
+        "transforms": [
+          "TRIM",
+          "UPPER",
+          "lower",
+          "Title Case",
+          "Format Date",
+          "Format Number"
+        ]
+      }
+    },
+    {
+      "node_id": "dc_simulated",
+      "node_name": "DataConnectSource",
+      "node_type": "DataConnectSource",
+      "properties": {
+        "source_id": "dc_simulated",
+        "source_type": "DB Simulated",
+        "description": "Paste a SELECT query — engine matches EBS table names to demo data",
+        "requires_proxy": false,
+        "supported_tables": [
+          "ap_invoices_all",
+          "ap_suppliers",
+          "ar_customers",
+          "gl_je_headers",
+          "per_all_people_f",
+          "po_headers_all",
+          "fnd_concurrent_requests"
+        ]
+      }
+    },
+    {
+      "node_id": "dc_live",
+      "node_name": "DataConnectSource",
+      "node_type": "DataConnectSource",
+      "properties": {
+        "source_id": "dc_live",
+        "source_type": "Live Oracle DB",
+        "description": "Configure Host/Port/SID/User/Pass + Proxy URL to query real Oracle EBS DB",
+        "requires_proxy": true,
+        "proxy_api": "POST /query — body: {sql,host,port,sid,user,pass} — returns: {columns,rows}",
+        "proxy_options": [
+          "Node.js oracledb",
+          "Python cx_Oracle",
+          "Python oracledb"
+        ]
+      }
+    },
+    {
+      "node_id": "sql_cat_ap",
+      "node_name": "SQLCategory",
+      "node_type": "SQLCategory",
+      "properties": {
+        "category_id": "cat_ap",
+        "name": "Accounts Payable",
+        "module": "AP",
+        "query_count": 60
+      }
+    },
+    {
+      "node_id": "sql_cat_ar",
+      "node_name": "SQLCategory",
+      "node_type": "SQLCategory",
+      "properties": {
+        "category_id": "cat_ar",
+        "name": "Accounts Receivable",
+        "module": "AR",
+        "query_count": 30
+      }
+    },
+    {
+      "node_id": "sql_cat_gl",
+      "node_name": "SQLCategory",
+      "node_type": "SQLCategory",
+      "properties": {
+        "category_id": "cat_gl",
+        "name": "General Ledger",
+        "module": "GL",
+        "query_count": 40
+      }
+    },
+    {
+      "node_id": "sql_cat_po",
+      "node_name": "SQLCategory",
+      "node_type": "SQLCategory",
+      "properties": {
+        "category_id": "cat_po",
+        "name": "Purchasing",
+        "module": "PO",
+        "query_count": 45
+      }
+    },
+    {
+      "node_id": "sql_cat_hrms",
+      "node_name": "SQLCategory",
+      "node_type": "SQLCategory",
+      "properties": {
+        "category_id": "cat_hrms",
+        "name": "HRMS",
+        "module": "HRMS",
+        "query_count": 50
+      }
+    },
+    {
+      "node_id": "sql_cat_inv",
+      "node_name": "SQLCategory",
+      "node_type": "SQLCategory",
+      "properties": {
+        "category_id": "cat_inv",
+        "name": "Inventory",
+        "module": "INV",
+        "query_count": 35
+      }
+    },
+    {
+      "node_id": "sql_cat_iexp",
+      "node_name": "SQLCategory",
+      "node_type": "SQLCategory",
+      "properties": {
+        "category_id": "cat_iexp",
+        "name": "iExpense",
+        "module": "iExpense",
+        "query_count": 25
+      }
+    },
+    {
+      "node_id": "sql_cat_fnd",
+      "node_name": "SQLCategory",
+      "node_type": "SQLCategory",
+      "properties": {
+        "category_id": "cat_fnd",
+        "name": "FND / System",
+        "module": "FND",
+        "query_count": 40
+      }
+    },
+    {
+      "node_id": "sql_cat_perf",
+      "node_name": "SQLCategory",
+      "node_type": "SQLCategory",
+      "properties": {
+        "category_id": "cat_perf",
+        "name": "Performance & Tuning",
+        "module": "DBA",
+        "query_count": 35
+      }
+    },
+    {
+      "node_id": "sql_cat_sec",
+      "node_name": "SQLCategory",
+      "node_type": "SQLCategory",
+      "properties": {
+        "category_id": "cat_sec",
+        "name": "Security & Access",
+        "module": "Security",
+        "query_count": 40
+      }
+    },
+    {
+      "node_id": "sql_cat_wf",
+      "node_name": "SQLCategory",
+      "node_type": "SQLCategory",
+      "properties": {
+        "category_id": "cat_wf",
+        "name": "Workflow",
+        "module": "WF",
+        "query_count": 30
+      }
+    },
+    {
+      "node_id": "sql_cat_multi",
+      "node_name": "SQLCategory",
+      "node_type": "SQLCategory",
+      "properties": {
+        "category_id": "cat_multi",
+        "name": "Multi-Org & Diagnostics",
+        "module": "Multi",
+        "query_count": 70
+      }
+    },
+    {
+      "node_id": "proc_p2p",
+      "node_name": "BusinessProcess",
+      "node_type": "BusinessProcess",
+      "properties": {
+        "processCode": "P2P",
+        "processName": "Procure-to-Pay",
+        "primaryModules": [
+          "PO",
+          "AP",
+          "INV"
+        ],
+        "secondaryModules": [
+          "GL",
+          "CM",
+          "iEXP"
+        ],
+        "startEvent": "Purchase Requisition Created",
+        "endEvent": "Supplier Payment Cleared"
+      }
+    },
+    {
+      "node_id": "proc_o2c",
+      "node_name": "BusinessProcess",
+      "node_type": "BusinessProcess",
+      "properties": {
+        "processCode": "O2C",
+        "processName": "Order-to-Cash",
+        "primaryModules": [
+          "OM",
+          "INV",
+          "AR"
+        ],
+        "secondaryModules": [
+          "GL",
+          "CM"
+        ],
+        "startEvent": "Sales Order Created",
+        "endEvent": "Cash Receipt Applied"
+      }
+    },
+    {
+      "node_id": "proc_h2r",
+      "node_name": "BusinessProcess",
+      "node_type": "BusinessProcess",
+      "properties": {
+        "processCode": "H2R",
+        "processName": "Hire-to-Retire",
+        "primaryModules": [
+          "HRMS",
+          "PAY",
+          "BEN"
+        ],
+        "startEvent": "Job Requisition Created",
+        "endEvent": "Final Pay Processed"
+      }
+    },
+    {
+      "node_id": "proc_r2r",
+      "node_name": "BusinessProcess",
+      "node_type": "BusinessProcess",
+      "properties": {
+        "processCode": "R2R",
+        "processName": "Record-to-Report",
+        "primaryModules": [
+          "GL",
+          "AP",
+          "AR",
+          "FA",
+          "CM"
+        ],
+        "startEvent": "Subledger Transactions",
+        "endEvent": "Financial Statements Published"
+      }
+    },
+    {
+      "node_id": "comp_001",
+      "node_name": "ComplianceRule",
+      "node_type": "ComplianceRule",
+      "properties": {
+        "ruleId": "COMP-001",
+        "ruleName": "ORG_ID Required",
+        "category": "COMPLIANCE",
+        "severity": "CRITICAL",
+        "affectedModules": [
+          "AP",
+          "AR",
+          "PO",
+          "INV",
+          "OM",
+          "iEXP",
+          "CM",
+          "FA"
+        ],
+        "correctUsage": "WHERE table.org_id = :p_org_id"
+      }
+    },
+    {
+      "node_id": "comp_002",
+      "node_name": "ComplianceRule",
+      "node_type": "ComplianceRule",
+      "properties": {
+        "ruleId": "COMP-002",
+        "ruleName": "DateTrack Filter Required",
+        "category": "COMPLIANCE",
+        "severity": "CRITICAL",
+        "affectedModules": [
+          "HRMS",
+          "PAY",
+          "BEN"
+        ],
+        "correctUsage": "WHERE SYSDATE BETWEEN effective_start_date AND effective_end_date"
+      }
+    },
+    {
+      "node_id": "comp_003",
+      "node_name": "ComplianceRule",
+      "node_type": "ComplianceRule",
+      "properties": {
+        "ruleId": "COMP-003",
+        "ruleName": "GL Ledger ID Not Org ID",
+        "category": "COMPLIANCE",
+        "severity": "CRITICAL",
+        "affectedModules": [
+          "GL"
+        ],
+        "correctUsage": "WHERE gjh.ledger_id = :p_ledger_id"
+      }
+    },
+    {
+      "node_id": "comp_004",
+      "node_name": "ComplianceRule",
+      "node_type": "ComplianceRule",
+      "properties": {
+        "ruleId": "COMP-004",
+        "ruleName": "Cancelled Invoice Filter",
+        "category": "COMPLIANCE",
+        "severity": "MAJOR",
+        "affectedModules": [
+          "AP"
+        ],
+        "correctUsage": "AND aia.cancelled_date IS NULL"
+      }
+    },
+    {
+      "node_id": "comp_005",
+      "node_name": "ComplianceRule",
+      "node_type": "ComplianceRule",
+      "properties": {
+        "ruleId": "COMP-005",
+        "ruleName": "Reversal Distribution Filter",
+        "category": "COMPLIANCE",
+        "severity": "MAJOR",
+        "affectedModules": [
+          "AP"
+        ],
+        "correctUsage": "AND aida.reversal_flag != 'Y'"
+      }
+    },
+    {
+      "node_id": "comp_006",
+      "node_name": "ComplianceRule",
+      "node_type": "ComplianceRule",
+      "properties": {
+        "ruleId": "COMP-006",
+        "ruleName": "Primary Assignment Filter",
+        "category": "COMPLIANCE",
+        "severity": "MAJOR",
+        "affectedModules": [
+          "HRMS",
+          "PAY"
+        ],
+        "correctUsage": "AND paaf.primary_flag = 'Y'"
+      }
+    },
+    {
+      "node_id": "comp_007",
+      "node_name": "ComplianceRule",
+      "node_type": "ComplianceRule",
+      "properties": {
+        "ruleId": "COMP-007",
+        "ruleName": "Bind Variables Required",
+        "category": "SECURITY",
+        "severity": "CRITICAL",
+        "affectedModules": [
+          "AP",
+          "AR",
+          "GL",
+          "PO",
+          "INV",
+          "HRMS",
+          "PAY",
+          "FA",
+          "CM",
+          "BEN",
+          "iEXP",
+          "OM"
+        ],
+        "correctUsage": "WHERE org_id = :p_org_id"
+      }
+    },
+    {
+      "node_id": "comp_008",
+      "node_name": "ComplianceRule",
+      "node_type": "ComplianceRule",
+      "properties": {
+        "ruleId": "COMP-008",
+        "ruleName": "No SELECT Star",
+        "category": "PERFORMANCE",
+        "severity": "MAJOR",
+        "correctUsage": "SELECT col1, col2, col3 FROM table (never SELECT *)"
+      }
+    },
+    {
+      "node_id": "comp_009",
+      "node_name": "ComplianceRule",
+      "node_type": "ComplianceRule",
+      "properties": {
+        "ruleId": "COMP-009",
+        "ruleName": "No Functions on Indexed Columns",
+        "category": "PERFORMANCE",
+        "severity": "MAJOR",
+        "correctUsage": "WHERE date_col BETWEEN :p_start AND :p_end (not TO_CHAR(date_col))"
+      }
+    },
+    {
+      "node_id": "comp_010",
+      "node_name": "ComplianceRule",
+      "node_type": "ComplianceRule",
+      "properties": {
+        "ruleId": "COMP-010",
+        "ruleName": "HRMS Business Group Filter",
+        "category": "COMPLIANCE",
+        "severity": "CRITICAL",
+        "affectedModules": [
+          "HRMS"
+        ],
+        "correctUsage": "WHERE papf.business_group_id = :p_bg_id"
+      }
+    },
+    {
+      "node_id": "sqlpat_ap_001",
+      "node_name": "SQLPattern",
+      "node_type": "SQLPattern",
+      "properties": {
+        "patternId": "SQL-AP-001",
+        "module": "AP",
+        "difficulty": "BEGINNER",
+        "requiredFilters": [
+          "org_id",
+          "cancelled_date IS NULL",
+          "date range"
+        ]
+      }
+    },
+    {
+      "node_id": "sqlpat_gl_001",
+      "node_name": "SQLPattern",
+      "node_type": "SQLPattern",
+      "properties": {
+        "patternId": "SQL-GL-001",
+        "module": "GL",
+        "difficulty": "BEGINNER",
+        "requiredFilters": [
+          "ledger_id",
+          "status=P",
+          "period_name"
+        ]
+      }
+    },
+    {
+      "node_id": "sqlpat_hr_001",
+      "node_name": "SQLPattern",
+      "node_type": "SQLPattern",
+      "properties": {
+        "patternId": "SQL-HR-001",
+        "module": "HRMS",
+        "difficulty": "INTERMEDIATE",
+        "requiredFilters": [
+          "DateTrack papf",
+          "DateTrack paaf",
+          "primary_flag=Y",
+          "business_group_id"
+        ]
+      }
+    },
+    {
+      "node_id": "sqlpat_p2p_001",
+      "node_name": "SQLPattern",
+      "node_type": "SQLPattern",
+      "properties": {
+        "patternId": "SQL-P2P-001",
+        "module": "PO",
+        "difficulty": "ADVANCED",
+        "requiredFilters": [
+          "org_id on pha",
+          "outer joins for receipt/invoice/payment"
+        ]
+      }
+    },
+    {
+      "node_id": "sqlpat_o2c_001",
+      "node_name": "SQLPattern",
+      "node_type": "SQLPattern",
+      "properties": {
+        "patternId": "SQL-O2C-001",
+        "module": "OM",
+        "difficulty": "ADVANCED",
+        "requiredFilters": [
+          "org_id on ooh",
+          "outer joins",
+          "interface_line_context=ORDER ENTRY"
+        ]
+      }
+    },
+    {
+      "node_id": "sqlpat_pay_001",
+      "node_name": "SQLPattern",
+      "node_type": "SQLPattern",
+      "properties": {
+        "patternId": "SQL-PAY-001",
+        "module": "PAY",
+        "difficulty": "ADVANCED",
+        "requiredFilters": [
+          "DateTrack on 3 tables",
+          "action_type=R",
+          "action_status=C"
+        ]
+      }
+    },
+    {
+      "node_id": "rice_rpt_ap_001",
+      "node_name": "RICEComponent",
+      "node_type": "RICEComponent",
+      "properties": {
+        "componentId": "RPT-AP-001",
+        "componentName": "Invoice Register",
+        "riceCategory": "R",
+        "componentType": "REPORT",
+        "module": "AP",
+        "reportType": "RDF",
+        "concurrentProgramName": "APXINREG",
+        "complexity": "LOW"
+      }
+    },
+    {
+      "node_id": "rice_rpt_ap_002",
+      "node_name": "RICEComponent",
+      "node_type": "RICEComponent",
+      "properties": {
+        "componentId": "RPT-AP-002",
+        "componentName": "Payment Register",
+        "riceCategory": "R",
+        "componentType": "REPORT",
+        "module": "AP",
+        "reportType": "BIP",
+        "concurrentProgramName": "APXPAWKB",
+        "complexity": "MEDIUM"
+      }
+    },
+    {
+      "node_id": "rice_rpt_gl_001",
+      "node_name": "RICEComponent",
+      "node_type": "RICEComponent",
+      "properties": {
+        "componentId": "RPT-GL-001",
+        "componentName": "Trial Balance Report",
+        "riceCategory": "R",
+        "componentType": "REPORT",
+        "module": "GL",
+        "reportType": "XML_PUBLISHER",
+        "concurrentProgramName": "GLXTRBAL",
+        "complexity": "MEDIUM"
+      }
+    },
+    {
+      "node_id": "rice_int_ap_001",
+      "node_name": "RICEComponent",
+      "node_type": "RICEComponent",
+      "properties": {
+        "componentId": "INT-AP-001",
+        "componentName": "AP Invoice Open Interface",
+        "riceCategory": "I",
+        "componentType": "INTERFACE",
+        "module": "AP",
+        "interfaceDirection": "INBOUND",
+        "interfaceMethod": "OPEN_INTERFACE",
+        "openInterfaceTable": "ap_invoices_interface",
+        "complexity": "MEDIUM"
+      }
+    },
+    {
+      "node_id": "rice_int_gl_001",
+      "node_name": "RICEComponent",
+      "node_type": "RICEComponent",
+      "properties": {
+        "componentId": "INT-GL-001",
+        "componentName": "GL Journal Open Interface",
+        "riceCategory": "I",
+        "componentType": "INTERFACE",
+        "module": "GL",
+        "interfaceDirection": "INBOUND",
+        "interfaceMethod": "OPEN_INTERFACE",
+        "openInterfaceTable": "gl_interface",
+        "complexity": "MEDIUM"
+      }
+    },
+    {
+      "node_id": "rice_int_hr_001",
+      "node_name": "RICEComponent",
+      "node_type": "RICEComponent",
+      "properties": {
+        "componentId": "INT-HR-001",
+        "componentName": "HR Employee Open Interface",
+        "riceCategory": "I",
+        "componentType": "INTERFACE",
+        "module": "HRMS",
+        "interfaceDirection": "INBOUND",
+        "interfaceMethod": "API_BASED",
+        "apiPackage": "HR_PERSON_API",
+        "complexity": "HIGH"
+      }
+    },
+    {
+      "node_id": "rice_conv_ap_001",
+      "node_name": "RICEComponent",
+      "node_type": "RICEComponent",
+      "properties": {
+        "componentId": "CONV-AP-001",
+        "componentName": "Supplier Master Data Conversion",
+        "riceCategory": "C",
+        "componentType": "CONVERSION",
+        "module": "AP",
+        "conversionType": "INITIAL_LOAD",
+        "dataCategory": "MASTER_DATA",
+        "targetAPI": "AP_VENDOR_PUB.CREATE_VENDOR",
+        "complexity": "HIGH"
+      }
+    },
+    {
+      "node_id": "rice_conv_gl_001",
+      "node_name": "RICEComponent",
+      "node_type": "RICEComponent",
+      "properties": {
+        "componentId": "CONV-GL-001",
+        "componentName": "GL Opening Balances Conversion",
+        "riceCategory": "C",
+        "componentType": "CONVERSION",
+        "module": "GL",
+        "conversionType": "OPEN_BALANCES",
+        "complexity": "HIGH"
+      }
+    },
+    {
+      "node_id": "rice_conv_ap_002",
+      "node_name": "RICEComponent",
+      "node_type": "RICEComponent",
+      "properties": {
+        "componentId": "CONV-AP-002",
+        "componentName": "AP Open Invoices Conversion",
+        "riceCategory": "C",
+        "componentType": "CONVERSION",
+        "module": "AP",
+        "conversionType": "OPEN_ITEMS",
+        "complexity": "HIGH"
+      }
+    },
+    {
+      "node_id": "rice_ext_ap_001",
+      "node_name": "RICEComponent",
+      "node_type": "RICEComponent",
+      "properties": {
+        "componentId": "EXT-AP-001",
+        "componentName": "AP Invoice Validation Trigger",
+        "riceCategory": "E",
+        "componentType": "EXTENSION",
+        "module": "AP",
+        "extensionType": "DATABASE_TRIGGER",
+        "baseObject": "AP_INVOICES_ALL",
+        "complexity": "MEDIUM"
+      }
+    },
+    {
+      "node_id": "rice_ext_ap_002",
+      "node_name": "RICEComponent",
+      "node_type": "RICEComponent",
+      "properties": {
+        "componentId": "EXT-AP-002",
+        "componentName": "XXCUST_AP_UTILS_PKG",
+        "riceCategory": "E",
+        "componentType": "EXTENSION",
+        "module": "AP",
+        "extensionType": "CUSTOM_PACKAGE",
+        "complexity": "MEDIUM"
+      }
+    },
+    {
+      "node_id": "ame_ap_001",
+      "node_name": "AMEConfiguration",
+      "node_type": "AMEConfiguration",
+      "properties": {
+        "ameId": "AME-AP-001",
+        "ameName": "AP Invoice Approval",
+        "transactionType": "APINVOICE",
+        "module": "AP",
+        "approvalType": "SUPERVISORY",
+        "thresholds": [
+          10000,
+          50000,
+          100000
+        ]
+      }
+    },
+    {
+      "node_id": "ame_po_001",
+      "node_name": "AMEConfiguration",
+      "node_type": "AMEConfiguration",
+      "properties": {
+        "ameId": "AME-PO-001",
+        "ameName": "PO Approval",
+        "transactionType": "PURCHASE_ORDER",
+        "module": "PO",
+        "approvalType": "POSITION",
+        "thresholds": [
+          25000,
+          100000
+        ]
+      }
+    },
+    {
+      "node_id": "wf_ap_001",
+      "node_name": "OracleWorkflow",
+      "node_type": "OracleWorkflow",
+      "properties": {
+        "workflowId": "WF-AP-001",
+        "workflowName": "AP Invoice Approval Workflow",
+        "itemType": "APINVOICE",
+        "module": "AP",
+        "workflowType": "APPROVAL",
+        "relatedAME": "AME-AP-001"
+      }
+    },
+    {
+      "node_id": "wf_po_001",
+      "node_name": "OracleWorkflow",
+      "node_type": "OracleWorkflow",
+      "properties": {
+        "workflowId": "WF-PO-001",
+        "workflowName": "PO Approval Workflow",
+        "itemType": "POAPPRV",
+        "module": "PO",
+        "workflowType": "APPROVAL",
+        "relatedAME": "AME-PO-001"
+      }
+    },
+    {
+      "node_id": "wf_hr_001",
+      "node_name": "OracleWorkflow",
+      "node_type": "OracleWorkflow",
+      "properties": {
+        "workflowId": "WF-HR-001",
+        "workflowName": "HR New Hire Notification",
+        "itemType": "HRSSA",
+        "module": "HRMS",
+        "workflowType": "NOTIFICATION"
+      }
+    },
+    {
+      "node_id": "oaf_ap_001",
+      "node_name": "OAFComponent",
+      "node_type": "OAFComponent",
+      "properties": {
+        "oafId": "OAF-AP-001",
+        "componentName": "AP Invoice Entry Page Extension",
+        "extensionType": "CONTROLLER_EXTENSION",
+        "module": "AP",
+        "javaControllerClass": "xxcust.oracle.apps.ap.invoice.webui.XXCUSTInvoiceEntryPageCO"
+      }
+    },
+    {
+      "node_id": "soa_ap_001",
+      "node_name": "SOAService",
+      "node_type": "SOAService",
+      "properties": {
+        "soaId": "SOA-AP-001",
+        "serviceName": "APInvoiceCompositeService",
+        "serviceType": "BPEL_PROCESS",
+        "module": "AP",
+        "integrationPattern": "SYNC_REQUEST_REPLY",
+        "namespace": "http://xmlns.oracle.com/xxcust/APInvoiceComposite"
+      }
+    },
+    {
+      "node_id": "apex_ap_001",
+      "node_name": "APEXApplication",
+      "node_type": "APEXApplication",
+      "properties": {
+        "apexId": "APEX-AP-001",
+        "appName": "AP Invoice Management",
+        "appAlias": "AP_INV_MGMT",
+        "module": "AP",
+        "authenticationScheme": "EBS_SSO",
+        "pageCount": 3
+      }
+    },
+    {
+      "node_id": "adf_ap_001",
+      "node_name": "ADFApplication",
+      "node_type": "ADFApplication",
+      "properties": {
+        "adfId": "ADF-AP-001",
+        "appName": "AP Invoice ADF App",
+        "module": "AP",
+        "adfVersion": "12.2.1.4",
+        "deploymentTarget": "WEBLOGIC"
+      }
+    },
+    {
+      "node_id": "redwood_ap_001",
+      "node_name": "RedwoodComponent",
+      "node_type": "RedwoodComponent",
+      "properties": {
+        "redwoodId": "RED-AP-001",
+        "componentName": "AP Invoice Redwood App",
+        "componentType": "PAGE",
+        "module": "AP",
+        "oracleJETVersion": "14.0",
+        "vbcsVersion": "23.2",
+        "deploymentTarget": "VBCS"
+      }
+    },
+    {
+      "node_id": "mk_ap_001",
+      "node_name": "ModuleKnowledge",
+      "node_type": "ModuleKnowledge",
+      "properties": {
+        "knowledgeId": "AP-FUNC-001",
+        "moduleCode": "AP",
+        "topicName": "AP Functional Setup",
+        "topicCategory": "SETUP",
+        "difficulty": "INTERMEDIATE",
+        "businessProcess": "P2P"
+      }
+    },
+    {
+      "node_id": "mk_ap_002",
+      "node_name": "ModuleKnowledge",
+      "node_type": "ModuleKnowledge",
+      "properties": {
+        "knowledgeId": "AP-FUNC-002",
+        "moduleCode": "AP",
+        "topicName": "AP Invoice Processing End-to-End",
+        "topicCategory": "FUNCTIONAL",
+        "difficulty": "INTERMEDIATE",
+        "businessProcess": "P2P"
+      }
+    },
+    {
+      "node_id": "mk_gl_001",
+      "node_name": "ModuleKnowledge",
+      "node_type": "ModuleKnowledge",
+      "properties": {
+        "knowledgeId": "GL-FUNC-001",
+        "moduleCode": "GL",
+        "topicName": "GL Complete Functional Setup",
+        "topicCategory": "SETUP",
+        "difficulty": "ADVANCED",
+        "businessProcess": "R2R"
+      }
+    },
+    {
+      "node_id": "mk_ar_001",
+      "node_name": "ModuleKnowledge",
+      "node_type": "ModuleKnowledge",
+      "properties": {
+        "knowledgeId": "AR-FUNC-001",
+        "moduleCode": "AR",
+        "topicName": "AR Complete Functional Setup",
+        "topicCategory": "SETUP",
+        "difficulty": "INTERMEDIATE",
+        "businessProcess": "O2C"
+      }
+    },
+    {
+      "node_id": "mk_p2p_001",
+      "node_name": "ModuleKnowledge",
+      "node_type": "ModuleKnowledge",
+      "properties": {
+        "knowledgeId": "P2P-PROC-001",
+        "moduleCode": "PO",
+        "topicName": "Procure-to-Pay Complete Process",
+        "topicCategory": "FUNCTIONAL",
+        "difficulty": "ADVANCED",
+        "businessProcess": "P2P"
+      }
+    },
+    {
+      "node_id": "mk_o2c_001",
+      "node_name": "ModuleKnowledge",
+      "node_type": "ModuleKnowledge",
+      "properties": {
+        "knowledgeId": "O2C-PROC-001",
+        "moduleCode": "OM",
+        "topicName": "Order-to-Cash Complete Process",
+        "topicCategory": "FUNCTIONAL",
+        "difficulty": "ADVANCED",
+        "businessProcess": "O2C"
+      }
+    },
+    {
+      "node_id": "mk_hrms_001",
+      "node_name": "ModuleKnowledge",
+      "node_type": "ModuleKnowledge",
+      "properties": {
+        "knowledgeId": "HRMS-FUNC-001",
+        "moduleCode": "HRMS",
+        "topicName": "HRMS Complete Setup and Processing",
+        "topicCategory": "FUNCTIONAL",
+        "difficulty": "ADVANCED",
+        "businessProcess": "H2R"
+      }
+    },
+    {
+      "node_id": "mk_pay_001",
+      "node_name": "ModuleKnowledge",
+      "node_type": "ModuleKnowledge",
+      "properties": {
+        "knowledgeId": "PAY-FUNC-001",
+        "moduleCode": "PAY",
+        "topicName": "Oracle Payroll Complete Setup",
+        "topicCategory": "FUNCTIONAL",
+        "difficulty": "EXPERT",
+        "businessProcess": "H2R"
+      }
+    },
+    {
+      "node_id": "mk_ben_001",
+      "node_name": "ModuleKnowledge",
+      "node_type": "ModuleKnowledge",
+      "properties": {
+        "knowledgeId": "BEN-FUNC-001",
+        "moduleCode": "BEN",
+        "topicName": "Oracle Benefits Complete Setup",
+        "topicCategory": "FUNCTIONAL",
+        "difficulty": "ADVANCED",
+        "businessProcess": "H2R"
+      }
+    },
+    {
+      "node_id": "mk_cm_001",
+      "node_name": "ModuleKnowledge",
+      "node_type": "ModuleKnowledge",
+      "properties": {
+        "knowledgeId": "CM-FUNC-001",
+        "moduleCode": "CM",
+        "topicName": "Oracle Cash Management Complete Setup",
+        "topicCategory": "FUNCTIONAL",
+        "difficulty": "ADVANCED",
+        "businessProcess": "R2R"
+      }
+    },
+    {
+      "node_id": "mk_iexp_001",
+      "node_name": "ModuleKnowledge",
+      "node_type": "ModuleKnowledge",
+      "properties": {
+        "knowledgeId": "iEXP-FUNC-001",
+        "moduleCode": "iEXP",
+        "topicName": "Oracle iExpense Complete Setup",
+        "topicCategory": "FUNCTIONAL",
+        "difficulty": "INTERMEDIATE",
+        "businessProcess": "P2P"
+      }
+    },
+    {
+      "node_id": "mk_fa_001",
+      "node_name": "ModuleKnowledge",
+      "node_type": "ModuleKnowledge",
+      "properties": {
+        "knowledgeId": "FA-FUNC-001",
+        "moduleCode": "FA",
+        "topicName": "Oracle Fixed Assets Complete Setup",
+        "topicCategory": "FUNCTIONAL",
+        "difficulty": "ADVANCED",
+        "businessProcess": "R2R"
+      }
+    },
+    {
+      "node_id": "mk_plsql_001",
+      "node_name": "ModuleKnowledge",
+      "node_type": "ModuleKnowledge",
+      "properties": {
+        "knowledgeId": "PLSQL-ADV-001",
+        "moduleCode": "TECH",
+        "topicName": "Advanced PL/SQL Patterns for Oracle EBS",
+        "topicCategory": "TECHNICAL",
+        "difficulty": "EXPERT"
+      }
+    },
+    {
+      "node_id": "mk_trouble_001",
+      "node_name": "ModuleKnowledge",
+      "node_type": "ModuleKnowledge",
+      "properties": {
+        "knowledgeId": "TROUBLE-001",
+        "moduleCode": "TECH",
+        "topicName": "Oracle EBS Complete Troubleshooting Guide",
+        "topicCategory": "TROUBLESHOOTING",
+        "difficulty": "EXPERT"
+      }
+    },
+    {
+      "node_id": "mk_interview_001",
+      "node_name": "ModuleKnowledge",
+      "node_type": "ModuleKnowledge",
+      "properties": {
+        "knowledgeId": "INTERVIEW-001",
+        "moduleCode": "ALL",
+        "topicName": "Complete Oracle EBS Interview Questions",
+        "topicCategory": "LEARNING",
+        "difficulty": "ALL_LEVELS"
+      }
+    }
+  ]
+}

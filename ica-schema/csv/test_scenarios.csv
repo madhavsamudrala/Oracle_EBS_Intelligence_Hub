@@ -1,0 +1,36 @@
+scenario_id,tab,role,action,input,expected_result,report_key,pass_condition
+SCN_001,tab-chat,employee,natural_language_query,show aged payables,Load Aged Payables Detail report,aged_payables_detail,Report loads with sample data
+SCN_002,tab-chat,employee,natural_language_query,top vendors by payment,Load Suppliers High Payments report,suppliers_high_payments_by_year,Report loads with chart
+SCN_003,tab-chat,employee,natural_language_query,who are active employees,Load Active Employees report,active_employees,Report loads with HRMS data
+SCN_004,tab-chat,technical,natural_language_query,explain multi-org,Academy response on Multi-Org topic,,Response contains multi-org explanation
+SCN_005,tab-reports,employee,load_report,suppliers_report,Suppliers Report renders with data table,suppliers_report,Table shows VENDOR_ID VENDOR_NAME columns
+SCN_006,tab-reports,employee,load_report,gl_journals,GL Journals report renders,gl_journals,Table shows JE_HEADER_ID JOURNAL_NAME columns
+SCN_007,tab-reports,employee,load_report,active_employees,Active Employees report renders,active_employees,Table shows EMPLOYEE_NUMBER FULL_NAME columns
+SCN_008,tab-reports,technical,load_report,po_detail,PO Detail Report renders,po_detail,Table shows PO_NUMBER VENDOR_NAME columns
+SCN_009,tab-sql,technical,code_review,"SELECT * FROM ap_invoices_all",Violation detected — SELECT * prohibited,,Rule RULE_008 triggered with Critical severity
+SCN_010,tab-sql,technical,code_review,"SELECT invoice_id FROM ap_invoices_all WHERE vendor_id = 101",Violation detected — missing org_id filter,,Rule RULE_001 triggered with Critical severity
+SCN_011,tab-sql,technical,code_review,"SELECT ppf.person_id FROM per_all_people_f ppf",Violation detected — missing DateTrack filter,,Rule RULE_002 triggered with Critical severity
+SCN_012,tab-sql,technical,code_review,"SELECT ai.invoice_num FROM ap_invoices_all ai WHERE ai.org_id = mo_global.get_current_org_id() AND ai.cancelled_date IS NULL",No critical violations — clean query,,Review passes with 0 critical issues
+SCN_013,tab-academy,technical,open_module,acad_ap,AP Academy module loads with topics,,5 topics visible under Accounts Payable
+SCN_014,tab-academy,technical,open_module,acad_hrms,HRMS Academy module loads,,5 topics visible under Human Resources
+SCN_015,tab-academy,technical,search_topic,DateTrack,DateTrack explanation shown,,Response explains BETWEEN effective_start_date AND effective_end_date
+SCN_016,tab-sqllab,technical,search_query,outstanding invoices AP,SQL query returned and displayed,,SQL references AP_INVOICES_ALL with org_id filter
+SCN_017,tab-sqllab,technical,search_query,active employees HRMS,SQL query returned and displayed,,SQL references PER_ALL_PEOPLE_F with DateTrack filter
+SCN_018,tab-sqllab,technical,browse_category,AP,All AP SQL queries listed,,60 queries shown in category
+SCN_019,tab-dataconnect,employee,excel_upload,vendors_q1_2024.xlsx,"Columns fuzzy-mapped via dcAutoMap()",suppliers_report,"Mapping: 'Vendor Name' → VENDOR_NAME, 'Status' → VENDOR_STATUS"
+SCN_020,tab-dataconnect,employee,excel_upload,employees_list.xlsx,Columns fuzzy-mapped to active_employees,active_employees,"Mapping: 'Full Name' → FULL_NAME, 'Department' → DEPARTMENT"
+SCN_021,tab-dataconnect,employee,simulated_db,"SELECT * FROM ap_invoices WHERE status = 'UNPAID'",Simulated results loaded and mapped,aged_payables_detail,Data table renders with simulated rows
+SCN_022,tab-dataconnect,technical,live_db_connect,host=ebs-db port=1521 sid=EBSPRD user=apps,Proxy required message shown,,Error message: Live DB requires proxy server
+SCN_023,tab-reports,employee,delete_request,withholding_tax — reason: no longer needed,Delete request submitted to window.DELETE_REQUESTS,,Request appears in Technical delete queue
+SCN_024,tab-reports,technical,approve_delete,DEL001 — withholding_tax,Report moved to RECYCLE_BIN; blocked in DELETED_REPORTS,,Report disappears from report list; restore option available
+SCN_025,tab-reports,technical,reject_delete,DEL002 — supplier_audit,Delete request rejected; report remains active,,Report still accessible; notification sent
+SCN_026,tab-reports,technical,restore_deleted,withholding_tax from recycle bin,Report restored and accessible again,withholding_tax,Report reappears in report list
+SCN_027,tab-docgen,technical,generate_doc,suppliers_report,PDF-style doc generated with all sections,,Doc includes Overview SQL Columns Tables Rules Sample Data
+SCN_028,tab-docgen,employee,access_attempt,,Tab not visible — employee role blocked,,tab-docgen not in employee tab list
+SCN_029,login,employee,login,<employee password>,Employee sees only 3 tabs (Chat Reports DataConnect),,Tab count = 3
+SCN_030,login,technical,login,<technical password>,Technical sees all 7 tabs,,Tab count = 7
+SCN_031,tab-chat,employee,help_request,help,Help menu shown with available commands,,Response lists all chat commands
+SCN_032,tab-reports,employee,filter_by_module,AP,Only AP reports shown in filtered view,,Report list contains only AP module reports
+SCN_033,tab-reports,technical,filter_by_module,HRMS,Only HRMS reports shown,,Report list contains Active Employees Terminated Employees Supervisor Details Cost Allocation
+SCN_034,tab-sqllab,technical,copy_sql,outstanding invoices AP,SQL copied to clipboard,,Clipboard contains full SQL statement
+SCN_035,tab-sql,technical,generate_sql_from_prompt,show me iExpense reports for last month,SQL generated using generateSqlFromPrompt(),,Generated SQL references AP_EXPENSE_REPORT_HEADERS_ALL with date filter

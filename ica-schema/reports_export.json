@@ -1,0 +1,1590 @@
+{
+ "suppliers_list": {
+  "key": "suppliers_list",
+  "title": "Suppliers Report",
+  "module": "Accounts Payable",
+  "columns": [
+   "Supplier ID",
+   "Supplier Name",
+   "Type",
+   "Status",
+   "TIN/Tax ID",
+   "Country",
+   "State",
+   "City",
+   "Phone",
+   "Hold Status",
+   "Sites",
+   "Created Date"
+  ],
+  "sql": "SELECT aps.vendor_id,\n       aps.vendor_name,\n       aps.vendor_type_lookup_code  vendor_type,\n       aps.enabled_flag             status,\n       aps.num_1099                 tax_id,\n       aps.country,\n       apss.state,\n       apss.city,\n       aps.phone,\n       aps.hold_flag,\n       COUNT(apss.vendor_site_id)   site_count,\n       aps.creation_date\nFROM   ap_suppliers          aps\nJOIN   ap_supplier_sites_all apss ON apss.vendor_id = aps.vendor_id\nWHERE  aps.enabled_flag = 'Y'\nGROUP BY aps.vendor_id, aps.vendor_name, aps.vendor_type_lookup_code,\n         aps.enabled_flag, aps.num_1099, aps.country, apss.state,\n         apss.city, aps.phone, aps.hold_flag, aps.creation_date\nORDER BY aps.vendor_name",
+  "rows": [
+   [
+    10000,
+    "Accenture Inc",
+    "VENDOR",
+    "Active",
+    "47-6236452",
+    "US",
+    "IL",
+    "Chicago",
+    "312-308-7698",
+    "Y",
+    4,
+    "2023-05-09"
+   ],
+   [
+    10001,
+    "Deloitte Consulting",
+    "EMPLOYEE",
+    "Active",
+    "26-1591533",
+    "US",
+    "TX",
+    "Dallas",
+    "312-766-9931",
+    "N",
+    5,
+    "2024-11-05"
+   ],
+   [
+    10002,
+    "IBM Global Services",
+    "PARTY",
+    "Active",
+    "27-6998700",
+    "US",
+    "CA",
+    "San Jose",
+    "312-788-4756",
+    "N",
+    6,
+    "2025-04-15"
+   ]
+  ]
+ },
+ "suppliers_high_payments": {
+  "key": "suppliers_high_payments",
+  "title": "Suppliers Received High Payments (Last 3 Fiscal Years)",
+  "module": "Accounts Payable",
+  "columns": [
+   "Vendor ID",
+   "Vendor Name",
+   "FY2023 Amount",
+   "FY2024 Amount",
+   "FY2025 Amount",
+   "Total 3Y Payments",
+   "Invoice Count",
+   "Avg Invoice",
+   "Last Payment Date",
+   "Rank"
+  ],
+  "sql": "SELECT aps.vendor_id,\n       aps.vendor_name,\n       SUM(CASE WHEN EXTRACT(YEAR FROM apia.invoice_date)=2022\n                THEN apia.invoice_amount ELSE 0 END) fy2022,\n       SUM(CASE WHEN EXTRACT(YEAR FROM apia.invoice_date)=2023\n                THEN apia.invoice_amount ELSE 0 END) fy2023,\n       SUM(CASE WHEN EXTRACT(YEAR FROM apia.invoice_date)=2024\n                THEN apia.invoice_amount ELSE 0 END) fy2024,\n       SUM(apia.invoice_amount)        total_3y,\n       COUNT(apia.invoice_id)          invoice_count,\n       AVG(apia.invoice_amount)        avg_invoice,\n       MAX(apc.check_date)             last_payment_date,\n       RANK() OVER (ORDER BY SUM(apia.invoice_amount) DESC) rnk\nFROM   ap_invoices_all     apia\nJOIN   ap_suppliers        aps  ON aps.vendor_id  = apia.vendor_id\nJOIN   ap_invoice_payments apip ON apip.invoice_id = apia.invoice_id\nJOIN   ap_checks_all       apc  ON apc.check_id   = apip.check_id\nWHERE  apia.invoice_date >= ADD_MONTHS(SYSDATE,-36)\nAND    apia.payment_status_flag = 'Y'\nGROUP BY aps.vendor_id, aps.vendor_name\nORDER BY total_3y DESC",
+  "rows": [
+   [
+    10000,
+    "Accenture Inc",
+    "$130,611.00",
+    "$1,252,964.00",
+    "$1,753,273.00",
+    "$3,136,848.00",
+    121,
+    "$25,924.36",
+    "2025-02-14",
+    1
+   ],
+   [
+    10001,
+    "Deloitte Consulting",
+    "$1,265,528.00",
+    "$589,944.00",
+    "$672,725.00",
+    "$2,528,197.00",
+    19,
+    "$133,063.00",
+    "2025-09-05",
+    2
+   ],
+   [
+    10002,
+    "IBM Global Services",
+    "$337,264.00",
+    "$700,596.00",
+    "$769,134.00",
+    "$1,806,994.00",
+    172,
+    "$10,505.78",
+    "2025-08-26",
+    3
+   ]
+  ]
+ },
+ "supplier_paid_invoice_history": {
+  "key": "supplier_paid_invoice_history",
+  "title": "Supplier Paid Invoice History Report",
+  "module": "Accounts Payable",
+  "columns": [
+   "Invoice ID",
+   "Invoice Num",
+   "Vendor Name",
+   "Invoice Date",
+   "Invoice Type",
+   "Invoice Amount",
+   "Amount Paid",
+   "Payment Date",
+   "Check Number",
+   "Payment Method",
+   "Status"
+  ],
+  "sql": "SELECT apia.invoice_id,\n       apia.invoice_num,\n       aps.vendor_name,\n       apia.invoice_date,\n       apia.invoice_type_lookup_code invoice_type,\n       apia.invoice_amount,\n       apia.amount_paid,\n       apc.check_date payment_date,\n       apc.check_number,\n       apc.payment_method_code,\n       apia.payment_status_flag\nFROM   ap_invoices_all     apia\nJOIN   ap_suppliers        aps  ON aps.vendor_id   = apia.vendor_id\nJOIN   ap_invoice_payments apip ON apip.invoice_id = apia.invoice_id\nJOIN   ap_checks_all       apc  ON apc.check_id    = apip.check_id\nWHERE  apia.payment_status_flag IN ('Y','P')\nAND    apc.check_date BETWEEN :p_start_date AND :p_end_date\nORDER BY apc.check_date DESC",
+  "rows": [
+   [
+    200000,
+    "INV-2026-00001",
+    "Accenture Inc",
+    "2026-05-05",
+    "Standard",
+    "$84,628.00",
+    "$84,628.00",
+    "2026-02-19",
+    "CHK-976813",
+    "Check",
+    "Fully Paid"
+   ],
+   [
+    200001,
+    "INV-2026-00002",
+    "Deloitte Consulting",
+    "2026-04-03",
+    "Credit",
+    "$93,827.00",
+    "$93,827.00",
+    "2026-07-18",
+    "CHK-267372",
+    "Wire Transfer",
+    "Fully Paid"
+   ],
+   [
+    200002,
+    "INV-2026-00003",
+    "IBM Global Services",
+    "2026-12-01",
+    "Prepayment",
+    "$103,701.00",
+    "$103,701.00",
+    "2026-06-02",
+    "CHK-715926",
+    "EFT",
+    "Fully Paid"
+   ]
+  ]
+ },
+ "supplier_payment_history": {
+  "key": "supplier_payment_history",
+  "title": "Supplier Payment History Report",
+  "module": "Accounts Payable",
+  "columns": [
+   "Check ID",
+   "Check Number",
+   "Vendor Name",
+   "Check Date",
+   "Check Amount",
+   "Bank Account",
+   "Currency",
+   "Void Flag",
+   "Payment Batch",
+   "OU Name"
+  ],
+  "sql": "SELECT apc.check_id,\n       apc.check_number,\n       aps.vendor_name,\n       apc.check_date,\n       apc.amount check_amount,\n       apc.bank_account_name,\n       apc.currency_code,\n       apc.void_flag,\n       aba.name payment_batch,\n       haou.name ou_name\nFROM   ap_checks_all        apc\nJOIN   ap_suppliers         aps  ON aps.vendor_id    = apc.vendor_id\nJOIN   ap_batches_all       aba  ON aba.batch_id     = apc.future_pay_due_date\nJOIN   hr_all_organization_units haou ON haou.organization_id = apc.org_id\nWHERE  apc.status_lookup_code = 'CLEARED'\nORDER BY apc.check_date DESC",
+  "rows": [
+   [
+    300000,
+    "CHK-109083",
+    "Accenture Inc",
+    "2026-06-16",
+    "$410,955.00",
+    "BANK-ACCT-8530",
+    "USD",
+    "Y",
+    "BATCH-561",
+    "Cook County Primary (CCP)"
+   ],
+   [
+    300001,
+    "CHK-871252",
+    "Deloitte Consulting",
+    "2026-03-08",
+    "$170,448.00",
+    "BANK-ACCT-1028",
+    "USD",
+    "N",
+    "BATCH-390",
+    "Cook County Health (CCH)"
+   ],
+   [
+    300002,
+    "CHK-811642",
+    "IBM Global Services",
+    "2026-06-28",
+    "$129,409.00",
+    "BANK-ACCT-3335",
+    "USD",
+    "N",
+    "BATCH-995",
+    "Cook County Finance (CCF)"
+   ]
+  ]
+ },
+ "supplier_audit": {
+  "key": "supplier_audit",
+  "title": "Supplier Audit Report",
+  "module": "Accounts Payable",
+  "columns": [
+   "Audit ID",
+   "Vendor Name",
+   "Field Changed",
+   "Old Value",
+   "New Value",
+   "Changed By",
+   "Change Date",
+   "Change Type",
+   "Reason",
+   "IP Address"
+  ],
+  "sql": "SELECT faa.audit_id,\n       aps.vendor_name,\n       fac.column_name field_changed,\n       faa.old_value,\n       faa.new_value,\n       fu.user_name changed_by,\n       faa.last_update_date change_date,\n       faa.audit_transaction_type change_type,\n       faa.last_update_login,\n       NULL ip_address\nFROM   fnd_audit_trail faa\nJOIN   fnd_audit_columns fac ON fac.table_app_id = faa.table_app_id\nJOIN   ap_suppliers      aps ON TO_CHAR(aps.vendor_id) = faa.row_key\nJOIN   fnd_user          fu  ON fu.user_id = faa.last_updated_by\nWHERE  fac.table_name = 'AP_SUPPLIERS'\nORDER BY faa.last_update_date DESC",
+  "rows": [
+   [
+    900000,
+    "Accenture Inc",
+    "VENDOR_NAME",
+    "Old_Value_0",
+    "New_Value_0",
+    "JAMES",
+    "2026-01-13",
+    "INSERT",
+    "Routine Update",
+    "192.168.10.37"
+   ],
+   [
+    900001,
+    "Deloitte Consulting",
+    "HOLD_FLAG",
+    "Old_Value_1",
+    "New_Value_1",
+    "SARAH",
+    "2026-07-25",
+    "UPDATE",
+    "Routine Update",
+    "192.168.4.156"
+   ],
+   [
+    900002,
+    "IBM Global Services",
+    "ENABLED_FLAG",
+    "Old_Value_2",
+    "New_Value_2",
+    "MICHAEL",
+    "2026-12-26",
+    "DELETE",
+    "Routine Update",
+    "192.168.2.22"
+   ]
+  ]
+ },
+ "po_detail": {
+  "key": "po_detail",
+  "title": "Purchase Order Detail Report",
+  "module": "Purchasing",
+  "columns": [
+   "PO Number",
+   "PO Type",
+   "Vendor Name",
+   "Buyer",
+   "PO Date",
+   "Ship-To",
+   "Quantity",
+   "Unit Price",
+   "Line Total",
+   "Approved Status",
+   "Need By Date",
+   "Description"
+  ],
+  "sql": "SELECT poh.segment1             po_number,\n       poh.type_lookup_code      po_type,\n       aps.vendor_name,\n       ppf.full_name             buyer_name,\n       poh.creation_date         po_date,\n       hl.location_code          ship_to,\n       pol.quantity,\n       pol.unit_price,\n       pol.quantity * pol.unit_price line_total,\n       poh.authorization_status  approved_status,\n       pol.need_by_date,\n       pol.item_description\nFROM   po_headers_all   poh\nJOIN   po_lines_all     pol  ON pol.po_header_id = poh.po_header_id\nJOIN   ap_suppliers     aps  ON aps.vendor_id    = poh.vendor_id\nJOIN   per_people_f     ppf  ON ppf.person_id    = poh.agent_id\nJOIN   hr_locations_all hl   ON hl.location_id   = pol.ship_to_location_id\nWHERE  poh.org_id = :p_org_id\nAND    poh.creation_date BETWEEN :p_start AND :p_end\nORDER BY poh.creation_date DESC",
+  "rows": [
+   [
+    "PO-2026-00001",
+    "Standard",
+    "Accenture Inc",
+    "James Wilson",
+    "2026-02-22",
+    "CHICAGO-MAIN",
+    152,
+    "$10,049.00",
+    "$1,527,448.00",
+    "Approved",
+    "2026-12-07",
+    "IT Services - Lot 1"
+   ],
+   [
+    "PO-2026-00002",
+    "Blanket Release",
+    "Deloitte Consulting",
+    "Sarah Johnson",
+    "2026-06-10",
+    "CHICAGO-MAIN",
+    138,
+    "$30,053.00",
+    "$4,147,314.00",
+    "Pending",
+    "2026-06-01",
+    "IT Services - Lot 2"
+   ],
+   [
+    "PO-2026-00003",
+    "Contract",
+    "IBM Global Services",
+    "Michael Chen",
+    "2026-10-09",
+    "CHICAGO-MAIN",
+    345,
+    "$26,054.00",
+    "$8,988,630.00",
+    "Rejected",
+    "2026-02-13",
+    "IT Services - Lot 3"
+   ]
+  ]
+ },
+ "po_distribution": {
+  "key": "po_distribution",
+  "title": "Purchase Order Distribution Detail Report",
+  "module": "Purchasing",
+  "columns": [
+   "PO Number",
+   "Line#",
+   "Distribution#",
+   "GL Account",
+   "Cost Center",
+   "Fund",
+   "Amount",
+   "Quantity Ordered",
+   "Quantity Billed",
+   "Encumbrance Amount",
+   "Project",
+   "Task"
+  ],
+  "sql": "SELECT poh.segment1        po_number,\n       pol.line_num          line_num,\n       pod.distribution_num  dist_num,\n       gcc.concatenated_segments gl_account,\n       pod.code_combination_id,\n       pod.award_id          fund,\n       pod.amount_ordered    amount,\n       pod.quantity_ordered,\n       pod.quantity_billed,\n       pod.encumbered_amount,\n       pp.project_number,\n       pt.task_number\nFROM   po_distributions_all pod\nJOIN   po_headers_all       poh ON poh.po_header_id  = pod.po_header_id\nJOIN   po_lines_all         pol ON pol.po_line_id    = pod.po_line_id\nJOIN   gl_code_combinations gcc ON gcc.code_combination_id = pod.code_combination_id\nLEFT   JOIN pa_projects_all pp  ON pp.project_id    = pod.project_id\nLEFT   JOIN pa_tasks        pt  ON pt.task_id       = pod.task_id\nWHERE  poh.org_id = :p_org_id\nORDER BY poh.segment1, pol.line_num, pod.distribution_num",
+  "rows": [
+   [
+    "PO-2026-00001",
+    1,
+    1,
+    "01-000-5100-0000",
+    "CC-1001",
+    "FUND-42978",
+    "$58,300.00",
+    198,
+    189,
+    "$49,555.00",
+    "PROJ-5801",
+    "TASK-918"
+   ],
+   [
+    "PO-2026-00001",
+    2,
+    2,
+    "01-000-5200-0000",
+    "CC-1002",
+    "FUND-41214",
+    "$55,192.00",
+    125,
+    125,
+    "$46,913.20",
+    "PROJ-5213",
+    "TASK-824"
+   ],
+   [
+    "PO-2026-00001",
+    3,
+    1,
+    "01-000-5300-0000",
+    "CC-1003",
+    "FUND-41555",
+    "$64,699.00",
+    18,
+    42,
+    "$54,994.15",
+    "PROJ-1469",
+    "TASK-214"
+   ]
+  ]
+ },
+ "receipt_adjustments": {
+  "key": "receipt_adjustments",
+  "title": "Receipt Adjustments Report",
+  "module": "Purchasing",
+  "columns": [
+   "Receipt Number",
+   "PO Number",
+   "Vendor Name",
+   "Item Description",
+   "Ordered Qty",
+   "Received Qty",
+   "Adjustment Qty",
+   "Adjustment Reason",
+   "Adjustment Date",
+   "Status"
+  ],
+  "sql": "SELECT rsh.receipt_num,\n       poh.segment1           po_number,\n       aps.vendor_name,\n       pol.item_description,\n       pol.quantity           ordered_qty,\n       rt.quantity            received_qty,\n       rca.adjustment_quantity,\n       rca.reason_code,\n       rca.creation_date      adjustment_date,\n       rca.status_code\nFROM   rcv_shipment_headers  rsh\nJOIN   rcv_transactions      rt  ON rt.shipment_header_id = rsh.shipment_header_id\nJOIN   rcv_corrections       rca ON rca.transaction_id    = rt.transaction_id\nJOIN   po_headers_all        poh ON poh.po_header_id      = rt.po_header_id\nJOIN   po_lines_all          pol ON pol.po_line_id        = rt.po_line_id\nJOIN   ap_suppliers          aps ON aps.vendor_id         = poh.vendor_id\nWHERE  rca.creation_date >= ADD_MONTHS(SYSDATE,-12)\nORDER BY rca.creation_date DESC",
+  "rows": [
+   [
+    "RCV-351350",
+    "PO-2026-00001",
+    "Accenture Inc",
+    "Item Description 1",
+    131,
+    117,
+    -14,
+    "Short Shipment",
+    "2026-11-12",
+    "Pending"
+   ],
+   [
+    "RCV-909868",
+    "PO-2026-00002",
+    "Deloitte Consulting",
+    "Item Description 2",
+    394,
+    380,
+    -14,
+    "Damaged Goods",
+    "2026-07-02",
+    "Processed"
+   ],
+   [
+    "RCV-293771",
+    "PO-2026-00003",
+    "IBM Global Services",
+    "Item Description 3",
+    209,
+    194,
+    -15,
+    "Wrong Item",
+    "2026-01-02",
+    "Approved"
+   ]
+  ]
+ },
+ "savings_analysis": {
+  "key": "savings_analysis",
+  "title": "Savings Analysis Report (By Buyer / Category)",
+  "module": "Purchasing",
+  "columns": [
+   "Buyer Name",
+   "Category",
+   "Vendor Name",
+   "Target Price",
+   "Actual Price",
+   "Qty Purchased",
+   "List Savings",
+   "Negotiated Savings",
+   "Total Savings",
+   "Savings %",
+   "FY Period"
+  ],
+  "sql": "SELECT ppf.full_name          buyer_name,\n       mcat.category_concat_segs category,\n       aps.vendor_name,\n       pol.list_price_per_unit   target_price,\n       pol.unit_price            actual_price,\n       pol.quantity,\n       (pol.list_price_per_unit - pol.unit_price)*pol.quantity savings,\n       pol.negotiated_by_preparer_flag,\n       pol.quantity*(pol.list_price_per_unit - pol.unit_price) total_savings,\n       ROUND((1 - pol.unit_price/NULLIF(pol.list_price_per_unit,0))*100,2) pct_savings,\n       TO_CHAR(poh.creation_date,'YYYY-MM') fy_period\nFROM   po_lines_all     pol\nJOIN   po_headers_all   poh  ON poh.po_header_id = pol.po_header_id\nJOIN   ap_suppliers     aps  ON aps.vendor_id    = poh.vendor_id\nJOIN   per_people_f     ppf  ON ppf.person_id    = poh.agent_id\nJOIN   mtl_categories   mcat ON mcat.category_id = pol.category_id\nWHERE  pol.list_price_per_unit IS NOT NULL\nORDER BY total_savings DESC",
+  "rows": [
+   [
+    "James Wilson",
+    "IT Hardware",
+    "Accenture Inc",
+    "$5,498.00",
+    "$4,123.50",
+    99,
+    "$544,302.00",
+    "$408,226.50",
+    "$136,075.50",
+    "25.00%",
+    "2026-10"
+   ],
+   [
+    "Sarah Johnson",
+    "Software",
+    "Deloitte Consulting",
+    "$17,132.00",
+    "$12,849.00",
+    153,
+    "$2,621,196.00",
+    "$1,965,897.00",
+    "$655,299.00",
+    "25.00%",
+    "2026-09"
+   ],
+   [
+    "Michael Chen",
+    "Professional Svcs",
+    "IBM Global Services",
+    "$1,152.00",
+    "$864.00",
+    74,
+    "$85,248.00",
+    "$63,936.00",
+    "$21,312.00",
+    "25.00%",
+    "2026-08"
+   ]
+  ]
+ },
+ "aged_payables_detail": {
+  "key": "aged_payables_detail",
+  "title": "Aged Payables Detail Report",
+  "module": "Accounts Payable",
+  "columns": [
+   "Vendor Name",
+   "Invoice Number",
+   "Invoice Date",
+   "Due Date",
+   "Invoice Amount",
+   "Current (0-30)",
+   "31-60 Days",
+   "61-90 Days",
+   "91-120 Days",
+   "Over 120 Days",
+   "Total Outstanding"
+  ],
+  "sql": "SELECT aps.vendor_name,\n       apia.invoice_num,\n       apia.invoice_date,\n       apit.due_date,\n       apia.invoice_amount,\n       CASE WHEN SYSDATE-apit.due_date <= 30  THEN apit.amount_remaining ELSE 0 END cur_bucket,\n       CASE WHEN SYSDATE-apit.due_date BETWEEN 31 AND 60 THEN apit.amount_remaining ELSE 0 END b30_60,\n       CASE WHEN SYSDATE-apit.due_date BETWEEN 61 AND 90 THEN apit.amount_remaining ELSE 0 END b61_90,\n       CASE WHEN SYSDATE-apit.due_date BETWEEN 91 AND 120 THEN apit.amount_remaining ELSE 0 END b91_120,\n       CASE WHEN SYSDATE-apit.due_date > 120 THEN apit.amount_remaining ELSE 0 END over120,\n       apit.amount_remaining total_outstanding\nFROM   ap_invoices_all      apia\nJOIN   ap_suppliers         aps  ON aps.vendor_id  = apia.vendor_id\nJOIN   ap_payment_schedules apit ON apit.invoice_id = apia.invoice_id\nWHERE  apit.payment_status_flag != 'Y'\nAND    apia.org_id = :p_org_id\nORDER BY aps.vendor_name, apit.due_date",
+  "rows": [
+   [
+    "Accenture Inc",
+    "INV-799538",
+    "2026-09-23",
+    "2026-11-14",
+    "$35,787.00",
+    "$35,787.00",
+    "$0.00",
+    "$0.00",
+    "$0.00",
+    "$0.00",
+    "$35,787.00"
+   ],
+   [
+    "Deloitte Consulting",
+    "INV-794196",
+    "2026-10-26",
+    "2026-05-16",
+    "$388,769.00",
+    "$0.00",
+    "$388,769.00",
+    "$0.00",
+    "$0.00",
+    "$0.00",
+    "$388,769.00"
+   ],
+   [
+    "IBM Global Services",
+    "INV-423932",
+    "2026-01-14",
+    "2026-02-09",
+    "$33,463.00",
+    "$0.00",
+    "$0.00",
+    "$33,463.00",
+    "$0.00",
+    "$0.00",
+    "$33,463.00"
+   ]
+  ]
+ },
+ "aged_payables_summary": {
+  "key": "aged_payables_summary",
+  "title": "Aged Payables Summary Report",
+  "module": "Accounts Payable",
+  "columns": [
+   "Vendor Name",
+   "Vendor Type",
+   "Invoice Count",
+   "Total Outstanding",
+   "0-30 Days",
+   "31-60 Days",
+   "61-90 Days",
+   "Over 90 Days",
+   "Last Invoice Date"
+  ],
+  "sql": "SELECT aps.vendor_name,\n       aps.vendor_type_lookup_code,\n       COUNT(apia.invoice_id)     invoice_count,\n       SUM(apit.amount_remaining) total_outstanding,\n       SUM(CASE WHEN SYSDATE-apit.due_date<=30 THEN apit.amount_remaining ELSE 0 END) cur_30,\n       SUM(CASE WHEN SYSDATE-apit.due_date BETWEEN 31 AND 60 THEN apit.amount_remaining ELSE 0 END) b31_60,\n       SUM(CASE WHEN SYSDATE-apit.due_date BETWEEN 61 AND 90 THEN apit.amount_remaining ELSE 0 END) b61_90,\n       SUM(CASE WHEN SYSDATE-apit.due_date>90 THEN apit.amount_remaining ELSE 0 END) over90,\n       MAX(apia.invoice_date) last_invoice_date\nFROM   ap_invoices_all      apia\nJOIN   ap_suppliers         aps  ON aps.vendor_id  = apia.vendor_id\nJOIN   ap_payment_schedules apit ON apit.invoice_id = apia.invoice_id\nWHERE  apit.payment_status_flag != 'Y'\nGROUP BY aps.vendor_name, aps.vendor_type_lookup_code\nORDER BY total_outstanding DESC",
+  "rows": [
+   [
+    "Accenture Inc",
+    "VENDOR",
+    11,
+    "$783,672.00",
+    "$313,468.80",
+    "$235,101.60",
+    "$156,734.40",
+    "$78,367.20",
+    "2026-07-20"
+   ],
+   [
+    "Deloitte Consulting",
+    "VENDOR",
+    29,
+    "$310,531.00",
+    "$124,212.40",
+    "$93,159.30",
+    "$62,106.20",
+    "$31,053.10",
+    "2026-02-05"
+   ],
+   [
+    "IBM Global Services",
+    "VENDOR",
+    48,
+    "$1,242,708.00",
+    "$497,083.20",
+    "$372,812.40",
+    "$248,541.60",
+    "$124,270.80",
+    "2026-07-09"
+   ]
+  ]
+ },
+ "ap_trial_balance": {
+  "key": "ap_trial_balance",
+  "title": "Accounts Payable Trial Balance",
+  "module": "Accounts Payable",
+  "columns": [
+   "Vendor Name",
+   "GL Account",
+   "Liability Balance",
+   "Prepayment Balance",
+   "Discount Available",
+   "Net Balance",
+   "Period Name",
+   "OU Name"
+  ],
+  "sql": "SELECT aps.vendor_name,\n       gcc.concatenated_segments gl_account,\n       SUM(CASE WHEN aca.accounting_class_code='LIABILITY'\n                THEN aca.accounted_cr - aca.accounted_dr ELSE 0 END) liability_bal,\n       SUM(CASE WHEN aca.accounting_class_code='PREPAID'\n                THEN aca.accounted_cr - aca.accounted_dr ELSE 0 END) prepay_bal,\n       SUM(DECODE(aca.accounting_class_code,'DISCOUNT',aca.accounted_cr,0)) disc_avail,\n       SUM(aca.accounted_cr - aca.accounted_dr) net_bal,\n       gp.period_name,\n       haou.name ou_name\nFROM   ap_ae_lines_all        aca\nJOIN   ap_ae_headers_all      ach  ON ach.ae_header_id = aca.ae_header_id\nJOIN   ap_invoices_all        apia ON apia.invoice_id  = ach.source_id\nJOIN   ap_suppliers           aps  ON aps.vendor_id    = apia.vendor_id\nJOIN   gl_code_combinations   gcc  ON gcc.code_combination_id = aca.code_combination_id\nJOIN   gl_periods             gp   ON gp.period_name   = ach.period_name\nJOIN   hr_all_organization_units haou ON haou.organization_id = apia.org_id\nWHERE  gp.period_name = :p_period\nGROUP BY aps.vendor_name, gcc.concatenated_segments, gp.period_name, haou.name\nORDER BY aps.vendor_name",
+  "rows": [
+   [
+    "Accenture Inc",
+    "01-000-5100-0000",
+    "$43,960.00",
+    "$49,396.00",
+    "$879.20",
+    "$93,356.00",
+    "2026-JAN",
+    "Cook County Primary (CCP)"
+   ],
+   [
+    "Deloitte Consulting",
+    "01-000-5200-0000",
+    "$405,936.00",
+    "$34,924.00",
+    "$8,118.72",
+    "$440,860.00",
+    "2026-FEB",
+    "Cook County Health (CCH)"
+   ],
+   [
+    "IBM Global Services",
+    "01-000-5300-0000",
+    "$114,011.00",
+    "$19,013.00",
+    "$2,280.22",
+    "$133,024.00",
+    "2026-MAR",
+    "Cook County Finance (CCF)"
+   ]
+  ]
+ },
+ "invoice_register": {
+  "key": "invoice_register",
+  "title": "Invoice Register",
+  "module": "Accounts Payable",
+  "columns": [
+   "Invoice ID",
+   "Invoice Num",
+   "Vendor Name",
+   "Invoice Date",
+   "Invoice Type",
+   "Invoice Amount",
+   "Tax Amount",
+   "Freight",
+   "Net Amount",
+   "Payment Status",
+   "GL Period",
+   "Batch Name"
+  ],
+  "sql": "SELECT apia.invoice_id,\n       apia.invoice_num,\n       aps.vendor_name,\n       apia.invoice_date,\n       apia.invoice_type_lookup_code,\n       apia.invoice_amount,\n       apia.total_tax_amount,\n       apia.freight_amount,\n       apia.invoice_amount - NVL(apia.total_tax_amount,0) - NVL(apia.freight_amount,0) net_amount,\n       apia.payment_status_flag,\n       apia.gl_date_period_name,\n       aba.name batch_name\nFROM   ap_invoices_all apia\nJOIN   ap_suppliers    aps ON aps.vendor_id = apia.vendor_id\nLEFT   JOIN ap_batches_all aba ON aba.batch_id = apia.batch_id\nWHERE  apia.org_id = :p_org_id\nAND    apia.invoice_date BETWEEN :p_start AND :p_end\nORDER BY apia.invoice_date DESC",
+  "rows": [
+   [
+    400000,
+    "INV-2026-00001",
+    "Accenture Inc",
+    "2026-11-09",
+    "Standard",
+    "$125,470.00",
+    "$10,664.95",
+    "$89.00",
+    "$114,716.05",
+    "Y",
+    "2026-JAN",
+    "BATCH-795"
+   ],
+   [
+    400001,
+    "INV-2026-00002",
+    "Deloitte Consulting",
+    "2026-10-03",
+    "Credit",
+    "$77,058.00",
+    "$6,549.93",
+    "$368.00",
+    "$70,140.07",
+    "N",
+    "2026-FEB",
+    "BATCH-388"
+   ],
+   [
+    400002,
+    "INV-2026-00003",
+    "IBM Global Services",
+    "2026-03-13",
+    "Prepayment",
+    "$97,423.00",
+    "$8,280.96",
+    "$384.00",
+    "$88,758.05",
+    "P",
+    "2026-MAR",
+    "BATCH-530"
+   ]
+  ]
+ },
+ "withholding_tax": {
+  "key": "withholding_tax",
+  "title": "Withholding Tax by Supplier Report",
+  "module": "Accounts Payable",
+  "columns": [
+   "Vendor Name",
+   "TIN/Tax ID",
+   "1099 Type",
+   "Tax Code",
+   "Taxable Amount",
+   "Withheld Amount",
+   "Tax Rate",
+   "Payment Date",
+   "Invoice Number",
+   "GL Account"
+  ],
+  "sql": "SELECT aps.vendor_name,\n       aps.num_1099           tin,\n       aps.vendor_1099        type_1099,\n       awt.tax_name           tax_code,\n       apwt.taxable_base_amount,\n       apwt.withheld_amount,\n       awt.percentage_rate    tax_rate,\n       apc.check_date         payment_date,\n       apia.invoice_num,\n       gcc.concatenated_segments gl_account\nFROM   ap_invoices_all              apia\nJOIN   ap_suppliers                 aps  ON aps.vendor_id = apia.vendor_id\nJOIN   ap_invoice_payments          apip ON apip.invoice_id = apia.invoice_id\nJOIN   ap_checks_all                apc  ON apc.check_id   = apip.check_id\nJOIN   ap_awt_tax_rates_history     apwt ON apwt.invoice_id = apia.invoice_id\nJOIN   ap_tax_codes_all             awt  ON awt.tax_id      = apwt.tax_code_id\nJOIN   gl_code_combinations         gcc  ON gcc.code_combination_id = apwt.awt_related_id\nWHERE  aps.allow_awt_flag = 'Y'\nORDER BY aps.vendor_name, apc.check_date",
+  "rows": [
+   [
+    "Accenture Inc",
+    "88-7970567",
+    "MISC",
+    "WHT-FED",
+    "$120,782.00",
+    "$33,818.96",
+    "28%",
+    "2026-10-18",
+    "INV-977834",
+    "01-000-5100-0000"
+   ],
+   [
+    "Deloitte Consulting",
+    "11-5250579",
+    "INT",
+    "WHT-STATE",
+    "$114,173.00",
+    "$31,968.44",
+    "28%",
+    "2026-07-11",
+    "INV-816750",
+    "01-000-5200-0000"
+   ],
+   [
+    "IBM Global Services",
+    "37-8367819",
+    "DIV",
+    "BACKUP-WHT",
+    "$32,801.00",
+    "$9,184.28",
+    "28%",
+    "2026-01-19",
+    "INV-257756",
+    "01-000-5300-0000"
+   ]
+  ]
+ },
+ "iexpense_detail": {
+  "key": "iexpense_detail",
+  "title": "Oracle iExpense Detail Report",
+  "module": "iExpense",
+  "columns": [
+   "Report Number",
+   "Employee Name",
+   "Report Date",
+   "OU",
+   "Expense Type",
+   "Amount",
+   "Reimbursable",
+   "Purpose",
+   "Approval Status",
+   "Submitted Date",
+   "Approver"
+  ],
+  "sql": "SELECT oiea.report_header_id  report_number,\n       ppf.full_name           employee_name,\n       oiea.week_end_date      report_date,\n       haou.name               ou_name,\n       oiel.web_parameter_id   expense_type,\n       oiel.amount,\n       oiel.reimbursable_amount,\n       oiea.description        purpose,\n       oiea.workflow_approved_flag approval_status,\n       oiea.submission_date,\n       ppf2.full_name          approver_name\nFROM   ap_expense_report_headers_all oiea\nJOIN   ap_expense_report_lines_all   oiel ON oiel.report_header_id = oiea.report_header_id\nJOIN   per_people_f                  ppf  ON ppf.person_id  = oiea.employee_id\nJOIN   hr_all_organization_units    haou  ON haou.organization_id = oiea.org_id\nLEFT   JOIN per_people_f            ppf2  ON ppf2.person_id = oiea.override_approver_id\nWHERE  oiea.source = 'Both'\nORDER BY oiea.submission_date DESC",
+  "rows": [
+   [
+    "EXP-2026-00001",
+    "James Wilson",
+    "2026-10-13",
+    "Cook County Primary (CCP)",
+    "Travel",
+    "$3,348.00",
+    "$3,348.00",
+    "Business travel for Q1 project",
+    "Approved",
+    "2026-03-07",
+    "Linda Martinez"
+   ],
+   [
+    "EXP-2026-00002",
+    "Sarah Johnson",
+    "2026-03-23",
+    "Cook County Health (CCH)",
+    "Meals & Entertainment",
+    "$6,137.00",
+    "$6,137.00",
+    "Business travel for Q3 project",
+    "Pending",
+    "2026-11-22",
+    "David Anderson"
+   ],
+   [
+    "EXP-2026-00003",
+    "Michael Chen",
+    "2026-12-17",
+    "Cook County Finance (CCF)",
+    "Office Supplies",
+    "$94.00",
+    "$94.00",
+    "Business travel for Q2 project",
+    "Rejected",
+    "2026-07-11",
+    "Patricia Taylor"
+   ]
+  ]
+ },
+ "credit_card_report": {
+  "key": "credit_card_report",
+  "title": "iExpense Credit Card Report",
+  "module": "iExpense",
+  "columns": [
+   "Transaction ID",
+   "Card Number (Masked)",
+   "Employee Name",
+   "Transaction Date",
+   "Merchant",
+   "Category",
+   "Amount",
+   "Expense Report#",
+   "Status",
+   "Billed Date"
+  ],
+  "sql": "SELECT cct.transaction_id,\n       '****-****-****-'||SUBSTR(cct.card_number,-4) masked_card,\n       ppf.full_name          employee_name,\n       cct.transaction_date,\n       cct.merchant_name,\n       cct.category,\n       cct.transaction_amount,\n       aerh.report_header_id  expense_report_num,\n       cct.status,\n       cct.billed_date\nFROM   ap_credit_card_trxns_all cct\nJOIN   per_people_f              ppf  ON ppf.person_id    = cct.employee_id\nLEFT   JOIN ap_expense_report_headers_all aerh ON aerh.report_header_id = cct.report_header_id\nWHERE  cct.transaction_date BETWEEN :p_start AND :p_end\nORDER BY cct.transaction_date DESC",
+  "rows": [
+   [
+    700000,
+    "****-****-****-4140",
+    "James Wilson",
+    "2026-05-23",
+    "Delta Airlines",
+    "Travel",
+    "$2,960.00",
+    "EXP-2026-00001",
+    "Expensed",
+    "2026-04-08"
+   ],
+   [
+    700001,
+    "****-****-****-5355",
+    "Sarah Johnson",
+    "2026-11-07",
+    "Marriott Hotels",
+    "Meals & Entertainment",
+    "$4,378.00",
+    "EXP-2026-00002",
+    "Unmatched",
+    "2026-04-28"
+   ],
+   [
+    700002,
+    "****-****-****-8123",
+    "Michael Chen",
+    "2026-03-10",
+    "Uber",
+    "Office Supplies",
+    "$1,853.00",
+    "EXP-2026-00003",
+    "Disputed",
+    "2026-10-03"
+   ]
+  ]
+ },
+ "workflow_approvals": {
+  "key": "workflow_approvals",
+  "title": "iExpense Workflow & Approvals Report",
+  "module": "iExpense",
+  "columns": [
+   "Report Number",
+   "Employee",
+   "Report Amount",
+   "Submitted Date",
+   "Approver Level 1",
+   "L1 Action Date",
+   "Approver Level 2",
+   "L2 Action Date",
+   "Final Status",
+   "Cycle Time (Days)",
+   "Notes"
+  ],
+  "sql": "SELECT aerh.report_header_id  report_num,\n       ppf.full_name           employee_name,\n       aerh.total             report_amount,\n       aerh.submission_date,\n       ppf2.full_name         approver_l1,\n       wn1.action_date        l1_action_date,\n       ppf3.full_name         approver_l2,\n       wn2.action_date        l2_action_date,\n       aerh.workflow_approved_flag final_status,\n       ROUND(NVL(wn2.action_date,SYSDATE) - aerh.submission_date,0) cycle_days,\n       wn1.notification_comment notes\nFROM   ap_expense_report_headers_all aerh\nJOIN   per_people_f                  ppf  ON ppf.person_id  = aerh.employee_id\nLEFT   JOIN wf_notifications wn1 ON wn1.item_key = TO_CHAR(aerh.report_header_id) AND wn1.activity_name LIKE '%APPROVE%L1%'\nLEFT   JOIN wf_notifications wn2 ON wn2.item_key = TO_CHAR(aerh.report_header_id) AND wn2.activity_name LIKE '%APPROVE%L2%'\nLEFT   JOIN per_people_f ppf2 ON ppf2.person_id = TO_NUMBER(wn1.to_user)\nLEFT   JOIN per_people_f ppf3 ON ppf3.person_id = TO_NUMBER(wn2.to_user)\nWHERE  aerh.source = 'Both'\nORDER BY aerh.submission_date DESC",
+  "rows": [
+   [
+    "EXP-2026-00001",
+    "James Wilson",
+    "$3,970.00",
+    "2026-07-15",
+    "Michael Chen",
+    "2026-02-10",
+    "Robert Brown",
+    "2026-07-27",
+    "Approved",
+    10,
+    "Standard Approval"
+   ],
+   [
+    "EXP-2026-00002",
+    "Sarah Johnson",
+    "$6,468.00",
+    "2026-08-16",
+    "Emily Davis",
+    "2026-02-11",
+    "N/A",
+    "N/A",
+    "Pending",
+    7,
+    "Escalated"
+   ],
+   [
+    "EXP-2026-00003",
+    "Michael Chen",
+    "$7,247.00",
+    "2026-01-22",
+    "Robert Brown",
+    "2026-09-15",
+    "N/A",
+    "N/A",
+    "Rejected",
+    6,
+    "Auto-Approved"
+   ]
+  ]
+ },
+ "employee_report": {
+  "key": "employee_report",
+  "title": "HRMS Employee Report",
+  "module": "HRMS",
+  "columns": [
+   "Employee ID",
+   "Full Name",
+   "Job Title",
+   "Department",
+   "Grade",
+   "Hire Date",
+   "Location",
+   "Manager",
+   "Employee Type",
+   "Status",
+   "Email",
+   "Phone"
+  ],
+  "sql": "SELECT ppf.employee_number,\n       ppf.full_name,\n       pj.name                  job_title,\n       haou.name                department,\n       pg.name                  grade,\n       ppf.original_date_of_hire hire_date,\n       hl.location_code,\n       ppf2.full_name           manager_name,\n       ppt.system_person_type   emp_type,\n       pas.per_system_status     status,\n       ppf.email_address,\n       ppf.work_telephone\nFROM   per_people_f     ppf\nJOIN   per_assignments_f paf ON paf.person_id    = ppf.person_id\nJOIN   per_jobs         pj   ON pj.job_id        = paf.job_id\nJOIN   hr_all_organization_units haou ON haou.organization_id = paf.organization_id\nJOIN   per_grades       pg   ON pg.grade_id      = paf.grade_id\nJOIN   hr_locations_all hl   ON hl.location_id   = paf.location_id\nJOIN   per_person_types ppt  ON ppt.person_type_id = ppf.person_type_id\nJOIN   per_assignment_status_types pas ON pas.assignment_status_type_id = paf.assignment_status_type_id\nLEFT   JOIN per_people_f ppf2 ON ppf2.person_id  = paf.supervisor_id\nWHERE  paf.primary_flag = 'Y'\nAND    SYSDATE BETWEEN paf.effective_start_date AND paf.effective_end_date\nORDER BY ppf.full_name",
+  "rows": [
+   [
+    "EMP-10000",
+    "James Wilson",
+    "Senior Analyst",
+    "Finance",
+    "G7",
+    "2010-12-05",
+    "CHICAGO-MAIN",
+    "Patricia Taylor",
+    "Employee",
+    "Active",
+    "james@cookcounty.gov",
+    "312-598-9795"
+   ],
+   [
+    "EMP-10001",
+    "Sarah Johnson",
+    "Manager",
+    "Information Technology",
+    "G6",
+    "2011-04-06",
+    "CHICAGO-MAIN",
+    "Christopher Moore",
+    "Employee",
+    "Terminated",
+    "sarah@cookcounty.gov",
+    "312-273-5395"
+   ],
+   [
+    "EMP-10002",
+    "Michael Chen",
+    "Director",
+    "Human Resources",
+    "G6",
+    "2012-08-10",
+    "CHICAGO-MAIN",
+    "Barbara Jackson",
+    "Employee",
+    "Leave of Absence",
+    "michael@cookcounty.gov",
+    "312-436-4285"
+   ]
+  ]
+ },
+ "active_employees": {
+  "key": "active_employees",
+  "title": "Active Employees Report",
+  "module": "HRMS",
+  "columns": [
+   "Employee ID",
+   "Full Name",
+   "Job",
+   "Department",
+   "Grade",
+   "Hire Date",
+   "Years of Service",
+   "Supervisor",
+   "Cost Center",
+   "Position",
+   "FTE",
+   "Payroll"
+  ],
+  "sql": "SELECT ppf.employee_number,\n       ppf.full_name,\n       pj.name job_title,\n       haou.name department,\n       pg.name grade,\n       ppf.original_date_of_hire,\n       ROUND((SYSDATE-ppf.original_date_of_hire)/365,1) yrs_service,\n       ppf2.full_name supervisor,\n       paf.default_code_comb_id cost_center,\n       pp.name position_name,\n       paf.fte,\n       ppg.payroll_name\nFROM   per_people_f     ppf\nJOIN   per_assignments_f paf ON paf.person_id = ppf.person_id AND paf.primary_flag='Y'\n  AND SYSDATE BETWEEN paf.effective_start_date AND paf.effective_end_date\nJOIN   per_jobs         pj   ON pj.job_id = paf.job_id\nJOIN   hr_all_organization_units haou ON haou.organization_id = paf.organization_id\nJOIN   per_grades       pg   ON pg.grade_id = paf.grade_id\nJOIN   per_positions    pp   ON pp.position_id = paf.position_id\nJOIN   pay_payrolls_f   ppg  ON ppg.payroll_id = paf.payroll_id\nLEFT   JOIN per_people_f ppf2 ON ppf2.person_id = paf.supervisor_id\nWHERE  ppf.current_employee_flag = 'Y'\nORDER BY ppf.full_name",
+  "rows": [
+   [
+    "EMP-10000",
+    "James Wilson",
+    "Analyst",
+    "Finance",
+    "G5",
+    "2010-04-01",
+    "7 yrs",
+    "Emily Davis",
+    "CC-1001",
+    "POS-9923",
+    "1.0",
+    "BI-WEEKLY"
+   ],
+   [
+    "EMP-10001",
+    "Sarah Johnson",
+    "Manager",
+    "Information Technology",
+    "G4",
+    "2011-01-26",
+    "8 yrs",
+    "Robert Brown",
+    "CC-1002",
+    "POS-5973",
+    "1.0",
+    "SEMI-MONTHLY"
+   ],
+   [
+    "EMP-10002",
+    "Michael Chen",
+    "Director",
+    "Human Resources",
+    "G6",
+    "2012-03-19",
+    "8 yrs",
+    "Linda Martinez",
+    "CC-1003",
+    "POS-8143",
+    "1.0",
+    "BI-WEEKLY"
+   ]
+  ]
+ },
+ "contingent_workers": {
+  "key": "contingent_workers",
+  "title": "Contingent Workers Report",
+  "module": "HRMS",
+  "columns": [
+   "Worker ID",
+   "Full Name",
+   "Job Title",
+   "Supplier Company",
+   "Department",
+   "Start Date",
+   "End Date",
+   "Contract Type",
+   "PO Number",
+   "Daily Rate",
+   "Status"
+  ],
+  "sql": "SELECT ppf.employee_number,\n       ppf.full_name,\n       pj.name               job_title,\n       aps.vendor_name       supplier_company,\n       haou.name             department,\n       paf.effective_start_date start_date,\n       paf.projected_assignment_end end_date,\n       paf.assignment_type   contract_type,\n       poh.segment1          po_number,\n       paf.projected_hourly_labour_rate daily_rate,\n       pas.per_system_status status\nFROM   per_people_f     ppf\nJOIN   per_assignments_f paf ON paf.person_id = ppf.person_id\nJOIN   per_jobs         pj   ON pj.job_id = paf.job_id\nJOIN   hr_all_organization_units haou ON haou.organization_id = paf.organization_id\nJOIN   per_assignment_status_types pas ON pas.assignment_status_type_id = paf.assignment_status_type_id\nLEFT   JOIN ap_suppliers aps  ON aps.vendor_id = paf.vendor_id\nLEFT   JOIN po_headers_all poh ON poh.po_header_id = paf.po_header_id\nWHERE  ppf.current_npw_flag = 'Y'\nORDER BY ppf.full_name",
+  "rows": [
+   [
+    "CWK-10000",
+    "James Wilson",
+    "Contractor",
+    "Accenture Inc",
+    "Finance",
+    "2026-02-24",
+    "2026-08-07",
+    "Fixed Term",
+    "PO-2026-07025",
+    "$1,011.00",
+    "Active"
+   ],
+   [
+    "CWK-10001",
+    "Sarah Johnson",
+    "Consultant",
+    "Deloitte Consulting",
+    "Information Technology",
+    "2026-05-05",
+    "2026-12-01",
+    "Time & Material",
+    "PO-2026-09827",
+    "$576.00",
+    "Ended"
+   ],
+   [
+    "CWK-10002",
+    "Michael Chen",
+    "Temp Worker",
+    "IBM Global Services",
+    "Human Resources",
+    "2026-04-01",
+    "2026-10-12",
+    "Milestone",
+    "PO-2026-01484",
+    "$449.00",
+    "Suspended"
+   ]
+  ]
+ },
+ "terminated_employees": {
+  "key": "terminated_employees",
+  "title": "Terminated Employees Report",
+  "module": "HRMS",
+  "columns": [
+   "Employee ID",
+   "Full Name",
+   "Department",
+   "Job Title",
+   "Hire Date",
+   "Termination Date",
+   "Termination Reason",
+   "Last Salary",
+   "Notice Period",
+   "Final Pay Date",
+   "Rehire Eligible"
+  ],
+  "sql": "SELECT ppf.employee_number,\n       ppf.full_name,\n       haou.name         department,\n       pj.name           job_title,\n       ppf.original_date_of_hire,\n       ppf.actual_termination_date,\n       plr.meaning       termination_reason,\n       pap.proposed_salary_n last_salary,\n       ROUND((ppf.actual_termination_date - ppf.last_day_worked)) notice_days,\n       ppf.final_process_date,\n       ppf.rehire_recommendation\nFROM   per_people_f ppf\nJOIN   per_assignments_f paf ON paf.person_id = ppf.person_id AND paf.primary_flag='Y'\nJOIN   per_jobs         pj   ON pj.job_id = paf.job_id\nJOIN   hr_all_organization_units haou ON haou.organization_id = paf.organization_id\nJOIN   per_pay_proposals pap ON pap.assignment_id = paf.assignment_id\nJOIN   per_lookup_values plr ON plr.lookup_code = ppf.leaving_reason AND plr.lookup_type='LEAV_REAS'\nWHERE  ppf.current_employee_flag = 'N'\nAND    ppf.actual_termination_date >= ADD_MONTHS(SYSDATE,-12)\nORDER BY ppf.actual_termination_date DESC",
+  "rows": [
+   [
+    "EMP-20000",
+    "James Wilson",
+    "Finance",
+    "Analyst",
+    "2015-09-27",
+    "2026-02-26",
+    "Resignation",
+    "$115,384.00",
+    "30 days",
+    "2026-05-27",
+    "Y"
+   ],
+   [
+    "EMP-20001",
+    "Sarah Johnson",
+    "Information Technology",
+    "Manager",
+    "2016-06-25",
+    "2026-09-10",
+    "Retirement",
+    "$63,598.00",
+    "29 days",
+    "2026-04-01",
+    "N"
+   ],
+   [
+    "EMP-20002",
+    "Michael Chen",
+    "Human Resources",
+    "Specialist",
+    "2017-11-26",
+    "2026-01-28",
+    "Layoff",
+    "$63,755.00",
+    "77 days",
+    "2026-03-03",
+    "Y"
+   ]
+  ]
+ },
+ "supervisor_details": {
+  "key": "supervisor_details",
+  "title": "Supervisor Details Report",
+  "module": "HRMS",
+  "columns": [
+   "Supervisor ID",
+   "Supervisor Name",
+   "Job Title",
+   "Department",
+   "Direct Reports",
+   "Total Headcount",
+   "Approval Limit",
+   "Location",
+   "Email",
+   "Manager Level"
+  ],
+  "sql": "SELECT ppf_sup.employee_number,\n       ppf_sup.full_name       supervisor_name,\n       pj.name                 job_title,\n       haou.name               department,\n       COUNT(paf_sub.person_id) direct_reports,\n       COUNT(paf_sub.person_id) total_headcount,\n       ppf_sup.email_address,\n       hl.location_code,\n       plr.meaning             mgr_level\nFROM   per_people_f     ppf_sup\nJOIN   per_assignments_f paf_sup ON paf_sup.person_id = ppf_sup.person_id AND paf_sup.primary_flag='Y'\n  AND SYSDATE BETWEEN paf_sup.effective_start_date AND paf_sup.effective_end_date\nJOIN   per_assignments_f paf_sub ON paf_sub.supervisor_id = ppf_sup.person_id\nJOIN   per_jobs          pj   ON pj.job_id = paf_sup.job_id\nJOIN   hr_all_organization_units haou ON haou.organization_id = paf_sup.organization_id\nJOIN   hr_locations_all  hl   ON hl.location_id = paf_sup.location_id\nLEFT   JOIN per_lookup_values plr ON plr.lookup_code = paf_sup.manager_level\nGROUP BY ppf_sup.employee_number, ppf_sup.full_name, pj.name, haou.name,\n         ppf_sup.email_address, hl.location_code, plr.meaning\nORDER BY direct_reports DESC",
+  "rows": [
+   [
+    "EMP-10000",
+    "James Wilson",
+    "Director",
+    "Finance",
+    5,
+    53,
+    "$335,494.00",
+    "CHICAGO-MAIN",
+    "james@cookcounty.gov",
+    "L1 Manager"
+   ],
+   [
+    "EMP-10001",
+    "Sarah Johnson",
+    "Senior Manager",
+    "Information Technology",
+    23,
+    73,
+    "$41,937.00",
+    "CHICAGO-NORTH",
+    "sarah@cookcounty.gov",
+    "L2 Manager"
+   ],
+   [
+    "EMP-10002",
+    "Michael Chen",
+    "Manager",
+    "Human Resources",
+    21,
+    48,
+    "$112,972.00",
+    "CHICAGO-SOUTH",
+    "michael@cookcounty.gov",
+    "Senior Leader"
+   ]
+  ]
+ },
+ "expense_cost_allocation": {
+  "key": "expense_cost_allocation",
+  "title": "Expense Account Cost Allocation Full Details Report",
+  "module": "HRMS / iExpense",
+  "columns": [
+   "Employee ID",
+   "Employee Name",
+   "Department",
+   "Cost Center",
+   "GL Account",
+   "Expense Type",
+   "Expense Amount",
+   "Fund",
+   "Program",
+   "Project",
+   "Task",
+   "Report Period"
+  ],
+  "sql": "SELECT ppf.employee_number,\n       ppf.full_name,\n       haou.name              department,\n       gcc.segment2           cost_center,\n       gcc.concatenated_segments gl_account,\n       oiel.web_parameter_id  expense_type,\n       oiel.amount            expense_amount,\n       gcc.segment4           fund,\n       gcc.segment3           program,\n       oiel.project_id,\n       oiel.task_id,\n       TO_CHAR(oiea.week_end_date,'YYYY-MM') report_period\nFROM   ap_expense_report_headers_all oiea\nJOIN   ap_expense_report_lines_all   oiel ON oiel.report_header_id = oiea.report_header_id\nJOIN   per_people_f  ppf ON ppf.person_id = oiea.employee_id\nJOIN   hr_all_organization_units haou ON haou.organization_id = oiea.org_id\nJOIN   gl_code_combinations gcc ON gcc.code_combination_id = oiel.code_combination_id\nWHERE  oiea.source = 'Both'\nAND    oiea.workflow_approved_flag = 'A'\nORDER BY ppf.full_name, oiea.week_end_date",
+  "rows": [
+   [
+    "EMP-10000",
+    "James Wilson",
+    "Finance",
+    "CC-1001",
+    "01-000-5100-0000",
+    "Travel",
+    "$2,782.00",
+    "41718",
+    "PROG-785",
+    "PROJ-1545",
+    "TASK-663",
+    "2026-02"
+   ],
+   [
+    "EMP-10001",
+    "Sarah Johnson",
+    "Information Technology",
+    "CC-1002",
+    "01-000-5200-0000",
+    "Meals & Entertainment",
+    "$652.00",
+    "42092",
+    "PROG-687",
+    "PROJ-3527",
+    "TASK-799",
+    "2026-02"
+   ],
+   [
+    "EMP-10002",
+    "Michael Chen",
+    "Human Resources",
+    "CC-1003",
+    "01-000-5300-0000",
+    "Office Supplies",
+    "$3,125.00",
+    "42202",
+    "PROG-846",
+    "PROJ-5369",
+    "TASK-422",
+    "2026-09"
+   ]
+  ]
+ },
+ "gl_journals": {
+  "key": "gl_journals",
+  "title": "GL Journal Entry Report",
+  "module": "General Ledger",
+  "columns": [
+   "Journal Name",
+   "Source",
+   "Category",
+   "Period Name",
+   "GL Account",
+   "Dr Amount",
+   "Cr Amount",
+   "Posted Status",
+   "Batch Name",
+   "Created By",
+   "Creation Date"
+  ],
+  "sql": "SELECT gjh.name            journal_name,\n       gjh.je_source         source,\n       gjh.je_category       category,\n       gjh.period_name,\n       gcc.concatenated_segments gl_account,\n       gjl.accounted_dr,\n       gjl.accounted_cr,\n       gjh.status            posted_status,\n       gjb.name              batch_name,\n       fu.user_name          created_by,\n       gjh.creation_date\nFROM   gl_je_headers  gjh\nJOIN   gl_je_lines    gjl ON gjl.je_header_id = gjh.je_header_id\nJOIN   gl_code_combinations gcc ON gcc.code_combination_id = gjl.code_combination_id\nJOIN   gl_je_batches  gjb ON gjb.je_batch_id  = gjh.je_batch_id\nJOIN   fnd_user       fu  ON fu.user_id       = gjh.created_by\nWHERE  gjh.period_name = :p_period\nORDER BY gjh.creation_date DESC",
+  "rows": [
+   [
+    "JE-2026-00001",
+    "Manual",
+    "Accrual",
+    "2026-JAN",
+    "01-000-5100-0000",
+    "$32,029.00",
+    null,
+    "Posted",
+    "BATCH-659",
+    "JAMES",
+    "2026-02-27"
+   ],
+   [
+    "JE-2026-00002",
+    "Payables",
+    "Adjustment",
+    "2026-FEB",
+    "01-000-5200-0000",
+    null,
+    "$321,899.00",
+    "Unposted",
+    "BATCH-447",
+    "SARAH",
+    "2026-01-20"
+   ],
+   [
+    "JE-2026-00003",
+    "Purchasing",
+    "Purchase",
+    "2026-MAR",
+    "01-000-5300-0000",
+    "$391,044.00",
+    null,
+    "Posted",
+    "BATCH-931",
+    "MICHAEL",
+    "2026-07-03"
+   ]
+  ]
+ },
+ "gl_trial_balance": {
+  "key": "gl_trial_balance",
+  "title": "General Ledger Trial Balance",
+  "module": "General Ledger",
+  "columns": [
+   "Account Code",
+   "Account Description",
+   "Account Type",
+   "Period Dr",
+   "Period Cr",
+   "Net Activity",
+   "Beg Balance",
+   "Ending Balance",
+   "Currency",
+   "Ledger"
+  ],
+  "sql": "SELECT gcc.concatenated_segments acct_code,\n       fav.description         acct_desc,\n       gcc.account_type,\n       SUM(gb.period_net_dr)   period_dr,\n       SUM(gb.period_net_cr)   period_cr,\n       SUM(gb.period_net_dr - gb.period_net_cr) net_activity,\n       SUM(gb.begin_balance_dr - gb.begin_balance_cr) beg_bal,\n       SUM((gb.begin_balance_dr + gb.period_net_dr) -\n           (gb.begin_balance_cr + gb.period_net_cr)) end_bal,\n       gb.currency_code,\n       gl.name                 ledger_name\nFROM   gl_balances            gb\nJOIN   gl_code_combinations   gcc ON gcc.code_combination_id = gb.code_combination_id\nJOIN   gl_ledgers             gl  ON gl.ledger_id            = gb.ledger_id\nLEFT   JOIN fnd_flex_values_vl fav ON fav.flex_value          = gcc.segment5\nWHERE  gb.period_name = :p_period\nAND    gb.actual_flag = 'A'\nGROUP BY gcc.concatenated_segments, fav.description, gcc.account_type,\n         gb.currency_code, gl.name\nORDER BY gcc.concatenated_segments",
+  "rows": [
+   [
+    "01-000-5100-0000",
+    "Cash",
+    "A",
+    "$3,766,060.00",
+    "$1,405,197.00",
+    "$2,360,863.00",
+    "$2,824,326.00",
+    "$7,985,532.00",
+    "USD",
+    "Cook County Ledger"
+   ],
+   [
+    "01-000-5200-0000",
+    "AP Liability",
+    "L",
+    "$2,613,230.00",
+    "$3,110,274.00",
+    "$-497,044.00",
+    "$6,609,978.00",
+    "$-233,044.00",
+    "USD",
+    "Cook County Ledger"
+   ],
+   [
+    "01-000-5300-0000",
+    "Revenue",
+    "R",
+    "$2,689,316.00",
+    "$3,175,779.00",
+    "$-486,463.00",
+    "$4,416,628.00",
+    "$6,556,223.00",
+    "USD",
+    "Cook County Ledger"
+   ]
+  ]
+ },
+ "gl_account_analysis": {
+  "key": "gl_account_analysis",
+  "title": "GL Account Analysis Report",
+  "module": "General Ledger",
+  "columns": [
+   "GL Account",
+   "Transaction Date",
+   "Journal Name",
+   "Source",
+   "Dr Amount",
+   "Cr Amount",
+   "Running Balance",
+   "Reference",
+   "Created By",
+   "Period"
+  ],
+  "sql": "SELECT gcc.concatenated_segments gl_account,\n       gjl.effective_date,\n       gjh.name            journal_name,\n       gjh.je_source       source,\n       gjl.accounted_dr,\n       gjl.accounted_cr,\n       SUM(gjl.accounted_dr - gjl.accounted_cr) OVER (\n           PARTITION BY gjl.code_combination_id\n           ORDER BY gjl.effective_date\n           ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n       ) running_balance,\n       gjl.reference_1     reference,\n       fu.user_name        created_by,\n       gjh.period_name\nFROM   gl_je_lines    gjl\nJOIN   gl_je_headers  gjh ON gjh.je_header_id = gjl.je_header_id\nJOIN   gl_code_combinations gcc ON gcc.code_combination_id = gjl.code_combination_id\nJOIN   fnd_user       fu  ON fu.user_id = gjh.created_by\nWHERE  gjl.code_combination_id = :p_ccid\nAND    gjh.period_name BETWEEN :p_from AND :p_to\nORDER BY gjl.effective_date",
+  "rows": [
+   [
+    "01-000-5100-0000",
+    "2026-01-15",
+    "JE-2026-00001",
+    "Manual",
+    "$102,089.00",
+    "$181,878.00",
+    "$4,297,558.00",
+    "REF-67010",
+    "JAMES",
+    "2026-JAN"
+   ],
+   [
+    "01-000-5200-0000",
+    "2026-09-03",
+    "JE-2026-00002",
+    "AP",
+    "$156,269.00",
+    "$59,971.00",
+    "$1,927,248.00",
+    "REF-74113",
+    "SARAH",
+    "2026-FEB"
+   ],
+   [
+    "01-000-5300-0000",
+    "2026-09-27",
+    "JE-2026-00003",
+    "AR",
+    "$145,187.00",
+    "$210.00",
+    "$315,501.00",
+    "REF-55563",
+    "MICHAEL",
+    "2026-MAR"
+   ]
+  ]
+ },
+ "suppliers_high_payments_by_year": {
+  "key": "suppliers_high_payments_by_year",
+  "title": "Suppliers with High Payments by Year",
+  "module": "Accounts Payable",
+  "columns": [
+   "Supplier Name",
+   "Supplier Number",
+   "Fiscal Year",
+   "Total Payments (USD)",
+   "Invoice Count",
+   "Avg Payment",
+   "Last Payment Date",
+   "Payment Method",
+   "Bank Account",
+   "Status"
+  ],
+  "sql": "SELECT aps.vendor_name,\n       aps.segment1                              supplier_number,\n       TO_CHAR(apc.check_date,'YYYY')            fiscal_year,\n       SUM(apip.amount)                          total_payments,\n       COUNT(DISTINCT apia.invoice_id)            invoice_count,\n       ROUND(AVG(apip.amount),2)                 avg_payment,\n       MAX(apc.check_date)                       last_payment_date,\n       apc.payment_method_code                   payment_method,\n       aba.bank_account_num                      bank_account,\n       aps.vendor_type_lookup_code               status\nFROM   ap_suppliers              aps\nJOIN   ap_invoices_all           apia  ON apia.vendor_id   = aps.vendor_id\n                                      AND apia.org_id      = mo_global.get_current_org_id()\nJOIN   ap_invoice_payments       apip  ON apip.invoice_id  = apia.invoice_id\nJOIN   ap_checks_all             apc   ON apc.check_id     = apip.check_id\n                                      AND apc.org_id       = mo_global.get_current_org_id()\n                                      AND apc.void_date    IS NULL\nLEFT JOIN ap_bank_accounts_all   aba   ON aba.bank_account_id = apc.external_bank_account_id\nWHERE  TO_CHAR(apc.check_date,'YYYY') = TO_CHAR(:p_year)\nAND    apip.amount                   > :p_min_amount\nGROUP  BY aps.vendor_name, aps.segment1,\n          TO_CHAR(apc.check_date,'YYYY'),\n          apc.payment_method_code,\n          aba.bank_account_num,\n          aps.vendor_type_lookup_code\nHAVING SUM(apip.amount) > :p_threshold\nORDER  BY total_payments DESC",
+  "rows": [
+   [
+    "Accenture Inc",
+    "SUP-01000",
+    "2025",
+    "$3,016,081.00",
+    "93",
+    "$32,431.00",
+    "2025-07-23",
+    "Check",
+    "BANK-7416",
+    "On Hold"
+   ],
+   [
+    "Deloitte Consulting",
+    "SUP-01001",
+    "2025",
+    "$1,956,367.00",
+    "84",
+    "$23,290.00",
+    "2025-11-05",
+    "Wire Transfer",
+    "BANK-6150",
+    "Active"
+   ],
+   [
+    "IBM Global Services",
+    "SUP-01002",
+    "2025",
+    "$11,036,308.00",
+    "11",
+    "$1,003,301.00",
+    "2025-05-28",
+    "EFT",
+    "BANK-5674",
+    "Active"
+   ]
+  ]
+ }
+}

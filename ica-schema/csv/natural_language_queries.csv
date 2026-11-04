@@ -1,0 +1,116 @@
+query_id,query_text,intent,report_key,feature,tab,confidence,example_response
+NL001,show aged payables,aged_payables,aged_payables_detail,report,tab-reports,0.95,Aged Payables Detail Report
+NL002,outstanding invoices,aged_payables,aged_payables_detail,report,tab-reports,0.90,Aged Payables Detail Report
+NL003,overdue payables,aged_payables,aged_payables_detail,report,tab-reports,0.92,Aged Payables Detail Report
+NL004,AP aging report,aged_payables,aged_payables_detail,report,tab-reports,0.98,Aged Payables Detail Report
+NL005,what invoices are past due,aged_payables,aged_payables_detail,report,tab-reports,0.85,Aged Payables Detail Report
+NL006,invoice register,invoice_register,invoice_register,report,tab-reports,0.97,Invoice Register
+NL007,all AP invoices,invoice_register,invoice_register,report,tab-reports,0.88,Invoice Register
+NL008,invoices entered this month,invoice_register,invoice_register,report,tab-reports,0.82,Invoice Register
+NL009,AP trial balance,ap_trial_balance,ap_trial_balance,report,tab-reports,0.97,AP Trial Balance
+NL010,vendor open balance,ap_trial_balance,ap_trial_balance,report,tab-reports,0.90,AP Trial Balance
+NL011,withholding tax report,withholding_tax,withholding_tax,report,tab-reports,0.96,Withholding Tax by Supplier
+NL012,1099 report,withholding_tax,withholding_tax,report,tab-reports,0.94,Withholding Tax by Supplier
+NL013,TDS by supplier,withholding_tax,withholding_tax,report,tab-reports,0.91,Withholding Tax by Supplier
+NL014,show all suppliers,suppliers_report,suppliers_report,report,tab-reports,0.95,Suppliers Report
+NL015,vendor list,suppliers_report,suppliers_report,report,tab-reports,0.93,Suppliers Report
+NL016,suppliers on hold,suppliers_report,suppliers_report,report,tab-reports,0.85,Suppliers Report
+NL017,suppliers with high payments,high_payments,suppliers_high_payments_by_year,report,tab-reports,0.97,Suppliers High Payments
+NL018,top vendors by payment,high_payments,suppliers_high_payments_by_year,report,tab-reports,0.90,Suppliers High Payments
+NL019,which vendors got paid most,high_payments,suppliers_high_payments_by_year,report,tab-reports,0.85,Suppliers High Payments
+NL020,supplier payment history,supplier_payment_history,supplier_payment_history,report,tab-reports,0.95,Supplier Payment History
+NL021,remittance details,supplier_payment_history,supplier_payment_history,report,tab-reports,0.88,Supplier Payment History
+NL022,purchase orders,po_detail,po_detail,report,tab-reports,0.95,PO Detail Report
+NL023,PO detail report,po_detail,po_detail,report,tab-reports,0.98,PO Detail Report
+NL024,approved purchase orders,po_detail,po_detail,report,tab-reports,0.90,PO Detail Report
+NL025,PO distribution detail,po_distribution,po_distribution_detail,report,tab-reports,0.96,PO Distribution Detail
+NL026,accounting distributions for PO,po_distribution,po_distribution_detail,report,tab-reports,0.88,PO Distribution Detail
+NL027,receipt adjustments,receipt_adjustments,receipt_adjustments,report,tab-reports,0.96,Receipt Adjustments
+NL028,receiving discrepancies,receipt_adjustments,receipt_adjustments,report,tab-reports,0.85,Receipt Adjustments
+NL029,savings analysis,savings_analysis,savings_analysis,report,tab-reports,0.96,Savings Analysis
+NL030,procurement savings,savings_analysis,savings_analysis,report,tab-reports,0.92,Savings Analysis
+NL031,buyer savings report,savings_analysis,savings_analysis,report,tab-reports,0.88,Savings Analysis
+NL032,journal entries,gl_journals,gl_journals,report,tab-reports,0.97,GL Journal Entries
+NL033,GL journals,gl_journals,gl_journals,report,tab-reports,0.98,GL Journal Entries
+NL034,general ledger transactions,gl_journals,gl_journals,report,tab-reports,0.90,GL Journal Entries
+NL035,GL trial balance,gl_trial_balance,gl_trial_balance,report,tab-reports,0.97,GL Trial Balance
+NL036,account balances,gl_trial_balance,gl_trial_balance,report,tab-reports,0.90,GL Trial Balance
+NL037,period end balance,gl_trial_balance,gl_trial_balance,report,tab-reports,0.85,GL Trial Balance
+NL038,account analysis,account_analysis,gl_account_analysis,report,tab-reports,0.96,Account Analysis
+NL039,GL activity for account,account_analysis,gl_account_analysis,report,tab-reports,0.88,Account Analysis
+NL040,iexpense reports,iexpense_detail,iexpense_detail,report,tab-reports,0.97,iExpense Detail Report
+NL041,expense reports pending approval,iexpense_detail,iexpense_detail,report,tab-reports,0.92,iExpense Detail Report
+NL042,employee expenses,iexpense_detail,iexpense_detail,report,tab-reports,0.88,iExpense Detail Report
+NL043,credit card report,credit_card,credit_card_report,report,tab-reports,0.97,Credit Card Report
+NL044,corporate card transactions,credit_card,credit_card_report,report,tab-reports,0.92,Credit Card Report
+NL045,unmatched credit card,credit_card,credit_card_report,report,tab-reports,0.88,Credit Card Report
+NL046,workflow approvals,workflow_approvals,workflow_approvals,report,tab-reports,0.96,Workflow Approvals
+NL047,approval status,workflow_approvals,workflow_approvals,report,tab-reports,0.92,Workflow Approvals
+NL048,pending approvals,workflow_approvals,workflow_approvals,report,tab-reports,0.90,Workflow Approvals
+NL049,active employees,active_employees,active_employees,report,tab-reports,0.97,Active Employees
+NL050,headcount report,active_employees,active_employees,report,tab-reports,0.92,Active Employees
+NL051,current employees,active_employees,active_employees,report,tab-reports,0.90,Active Employees
+NL052,terminated employees,terminated_employees,terminated_employees,report,tab-reports,0.97,Terminated Employees
+NL053,resignations this year,terminated_employees,terminated_employees,report,tab-reports,0.88,Terminated Employees
+NL054,leavers report,terminated_employees,terminated_employees,report,tab-reports,0.90,Terminated Employees
+NL055,supervisor details,supervisor_details,supervisor_details,report,tab-reports,0.96,Supervisor Details
+NL056,manager hierarchy,supervisor_details,supervisor_details,report,tab-reports,0.90,Supervisor Details
+NL057,cost allocation,expense_cost_allocation,expense_cost_allocation,report,tab-reports,0.96,Expense Cost Allocation
+NL058,expense account allocation,expense_cost_allocation,expense_cost_allocation,report,tab-reports,0.92,Expense Cost Allocation
+NL059,AR aging,ar_aging,ar_aging,report,tab-reports,0.97,AR Aging Report
+NL060,customer outstanding,ar_aging,ar_aging,report,tab-reports,0.90,AR Aging Report
+NL061,customer statement,customer_statement,customer_statement,report,tab-reports,0.96,Customer Statement
+NL062,inventory valuation,inventory_valuation,inventory_valuation,report,tab-reports,0.96,Inventory Valuation
+NL063,stock value,inventory_valuation,inventory_valuation,report,tab-reports,0.88,Inventory Valuation
+NL064,concurrent requests,concurrent_requests,,report,tab-reports,0.95,Concurrent Requests Report
+NL065,running programs,concurrent_requests,,report,tab-reports,0.88,Concurrent Requests Report
+NL066,show unpaid invoices over 10000,sql_lab_prompt,,sql-lab,tab-sqllab,0.90,SQL Lab — AP unpaid invoices query
+NL067,list all suppliers with holds,sql_lab_prompt,,sql-lab,tab-sqllab,0.88,SQL Lab — AP suppliers on hold query
+NL068,employee headcount by department,sql_lab_prompt,,sql-lab,tab-sqllab,0.92,SQL Lab — HRMS headcount query
+NL069,journal entries for current period,sql_lab_prompt,,sql-lab,tab-sqllab,0.90,SQL Lab — GL current period journals
+NL070,open purchase orders this month,sql_lab_prompt,,sql-lab,tab-sqllab,0.88,SQL Lab — PO open orders query
+NL071,customer aging buckets,sql_lab_prompt,,sql-lab,tab-sqllab,0.90,SQL Lab — AR aging query
+NL072,expense reports pending approval,sql_lab_prompt,,sql-lab,tab-sqllab,0.92,SQL Lab — iExpense pending query
+NL073,inventory on hand quantities,sql_lab_prompt,,sql-lab,tab-sqllab,0.88,SQL Lab — INV on-hand query
+NL074,failed concurrent requests today,sql_lab_prompt,,sql-lab,tab-sqllab,0.88,SQL Lab — FND concurrent failures
+NL075,show me AP SQL queries,sql_lab_browse,,sql-lab,tab-sqllab,0.92,SQL Lab — browse AP category
+NL076,open sql lab,open_tab,,tab-open,tab-sqllab,0.95,Opens SQL Lab tab
+NL077,open academy,open_tab,,tab-open,tab-academy,0.95,Opens EBS Academy tab
+NL078,open sql advisor,open_tab,,tab-open,tab-sql,0.95,Opens SQL Advisor tab
+NL079,open data connect,open_tab,,tab-open,tab-dataconnect,0.95,Opens Data Connect tab
+NL080,open document generator,open_tab,,tab-open,tab-docgen,0.92,Opens Doc Generator tab
+NL081,learn about accounts payable,academy_topic,,acad_ap,tab-academy,0.95,Opens Academy — AP module
+NL082,how does 3-way match work,academy_topic,,acad_ap,tab-academy,0.92,Academy AI — 3-way match explanation
+NL083,how to do period close,academy_topic,,acad_gl,tab-academy,0.92,Academy AI — GL period close
+NL084,explain DateTrack,academy_topic,,acad_hrms,tab-academy,0.90,Academy AI — DateTrack in HRMS
+NL085,how to apply a patch,academy_topic,,acad_dba,tab-academy,0.92,Academy AI — adop patching
+NL086,what is ORG_ID,academy_topic,,acad_arch,tab-academy,0.93,Academy AI — Multi-Org / ORG_ID
+NL087,what is OIC,academy_topic,,acad_soa,tab-academy,0.90,Academy AI — Oracle Integration Cloud
+NL088,how to migrate to APEX,academy_topic,,acad_apex,tab-academy,0.88,Academy AI — EBS to APEX migration
+NL089,UAT testing process,academy_topic,,acad_testing,tab-academy,0.90,Academy AI — UAT in Oracle EBS
+NL090,how to create a responsibility,academy_topic,,acad_security,tab-academy,0.92,Academy AI — Responsibilities setup
+NL091,what is CRP,academy_topic,,acad_pm,tab-academy,0.90,Academy AI — Conference Room Pilot
+NL092,analyse this sql,sql_advisor_analyse,,performance-advisor,tab-sql,0.95,Opens SQL Advisor — Performance tab
+NL093,review my sql,sql_review,,code-review,tab-sql,0.95,Opens SQL Advisor — Code Review tab
+NL094,format my sql,sql_format,,formatter,tab-sql,0.92,Opens SQL Advisor — Formatter tab
+NL095,generate a TDD,doc_generate,,docgen,tab-docgen,0.95,Opens Doc Generator
+NL096,create technical design document,doc_generate,,docgen,tab-docgen,0.92,Opens Doc Generator
+NL097,generate functional spec,doc_generate,,docgen,tab-docgen,0.90,Opens Doc Generator
+NL098,upload my excel file,data_connect_upload,,excel-upload,tab-dataconnect,0.95,Opens Data Connect — Excel upload
+NL099,import data from spreadsheet,data_connect_upload,,excel-upload,tab-dataconnect,0.90,Opens Data Connect — Excel upload
+NL100,connect to oracle database,data_connect_db,,live-db,tab-dataconnect,0.92,Opens Data Connect — Live DB mode
+NL101,push my data to the report,data_connect_push,,push-to-reports,tab-dataconnect,0.90,Data Connect — Push to Reports action
+NL102,delete this report,delete_report,,delete-workflow,tab-reports,0.88,Opens delete workflow (role-based)
+NL103,restore deleted report,restore_report,,recycle-bin,tab-reports,0.85,Opens Notification Panel — Recycle Bin
+NL104,show notification panel,open_notifications,,notif-panel,tab-reports,0.90,Opens Notification Bell panel
+NL105,pending delete requests,view_requests,,notif-panel,tab-reports,0.88,Opens Notification Panel — Requests tab
+NL106,download report as excel,download_excel,,download,tab-reports,0.95,Downloads current report as Excel
+NL107,download report as csv,download_csv,,download,tab-reports,0.95,Downloads current report as CSV
+NL108,download report as pdf,download_pdf,,download,tab-reports,0.92,Downloads current report as PDF
+NL109,show chart,toggle_chart,,chart-panel,tab-reports,0.92,Opens Chart panel for current report
+NL110,show sql for this report,toggle_sql,,sql-panel,tab-reports,0.90,Opens SQL panel for current report
+NL111,login as employee,auth_login,,login,login,0.92,Selects Employee login role
+NL112,login as technical,auth_login,,login,login,0.92,Selects Technical login role
+NL113,logout,auth_logout,,logout,app,0.95,Logs out and returns to landing page
+NL114,payroll summary,payroll_summary,,payroll,tab-reports,0.95,Payroll Summary report
+NL115,supplier audit,supplier_audit,supplier_audit,report,tab-reports,0.92,Supplier Audit Report

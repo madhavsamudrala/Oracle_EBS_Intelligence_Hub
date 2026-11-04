@@ -1,0 +1,80 @@
+edge_id,from_node,to_node,relationship_type,property_join_type,property_required
+E001,MOD_AP,RPT_SUPPLIERS,module_has_report,,true
+E002,MOD_AP,RPT_HIGH_PAY,module_has_report,,true
+E003,MOD_AP,RPT_PAID_INV,module_has_report,,true
+E004,MOD_AP,RPT_PAY_HIST,module_has_report,,true
+E005,MOD_AP,RPT_AUDIT,module_has_report,,true
+E006,MOD_AP,RPT_AGED_AP,module_has_report,,true
+E007,MOD_AP,RPT_AP_TB,module_has_report,,true
+E008,MOD_AP,RPT_INV_REG,module_has_report,,true
+E009,MOD_AP,RPT_WHT,module_has_report,,true
+E010,MOD_PO,RPT_PO_DET,module_has_report,,true
+E011,MOD_PO,RPT_PO_DIST,module_has_report,,true
+E012,MOD_PO,RPT_RCV,module_has_report,,true
+E013,MOD_PO,RPT_SAVINGS,module_has_report,,true
+E014,MOD_GL,RPT_GL_JNL,module_has_report,,true
+E015,MOD_GL,RPT_GL_TB,module_has_report,,true
+E016,MOD_GL,RPT_ACCT,module_has_report,,true
+E017,MOD_IEXP,RPT_IEXP,module_has_report,,true
+E018,MOD_IEXP,RPT_CC,module_has_report,,true
+E019,MOD_IEXP,RPT_WF,module_has_report,,true
+E020,MOD_HRMS,RPT_ACTIEMP,module_has_report,,true
+E021,MOD_HRMS,RPT_TERMEMP,module_has_report,,true
+E022,MOD_HRMS,RPT_SUP,module_has_report,,true
+E023,MOD_HRMS,RPT_COST,module_has_report,,true
+E024,MOD_AR,RPT_AR_AGE,module_has_report,,true
+E025,MOD_AR,RPT_CUST,module_has_report,,true
+E026,MOD_INV,RPT_INV_VAL,module_has_report,,true
+E027,RPT_AGED_AP,TBL_APIA,report_uses_table,INNER JOIN,true
+E028,RPT_AGED_AP,TBL_APPS,report_uses_table,INNER JOIN,true
+E029,RPT_AGED_AP,TBL_APS,report_uses_table,INNER JOIN,true
+E030,RPT_HIGH_PAY,TBL_APS,report_uses_table,INNER JOIN,true
+E031,RPT_HIGH_PAY,TBL_APIA,report_uses_table,INNER JOIN,true
+E032,RPT_HIGH_PAY,TBL_APCA,report_uses_table,INNER JOIN,true
+E033,RPT_GL_JNL,TBL_GLJH,report_uses_table,INNER JOIN,true
+E034,RPT_GL_JNL,TBL_GLJL,report_uses_table,INNER JOIN,true
+E035,RPT_GL_JNL,TBL_GCC,report_uses_table,INNER JOIN,true
+E036,RPT_IEXP,TBL_AERH,report_uses_table,INNER JOIN,true
+E037,RPT_IEXP,TBL_AERL,report_uses_table,INNER JOIN,true
+E038,RPT_IEXP,TBL_PPF,report_uses_table,INNER JOIN,true
+E039,RPT_ACTIEMP,TBL_PPF,report_uses_table,INNER JOIN,true
+E040,RPT_ACTIEMP,TBL_PAF,report_uses_table,INNER JOIN,true
+E041,RPT_ACTIEMP,TBL_HAOU,report_uses_table,INNER JOIN,true
+E042,TBL_APIA,RULE_ORGID,table_has_rule,,true
+E043,TBL_APCA,RULE_ORGID,table_has_rule,,true
+E044,TBL_APPS,RULE_ORGID,table_has_rule,,true
+E045,TBL_AERH,RULE_ORGID,table_has_rule,,true
+E046,TBL_AERH,RULE_SOURCE,table_has_rule,,true
+E047,TBL_PPF,RULE_DT_PPF,table_has_rule,,true
+E048,TBL_PAF,RULE_DT_PAF,table_has_rule,,true
+E049,TBL_APIA,RULE_CANCEL,table_has_rule,,false
+E050,TBL_APCA,RULE_VOID,table_has_rule,,false
+E051,TBL_GCC,RULE_SUMFLAG,table_has_rule,,false
+E052,MOD_AP,COMP_RULE_001,module_has_compliance_rule,,true
+E053,MOD_GL,COMP_RULE_001,module_has_compliance_rule,,true
+E054,MOD_PO,COMP_RULE_001,module_has_compliance_rule,,true
+E055,MOD_HRMS,COMP_RULE_001,module_has_compliance_rule,,true
+E056,MOD_IEXP,COMP_RULE_001,module_has_compliance_rule,,true
+E057,MOD_AP,COMP_RULE_002,module_has_compliance_rule,,true
+E058,MOD_GL,COMP_RULE_003,module_has_compliance_rule,,true
+E059,MOD_AP,COMP_RULE_011,module_has_compliance_rule,,true
+E060,MOD_GL,COMP_RULE_012,module_has_compliance_rule,,true
+E061,MOD_AP,SQLPAT_DATE,module_has_sql_pattern,,false
+E062,MOD_GL,SQLPAT_DATE,module_has_sql_pattern,,false
+E063,MOD_GL,SQLPAT_PERIOD,module_has_sql_pattern,,false
+E064,MOD_HRMS,SQLPAT_HIER,module_has_sql_pattern,,false
+E065,MOD_HRMS,SQLPAT_DATETRACK,module_has_sql_pattern,,false
+E066,MOD_GL,SQLPAT_PIVOT,module_has_sql_pattern,,false
+E067,MOD_AP,SQLPAT_LOOKUP,module_has_sql_pattern,,false
+E068,PROC_P2P,SQLPAT_MULTIORG,process_uses_module,,false
+E069,PROC_O2C,SQLPAT_MULTIORG,process_uses_module,,false
+E070,PROC_R2R,SQLPAT_PERIOD,process_uses_module,,false
+E071,MOD_AP,RICE_INT_SUP,module_has_rice_component,,true
+E072,MOD_AP,RICE_INT_BANK,module_has_rice_component,,true
+E073,MOD_GL,RICE_INT_GL,module_has_rice_component,,true
+E074,MOD_AR,RICE_CONV_CUST,module_has_rice_component,,true
+E075,MOD_AP,RICE_CONV_INV,module_has_rice_component,,true
+E076,MOD_AP,RICE_RPT_AP,module_has_rice_component,,true
+E077,MOD_GL,RICE_RPT_GL,module_has_rice_component,,true
+E078,MOD_IEXP,RICE_RPT_IEXP,module_has_rice_component,,true
+E079,MOD_PO,RICE_RPT_PO,module_has_rice_component,,true

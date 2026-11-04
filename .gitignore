@@ -1,0 +1,80 @@
+# ─── Secrets & Credentials ────────────────────────────────────────
+ica-credentials*.txt
+*.env
+*.key
+*.pem
+
+# ─── OS Generated Files ───────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# ─── Node / NPM ───────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# ─── Python ───────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+
+# ─── Logs & Temporary Files ───────────────────────────────────────
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+~$*
+
+# ─── Generated / Compiled Output ─────────────────────────────────
+dist/
+build/
+out/
+
+# ─── VS Code ──────────────────────────────────────────────────────
+# (workspace file is kept — it helps team members open the project)
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+.vscode/.ropeproject
+
+# ─── Dev Scripts ──────────────────────────────────────────────────
+# These are one-time build helper scripts used during development.
+# They are NOT needed to run the application.
+# The actual built output (HTML/CSS/JS) is tracked instead.
+dev-scripts/
+
+# ─── Addition / Patch Files ───────────────────────────────────────
+# These were staging files used to build up the main files.
+# The merged versions (ebs-reports.css, ebs-reports.js) are tracked.
+# ─── Python virtual environment ───
+venv/
+.venv/
+
+# ─── Addition / Patch Files ───
+ebs-reports-additions.js
+
+# ─── Binary Downloads / Exports ───────────────────────────────────
+# Exported Excel/PPT files — these are generated outputs, not source
+*.pptx
+
+# NOTE: *.xlsx is NOT ignored — the ICA schema CSV files are tracked,
+# and users may want to commit test Excel upload files.
+# If you want to ignore Excel files, uncomment the next line:
+# *.xlsx
+# *.xls
+
+# ─── Test Data Files ──────────────────────────────────────────────
+# Prefix any temporary test files with underscore to auto-ignore
+_*.py
+_*.txt
+_*.csv
+_*.json
+_*.xlsx
+ebs-credentials.js

@@ -1,0 +1,13 @@
+category_id,category_name,module,query_count,description,color,example_queries
+SQLCAT_AP,AP SQL Queries,AP,60,Accounts Payable — invoices, payments, suppliers, aging, trial balance,#C74634,"Outstanding invoices, aged payables, supplier payment history, withholding tax"
+SQLCAT_AR,AR SQL Queries,AR,30,Accounts Receivable — customer aging, cash receipts, customer statements,#0F62FE,"AR aging report, customer statement, open receivables, cash receipts"
+SQLCAT_GL,GL SQL Queries,GL,40,General Ledger — journals, trial balance, account analysis, budget vs actual,#24A148,"GL journal entries, trial balance, account analysis, budget comparison"
+SQLCAT_PO,PO SQL Queries,PO,45,Purchasing — PO headers/lines, receipts, distributions, savings analysis,#8A3FC7,"PO detail report, PO distributions, receipt adjustments, savings analysis"
+SQLCAT_HRMS,HRMS SQL Queries,HRMS,50,Human Resources — employees, assignments, departments, supervisor hierarchy,#B7590A,"Active employees, terminated employees, supervisor details, cost allocation"
+SQLCAT_INV,INV SQL Queries,INV,35,Inventory — stock levels, valuation, item master, on-hand quantities,#0043CE,"Inventory valuation, on-hand report, item master, slow moving stock"
+SQLCAT_IEXP,iExpense SQL Queries,iExpense,25,iExpense — expense reports, credit card transactions, workflow approvals,#198038,"iExpense detail, credit card report, workflow approvals, expense audit"
+SQLCAT_FND,FND/System SQL Queries,FND,40,FND — concurrent requests, programs, lookup values, profiles, users,#6929C4,"Concurrent requests, running programs, lookup values, profile options"
+SQLCAT_PERF,Performance & Tuning,ALL,35,Performance diagnostics — top SQL, AWR, execution plans, index usage,#9F1853,"Top SQL by elapsed time, AWR snapshot, execution plan, index suggestions"
+SQLCAT_SEC,Security & Access,ALL,40,Security — user responsibilities, menu access, function security, audit,#005D5D,"User responsibilities, menu access, function security, SOD analysis"
+SQLCAT_WF,Workflow,ALL,30,Oracle Workflow — open notifications, deferred activities, stuck processes,#1192E8,"Open notifications, stuck workflow, deferred activities, workflow history"
+SQLCAT_MULTI,Multi-Org & Diagnostics,ALL,70,Multi-Org setup, MO profiles, OU list, diagnostics, system parameters,#FA4D56,"OU list, MO profile, org_id validation, multi-org debug queries"

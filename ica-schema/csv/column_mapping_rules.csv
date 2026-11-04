@@ -1,0 +1,101 @@
+mapping_id,source_pattern,normalised_pattern,target_column,target_report_module,report_key_hint,data_type,transform_suggestion,confidence,notes
+CM001,VENDOR_NAME,vendorname,VENDOR_NAME,AP,suppliers_report,text,title,1.0,Exact EBS column match
+CM002,Vendor Name,vendorname,VENDOR_NAME,AP,suppliers_report,text,title,1.0,Human-readable label match
+CM003,SUPPLIER,supplier,VENDOR_NAME,AP,suppliers_report,text,title,0.85,Common synonym for vendor
+CM004,Supplier Name,suppliername,VENDOR_NAME,AP,suppliers_report,text,title,0.85,Synonym with label
+CM005,VENDOR_ID,vendorid,VENDOR_ID,AP,suppliers_report,number,none,1.0,Exact match
+CM006,Vendor ID,vendorid,VENDOR_ID,AP,suppliers_report,number,none,1.0,Label match
+CM007,INVOICE_NUM,invoicenum,INVOICE_NUM,AP,invoice_register,text,upper,1.0,Exact EBS column match
+CM008,Invoice Number,invoicenumber,INVOICE_NUM,AP,invoice_register,text,upper,0.9,Common label synonym
+CM009,Invoice No,invoiceno,INVOICE_NUM,AP,invoice_register,text,upper,0.85,Abbreviated label
+CM010,INV_NUM,invnum,INVOICE_NUM,AP,invoice_register,text,upper,0.88,Short form match
+CM011,INVOICE_AMOUNT,invoiceamount,INVOICE_AMOUNT,AP,invoice_register,number,num_fmt,1.0,Exact match
+CM012,Invoice Amount,invoiceamount,INVOICE_AMOUNT,AP,invoice_register,number,num_fmt,1.0,Label match
+CM013,Amount,amount,INVOICE_AMOUNT,AP,invoice_register,number,num_fmt,0.75,Generic amount — use with context
+CM014,INVOICE_DATE,invoicedate,INVOICE_DATE,AP,invoice_register,date,date_fmt,1.0,Exact match
+CM015,Invoice Date,invoicedate,INVOICE_DATE,AP,invoice_register,date,date_fmt,1.0,Label match
+CM016,Inv Date,invdate,INVOICE_DATE,AP,invoice_register,date,date_fmt,0.85,Abbreviated label
+CM017,PAYMENT_STATUS_FLAG,paymentstatusflag,PAYMENT_STATUS_FLAG,AP,invoice_register,text,upper,1.0,Exact match — values Y/N/P
+CM018,Payment Status,paymentstatus,PAYMENT_STATUS_FLAG,AP,invoice_register,text,upper,0.85,Label synonym
+CM019,Paid Status,paidstatus,PAYMENT_STATUS_FLAG,AP,invoice_register,text,upper,0.8,Alternative label
+CM020,DUE_DATE,duedate,DUE_DATE,AP,aged_payables_detail,date,date_fmt,1.0,Exact match
+CM021,Due Date,duedate,DUE_DATE,AP,aged_payables_detail,date,date_fmt,1.0,Label match
+CM022,Payment Due,paymentdue,DUE_DATE,AP,aged_payables_detail,date,date_fmt,0.82,Synonym
+CM023,DAYS_OVERDUE,daysoverdue,DAYS_OVERDUE,AP,aged_payables_detail,number,none,1.0,Exact match
+CM024,Days Overdue,daysoverdue,DAYS_OVERDUE,AP,aged_payables_detail,number,none,1.0,Label match
+CM025,Days Past Due,dayspastdue,DAYS_OVERDUE,AP,aged_payables_detail,number,none,0.85,Synonym
+CM026,Overdue Days,overduedays,DAYS_OVERDUE,AP,aged_payables_detail,number,none,0.85,Inverted label
+CM027,AMOUNT_REMAINING,amountremaining,AMOUNT_REMAINING,AP,aged_payables_detail,number,num_fmt,1.0,Exact match
+CM028,Amount Remaining,amountremaining,AMOUNT_REMAINING,AP,aged_payables_detail,number,num_fmt,1.0,Label match
+CM029,Outstanding Amount,outstandingamount,AMOUNT_REMAINING,AP,aged_payables_detail,number,num_fmt,0.83,Synonym
+CM030,Balance Due,balancedue,AMOUNT_REMAINING,AP,aged_payables_detail,number,num_fmt,0.8,Synonym
+CM031,EMPLOYEE_NUMBER,employeenumber,EMPLOYEE_NUMBER,HRMS,active_employees,text,upper,1.0,Exact match
+CM032,Employee Number,employeenumber,EMPLOYEE_NUMBER,HRMS,active_employees,text,upper,1.0,Label match
+CM033,Emp No,empno,EMPLOYEE_NUMBER,HRMS,active_employees,text,upper,0.85,Abbreviated label
+CM034,Staff ID,staffid,EMPLOYEE_NUMBER,HRMS,active_employees,text,upper,0.78,Common HR synonym
+CM035,FULL_NAME,fullname,FULL_NAME,HRMS,active_employees,text,title,1.0,Exact match
+CM036,Full Name,fullname,FULL_NAME,HRMS,active_employees,text,title,1.0,Label match
+CM037,Employee Name,employeename,FULL_NAME,HRMS,active_employees,text,title,0.88,Synonym
+CM038,Name,name,FULL_NAME,HRMS,active_employees,text,title,0.7,Generic — may match multiple contexts
+CM039,DEPARTMENT,department,DEPARTMENT,HRMS,active_employees,text,title,1.0,Exact match
+CM040,Dept,dept,DEPARTMENT,HRMS,active_employees,text,title,0.85,Abbreviated label
+CM041,Business Unit,businessunit,DEPARTMENT,HRMS,active_employees,text,title,0.75,Synonym used in some HR systems
+CM042,JOB_TITLE,jobtitle,JOB_TITLE,HRMS,active_employees,text,title,1.0,Exact match
+CM043,Job Title,jobtitle,JOB_TITLE,HRMS,active_employees,text,title,1.0,Label match
+CM044,Position,position,JOB_TITLE,HRMS,active_employees,text,title,0.8,Synonym
+CM045,Designation,designation,JOB_TITLE,HRMS,active_employees,text,title,0.78,Common regional synonym
+CM046,HIRE_DATE,hiredate,HIRE_DATE,HRMS,active_employees,date,date_fmt,1.0,Exact match
+CM047,Hire Date,hiredate,HIRE_DATE,HRMS,active_employees,date,date_fmt,1.0,Label match
+CM048,Join Date,joindate,HIRE_DATE,HRMS,active_employees,date,date_fmt,0.85,Regional synonym
+CM049,Start Date,startdate,HIRE_DATE,HRMS,active_employees,date,date_fmt,0.8,Generic synonym
+CM050,PO_NUMBER,ponumber,PO_NUMBER,PO,po_detail,text,upper,1.0,Exact match
+CM051,PO Number,ponumber,PO_NUMBER,PO,po_detail,text,upper,1.0,Label match
+CM052,Purchase Order,purchaseorder,PO_NUMBER,PO,po_detail,text,upper,0.85,Full name synonym
+CM053,PO No,pono,PO_NUMBER,PO,po_detail,text,upper,0.85,Abbreviated label
+CM054,ITEM_DESCRIPTION,itemdescription,ITEM_DESCRIPTION,PO,po_detail,text,title,1.0,Exact match
+CM055,Item Description,itemdescription,ITEM_DESCRIPTION,PO,po_detail,text,title,1.0,Label match
+CM056,Description,description,ITEM_DESCRIPTION,PO,po_detail,text,title,0.72,Generic — needs context
+CM057,UNIT_PRICE,unitprice,UNIT_PRICE,PO,po_detail,number,num_fmt,1.0,Exact match
+CM058,Unit Price,unitprice,UNIT_PRICE,PO,po_detail,number,num_fmt,1.0,Label match
+CM059,Rate,rate,UNIT_PRICE,PO,po_detail,number,num_fmt,0.72,Synonym — low confidence
+CM060,LINE_AMOUNT,lineamount,LINE_AMOUNT,PO,po_detail,number,num_fmt,1.0,Exact match
+CM061,Line Amount,lineamount,LINE_AMOUNT,PO,po_detail,number,num_fmt,1.0,Label match
+CM062,Line Total,linetotal,LINE_AMOUNT,PO,po_detail,number,num_fmt,0.85,Synonym
+CM063,JE_HEADER_ID,jeheaderid,JE_HEADER_ID,GL,gl_journals,number,none,1.0,Exact match
+CM064,JOURNAL_NAME,journalname,JOURNAL_NAME,GL,gl_journals,text,title,1.0,Exact match
+CM065,Journal Name,journalname,JOURNAL_NAME,GL,gl_journals,text,title,1.0,Label match
+CM066,PERIOD_NAME,periodname,PERIOD_NAME,GL,gl_journals,text,upper,1.0,Exact match — e.g. JAN-24
+CM067,Period,period,PERIOD_NAME,GL,gl_journals,text,upper,0.82,Shortened label
+CM068,Accounting Period,accountingperiod,PERIOD_NAME,GL,gl_journals,text,upper,0.85,Full synonym
+CM069,STATUS,status,STATUS,GL,gl_journals,text,upper,0.9,Exact match — Posted/Unposted
+CM070,DEBIT,debit,DEBIT,GL,gl_journals,number,num_fmt,1.0,Exact match
+CM071,Debit Amount,debitamount,DEBIT,GL,gl_journals,number,num_fmt,0.9,Label with suffix
+CM072,CREDIT,credit,CREDIT,GL,gl_journals,number,num_fmt,1.0,Exact match
+CM073,Credit Amount,creditamount,CREDIT,GL,gl_journals,number,num_fmt,0.9,Label with suffix
+CM074,EXPENSE_REPORT_NUM,expensereportnum,EXPENSE_REPORT_NUM,IEXP,expense_reports,text,upper,1.0,Exact match
+CM075,Expense Report,expensereport,EXPENSE_REPORT_NUM,IEXP,expense_reports,text,upper,0.85,Label synonym
+CM076,Expense Number,expensenumber,EXPENSE_REPORT_NUM,IEXP,expense_reports,text,upper,0.85,Alternative label
+CM077,TOTAL_AMOUNT,totalamount,TOTAL_AMOUNT,IEXP,expense_reports,number,num_fmt,1.0,Exact match
+CM078,Total Amount,totalamount,TOTAL_AMOUNT,IEXP,expense_reports,number,num_fmt,1.0,Label match
+CM079,Total,total,TOTAL_AMOUNT,IEXP,expense_reports,number,num_fmt,0.75,Generic — use with context
+CM080,CUSTOMER_NAME,customername,CUSTOMER_NAME,AR,ar_aging,text,title,1.0,Exact match
+CM081,Customer Name,customername,CUSTOMER_NAME,AR,ar_aging,text,title,1.0,Label match
+CM082,Customer,customer,CUSTOMER_NAME,AR,ar_aging,text,title,0.82,Shortened label
+CM083,Client Name,clientname,CUSTOMER_NAME,AR,ar_aging,text,title,0.78,Common synonym in some systems
+CM084,CURRENT_AMOUNT,currentamount,CURRENT_AMOUNT,AR,ar_aging,number,num_fmt,1.0,Exact match — AR current bucket
+CM085,DAYS_1_30,days130,DAYS_1_30,AR,ar_aging,number,num_fmt,0.95,AR aging 1-30 days bucket
+CM086,DAYS_31_60,days3160,DAYS_31_60,AR,ar_aging,number,num_fmt,0.95,AR aging 31-60 days bucket
+CM087,DAYS_61_90,days6190,DAYS_61_90,AR,ar_aging,number,num_fmt,0.95,AR aging 61-90 days bucket
+CM088,DAYS_OVER_90,daysover90,DAYS_OVER_90,AR,ar_aging,number,num_fmt,0.95,AR aging 90+ days bucket
+CM089,ORG_ID,orgid,ORG_ID,ALL,all,number,none,1.0,Multi-org operating unit ID — required filter on all _ALL tables
+CM090,Organization ID,organizationid,ORG_ID,ALL,all,number,none,0.9,Label synonym for ORG_ID
+CM091,EFFECTIVE_START_DATE,effectivestartdate,EFFECTIVE_START_DATE,HRMS,active_employees,date,date_fmt,1.0,DateTrack start — PER_ALL_PEOPLE_F / PER_ALL_ASSIGNMENTS_F
+CM092,EFFECTIVE_END_DATE,effectiveenddate,EFFECTIVE_END_DATE,HRMS,active_employees,date,date_fmt,1.0,DateTrack end — PER_ALL_PEOPLE_F / PER_ALL_ASSIGNMENTS_F
+CM093,PRIMARY_FLAG,primaryflag,PRIMARY_FLAG,HRMS,active_employees,text,upper,1.0,Must filter Y for active assignment
+CM094,CANCELLED_DATE,cancelleddate,CANCELLED_DATE,AP,invoice_register,date,date_fmt,1.0,Filter IS NULL to exclude cancelled invoices
+CM095,VOID_DATE,voiddate,VOID_DATE,AP,void_payments,date,date_fmt,1.0,Filter IS NULL for active checks
+CM096,AUTHORIZATION_STATUS,authorizationstatus,AUTHORIZATION_STATUS,PO,po_detail,text,upper,1.0,Filter APPROVED for valid POs
+CM097,QUANTITY,quantity,QUANTITY,PO,po_detail,number,none,1.0,PO line quantity ordered
+CM098,TOTAL_PAID,totalpaid,TOTAL_PAID,AP,high_payments,number,num_fmt,1.0,Annual total payments to a supplier
+CM099,PAYMENT_COUNT,paymentcount,PAYMENT_COUNT,AP,high_payments,number,none,1.0,Number of payments in year
+CM100,YEAR,year,YEAR,AP,high_payments,number,none,1.0,Fiscal/calendar year filter

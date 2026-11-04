@@ -1,0 +1,49 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name": "Oracle-EBS-Intelligence-HUB"
+    }
+  ],
+  "settings": {
+    "editor.tabSize": 2,
+    "editor.detectIndentation": true,
+    "files.associations": {
+      "*.css": "css",
+      "*.js": "javascript",
+      "*.html": "html"
+    },
+    "editor.formatOnSave": false,
+    "editor.wordWrap": "on",
+    "html.format.wrapLineLength": 0,
+    "css.validate": true,
+    "javascript.validate.enable": true,
+    "editor.renderWhitespace": "boundary",
+    "workbench.colorTheme": "Dark Modern",
+    "workbench.editor.openSideBySideDirection": "right",
+    "explorer.confirmDelete": false,
+    "explorer.sortOrder": "type"
+  },
+  "extensions": {
+    "recommendations": [
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "ms-vscode.vscode-js-profile-flame",
+      "ritwickdey.liveserver",
+      "formulahendry.auto-close-tag",
+      "bradlc.vscode-tailwindcss",
+      "ecmel.vscode-html-css"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "chrome",
+        "request": "launch",
+        "name": "Launch Oracle EBS Reports Portal",
+        "file": "${workspaceFolder}/oracle-ebs-intelligence-hub.html"
+      }
+    ]
+  }
+}

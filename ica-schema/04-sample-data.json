@@ -1,0 +1,207 @@
+{
+  "schema_name": "oracle_ebs_intelligence_hub_v5_sample_data",
+  "description": "Representative sample data for Oracle EBS Intelligence Hub v5.0 — test rows for all 7 EBS modules, roles, Data Connect uploads, delete workflow, Academy sessions",
+  "version": "5.0",
+  "sample_data": {
+    "user_sessions": [
+      {
+        "session_id": "S001",
+        "role": "employee",
+        "username": "employee_user",
+        "visible_tabs": ["tab-chat", "tab-reports", "tab-dataconnect"],
+        "can_submit_delete_request": true,
+        "can_approve_delete": false
+      },
+      {
+        "session_id": "S002",
+        "role": "technical",
+        "username": "technical_user",
+        "visible_tabs": ["tab-chat", "tab-reports", "tab-dataconnect", "tab-sql", "tab-academy", "tab-sqllab", "tab-docgen"],
+        "can_submit_delete_request": false,
+        "can_approve_delete": true
+      }
+    ],
+    "reports": [
+      {
+        "report_key": "suppliers_report",
+        "module": "AP",
+        "title": "Suppliers Report",
+        "sample_rows": [
+          { "VENDOR_ID": 10001, "VENDOR_NAME": "ABC Technology Ltd", "VENDOR_TYPE": "VENDOR", "VENDOR_STATUS": "Active", "COUNTRY": "UAE" },
+          { "VENDOR_ID": 10002, "VENDOR_NAME": "Gulf Supplies Co", "VENDOR_TYPE": "VENDOR", "VENDOR_STATUS": "Active", "COUNTRY": "UAE" },
+          { "VENDOR_ID": 10003, "VENDOR_NAME": "Dubai Logistics LLC", "VENDOR_TYPE": "VENDOR", "VENDOR_STATUS": "On Hold", "COUNTRY": "UAE" }
+        ]
+      },
+      {
+        "report_key": "aged_payables_detail",
+        "module": "AP",
+        "title": "Aged Payables Detail",
+        "sample_rows": [
+          { "VENDOR_NAME": "ABC Technology Ltd", "INVOICE_NUM": "INV-2024-001", "INVOICE_DATE": "2024-01-15", "DUE_DATE": "2024-02-15", "AMOUNT_REMAINING": 45000.00, "DAYS_OVERDUE": 62 },
+          { "VENDOR_NAME": "Gulf Supplies Co", "INVOICE_NUM": "INV-2024-045", "INVOICE_DATE": "2024-02-01", "DUE_DATE": "2024-03-01", "AMOUNT_REMAINING": 12500.00, "DAYS_OVERDUE": 18 },
+          { "VENDOR_NAME": "Dubai Logistics LLC", "INVOICE_NUM": "INV-2024-102", "INVOICE_DATE": "2024-03-10", "DUE_DATE": "2024-04-10", "AMOUNT_REMAINING": 8900.00, "DAYS_OVERDUE": 0 }
+        ]
+      },
+      {
+        "report_key": "suppliers_high_payments_by_year",
+        "module": "AP",
+        "title": "Suppliers High Payments",
+        "sample_rows": [
+          { "VENDOR_NAME": "ABC Technology Ltd", "YEAR": 2024, "TOTAL_PAID": 1250000.00, "PAYMENT_COUNT": 24 },
+          { "VENDOR_NAME": "Gulf Supplies Co", "YEAR": 2024, "TOTAL_PAID": 875000.00, "PAYMENT_COUNT": 18 },
+          { "VENDOR_NAME": "Emirates IT Services", "YEAR": 2024, "TOTAL_PAID": 640000.00, "PAYMENT_COUNT": 12 }
+        ]
+      },
+      {
+        "report_key": "gl_journals",
+        "module": "GL",
+        "title": "GL Journal Entries",
+        "sample_rows": [
+          { "JE_HEADER_ID": 5001, "JOURNAL_NAME": "AP Accruals Mar 2024", "PERIOD_NAME": "MAR-24", "STATUS": "Posted", "DEBIT": 125000.00, "CREDIT": 125000.00 },
+          { "JE_HEADER_ID": 5002, "JOURNAL_NAME": "Payroll Mar 2024", "PERIOD_NAME": "MAR-24", "STATUS": "Posted", "DEBIT": 980000.00, "CREDIT": 980000.00 },
+          { "JE_HEADER_ID": 5003, "JOURNAL_NAME": "Prepaid Adjustment", "PERIOD_NAME": "MAR-24", "STATUS": "Unposted", "DEBIT": 15000.00, "CREDIT": 15000.00 }
+        ]
+      },
+      {
+        "report_key": "po_detail",
+        "module": "PO",
+        "title": "PO Detail Report",
+        "sample_rows": [
+          { "PO_NUMBER": "PO-2024-0541", "VENDOR_NAME": "ABC Technology Ltd", "ITEM_DESCRIPTION": "Server Hardware", "QUANTITY": 5, "UNIT_PRICE": 12000.00, "LINE_AMOUNT": 60000.00, "STATUS": "Approved" },
+          { "PO_NUMBER": "PO-2024-0542", "VENDOR_NAME": "Gulf Supplies Co", "ITEM_DESCRIPTION": "Office Supplies", "QUANTITY": 200, "UNIT_PRICE": 25.00, "LINE_AMOUNT": 5000.00, "STATUS": "Approved" }
+        ]
+      },
+      {
+        "report_key": "active_employees",
+        "module": "HRMS",
+        "title": "Active Employees",
+        "sample_rows": [
+          { "EMPLOYEE_NUMBER": "E001", "FULL_NAME": "Ahmed Al Mansoori", "DEPARTMENT": "Finance", "JOB_TITLE": "Financial Analyst", "HIRE_DATE": "2019-03-01", "GRADE": "G7" },
+          { "EMPLOYEE_NUMBER": "E002", "FULL_NAME": "Sara Khan", "DEPARTMENT": "IT", "JOB_TITLE": "Senior DBA", "HIRE_DATE": "2017-06-15", "GRADE": "G8" },
+          { "EMPLOYEE_NUMBER": "E003", "FULL_NAME": "Ravi Sharma", "DEPARTMENT": "Procurement", "JOB_TITLE": "Purchasing Officer", "HIRE_DATE": "2021-01-10", "GRADE": "G6" }
+        ]
+      },
+      {
+        "report_key": "iexpense_detail",
+        "module": "iExpense",
+        "title": "iExpense Detail Report",
+        "sample_rows": [
+          { "EMPLOYEE_NAME": "Ahmed Al Mansoori", "EXPENSE_DATE": "2024-03-05", "EXPENSE_TYPE": "Travel", "AMOUNT": 1850.00, "STATUS": "Approved", "REPORT_NUMBER": "EXP-24-0321" },
+          { "EMPLOYEE_NAME": "Sara Khan", "EXPENSE_DATE": "2024-03-12", "EXPENSE_TYPE": "Conference", "AMOUNT": 3200.00, "STATUS": "Pending Approval", "REPORT_NUMBER": "EXP-24-0345" }
+        ]
+      },
+      {
+        "report_key": "ar_aging",
+        "module": "AR",
+        "title": "AR Aging Report",
+        "sample_rows": [
+          { "CUSTOMER_NAME": "Dubai Mall Group", "INVOICE_NUMBER": "AR-2024-0892", "INVOICE_DATE": "2024-02-01", "DUE_DATE": "2024-03-01", "AMOUNT_DUE": 320000.00, "DAYS_OVERDUE": 49 },
+          { "CUSTOMER_NAME": "Abu Dhabi Holdings", "INVOICE_NUMBER": "AR-2024-0910", "INVOICE_DATE": "2024-02-20", "DUE_DATE": "2024-03-20", "AMOUNT_DUE": 150000.00, "DAYS_OVERDUE": 30 }
+        ]
+      },
+      {
+        "report_key": "inventory_valuation",
+        "module": "INV",
+        "title": "Inventory Valuation",
+        "sample_rows": [
+          { "ITEM_NUMBER": "COMP-SERVER-001", "ITEM_DESCRIPTION": "Dell PowerEdge R740", "QUANTITY_ON_HAND": 12, "UNIT_COST": 18500.00, "TOTAL_VALUE": 222000.00, "ORGANIZATION": "Dubai Warehouse" },
+          { "ITEM_NUMBER": "COMP-LAPTOP-005", "ITEM_DESCRIPTION": "ThinkPad X1 Carbon", "QUANTITY_ON_HAND": 45, "UNIT_COST": 3200.00, "TOTAL_VALUE": 144000.00, "ORGANIZATION": "Dubai Warehouse" }
+        ]
+      }
+    ],
+    "data_connect_uploads": [
+      {
+        "upload_id": "DC001",
+        "source": "Excel",
+        "filename": "vendors_q1_2024.xlsx",
+        "columns_detected": ["Vendor Name", "Vendor ID", "Country", "Status"],
+        "mapped_to_report": "suppliers_report",
+        "column_mapping": {
+          "Vendor Name": "VENDOR_NAME",
+          "Vendor ID": "VENDOR_ID",
+          "Country": "COUNTRY",
+          "Status": "VENDOR_STATUS"
+        },
+        "mapping_function": "dcAutoMap()",
+        "rows_imported": 47
+      },
+      {
+        "upload_id": "DC002",
+        "source": "Simulated DB",
+        "query": "SELECT employee_number, full_name, department, job_title FROM hr_employees WHERE status = 'ACTIVE'",
+        "mapped_to_report": "active_employees",
+        "rows_returned": 312
+      }
+    ],
+    "delete_requests": [
+      {
+        "request_id": "DEL001",
+        "submitted_by_role": "employee",
+        "report_key": "withholding_tax",
+        "report_title": "Withholding Tax by Supplier",
+        "reason": "Data no longer needed for current year",
+        "status": "Pending",
+        "submitted_at": "2024-03-18T10:30:00Z"
+      },
+      {
+        "request_id": "DEL002",
+        "submitted_by_role": "employee",
+        "report_key": "supplier_audit",
+        "report_title": "Supplier Audit Report",
+        "reason": "Superseded by new audit report",
+        "status": "Approved",
+        "submitted_at": "2024-03-15T09:00:00Z",
+        "approved_at": "2024-03-15T14:22:00Z",
+        "approved_by_role": "technical"
+      }
+    ],
+    "chat_interactions": [
+      {
+        "session_id": "S001",
+        "user_input": "show aged payables",
+        "intent_matched": "aged_payables",
+        "report_key": "aged_payables_detail",
+        "confidence": 0.95,
+        "response_type": "report_load"
+      },
+      {
+        "session_id": "S001",
+        "user_input": "who are our top vendors by payment?",
+        "intent_matched": "high_payments",
+        "report_key": "suppliers_high_payments_by_year",
+        "confidence": 0.88,
+        "response_type": "report_load"
+      },
+      {
+        "session_id": "S002",
+        "user_input": "explain multi-org setup",
+        "intent_matched": "academy_multiorg",
+        "tab": "tab-academy",
+        "confidence": 0.90,
+        "response_type": "academy_topic"
+      }
+    ],
+    "sql_lab_queries": [
+      {
+        "category": "AP",
+        "query_title": "Outstanding AP Invoices",
+        "prompt": "show all unpaid invoices",
+        "sql_preview": "SELECT ai.invoice_num, ai.vendor_id, ai.invoice_amount, ai.amount_paid, ai.amount_remaining FROM ap_invoices_all ai WHERE ai.payment_status_flag = 'N' AND ai.cancelled_date IS NULL AND ai.org_id = mo_global.get_current_org_id()"
+      },
+      {
+        "category": "HRMS",
+        "query_title": "Active Employees with Grade",
+        "prompt": "list active employees with grade",
+        "sql_preview": "SELECT ppf.employee_number, ppf.full_name, paf.grade_id, haou.name department FROM per_all_people_f ppf JOIN per_all_assignments_f paf ON ppf.person_id = paf.person_id JOIN hr_all_organization_units haou ON paf.organization_id = haou.organization_id WHERE TRUNC(SYSDATE) BETWEEN ppf.effective_start_date AND ppf.effective_end_date AND paf.primary_flag = 'Y'"
+      }
+    ],
+    "doc_generator_outputs": [
+      {
+        "report_key": "suppliers_report",
+        "doc_type": "Technical Specification",
+        "sections_generated": ["Report Overview", "SQL Query", "Columns", "EBS Tables", "Business Rules", "Sample Data"],
+        "generated_by_role": "technical"
+      }
+    ]
+  }
+}

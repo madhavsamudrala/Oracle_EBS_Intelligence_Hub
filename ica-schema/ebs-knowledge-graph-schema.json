@@ -1,0 +1,399 @@
+{
+  "schema_version": "5.2",
+  "context_name": "oracle-ebs-intelligence-hub",
+  "description": "Knowledge graph for Oracle EBS Intelligence Hub v5.2 — covers 13 Oracle EBS R12.2 modules (AP, AR, GL, PO, HRMS, PAY, INV, OM, FA, CM, BEN, iEXP, FND), 4 end-to-end business processes (P2P, O2C, H2R, R2R), 26 pre-built reports, 40+ Oracle EBS tables, 10 SQL compliance rules (COMP-001 to COMP-010), 28 SQL code review rules (RULE_001–RULE_028), 6 SQL query patterns, 15 Academy learning modules, 500+ SQL Library queries, complete RICE taxonomy (RICEComponent/EBSInterface/EBSConversion/EBSExtension/AMEConfiguration/OracleWorkflow/OAFComponent/SOAService/APEXApplication/ADFApplication/RedwoodComponent), 15 ModuleKnowledge topics (AP-FUNC-001 through INTERVIEW-001), role-based access (Employee/Technical), Data Connect (Excel upload, DB Simulated, Live Oracle DB with fuzzy column mapping), Delete/Recycle Bin workflow, Document Generator.",
+  "ontology_file": "ica-schema/ebs-ontology.jsonld",
+  "ontology_complete_file": "ica-schema/ebs-complete-ontology.jsonld",
+  "ontology_format": "JSON-LD / OWL 2",
+  "ontology_version": "5.2",
+  "ontology_namespace": "https://ibm.com/ica/oracle-ebs-intelligence-hub/ontology#",
+  "secondary_namespace": "http://ibm.com/oracle-ebs#",
+  "guide_source": "bob ontology guide.txt (12,098 lines) — Sections A through AE",
+  "ica_context_upload": {
+    "primary_schema": "ica-schema/Oracle_EBS_Intelligence_Hub.jsonld",
+    "ontology": "ica-schema/ebs-ontology.jsonld",
+    "nodes_csv": "ica-schema/csv/ebs_nodes.csv",
+    "edges_csv": "ica-schema/csv/ebs_edges.csv",
+    "relationships_csv": "ica-schema/csv/ebs_relationships.csv",
+    "column_mapping_rules_csv": "ica-schema/csv/column_mapping_rules.csv",
+    "nl_queries_csv": "ica-schema/csv/natural_language_queries.csv"
+  },
+  "node_types": [
+    {
+      "type": "OracleModule",
+      "description": "One of the 7 Oracle EBS functional modules",
+      "properties": ["code", "name", "description", "color", "report_count"],
+      "required": ["code", "name"]
+    },
+    {
+      "type": "EBSReport",
+      "description": "A pre-built Oracle EBS report in the Reports Browser",
+      "properties": ["key", "title", "module", "sql_available", "columns", "approx_rows", "chart_type", "deletable"],
+      "required": ["key", "title", "module"]
+    },
+    {
+      "type": "OracleTable",
+      "description": "An Oracle EBS base table used by one or more reports",
+      "properties": ["name", "module", "est_rows", "primary_key", "key_indexes", "multi_org", "datetrack", "notes"],
+      "required": ["name", "module"]
+    },
+    {
+      "type": "BusinessRule",
+      "description": "An Oracle EBS SQL coding rule or compliance rule",
+      "properties": ["rule_id", "category", "description", "applies_to_tables", "sql_pattern", "correction", "severity"],
+      "required": ["rule_id", "description"]
+    },
+    {
+      "type": "NLQuery",
+      "description": "A natural language query mapped to a report, feature, or action",
+      "properties": ["query_id", "query_text", "intent", "report_key", "feature", "confidence"],
+      "required": ["query_id", "query_text"]
+    },
+    {
+      "type": "UserRole",
+      "description": "A login role with defined tab visibility and permissions",
+      "properties": ["role_id", "role_name", "password", "visible_tabs", "can_delete_direct", "has_notification_bell"],
+      "required": ["role_id", "role_name"]
+    },
+    {
+      "type": "AppTab",
+      "description": "One of the 7 tabs in the Intelligence Hub navigation",
+      "properties": ["tab_id", "tab_name", "icon", "visible_to_roles", "lazy_init", "description"],
+      "required": ["tab_id", "tab_name"]
+    },
+    {
+      "type": "AcademyModule",
+      "description": "One of 15 EBS Academy learning modules",
+      "properties": ["module_id", "module_number", "title", "target_roles", "topic_count", "has_ai_assistant", "has_flowchart", "has_sql_examples"],
+      "required": ["module_id", "title"]
+    },
+    {
+      "type": "AcademyTopic",
+      "description": "A learning topic within an Academy module",
+      "properties": ["topic_id", "module_id", "title", "content_length", "has_sql", "has_flowchart"],
+      "required": ["topic_id", "module_id", "title"]
+    },
+    {
+      "type": "SQLQuery",
+      "description": "A pre-written Oracle EBS SQL query in the SQL Library",
+      "properties": ["query_id", "title", "description", "module", "tags", "category", "sql_text"],
+      "required": ["query_id", "title", "module"]
+    },
+    {
+      "type": "SQLCategory",
+      "description": "A category grouping SQL Library queries by module/function",
+      "properties": ["category_id", "name", "module", "query_count"],
+      "required": ["category_id", "name"]
+    },
+    {
+      "type": "DataConnectSource",
+      "description": "A data source type supported by the Data Connect tab: Excel/CSV upload, DB Simulated, or Live Oracle DB (requires proxy).",
+      "properties": ["source_id", "source_type", "description", "requires_proxy", "file_formats"],
+      "required": ["source_id", "source_type"]
+    },
+    {
+      "type": "ColumnMapping",
+      "description": "A mapping between an incoming Excel/DB column and a target EBS report column. Created by dcAutoMap() via fuzzy normalised string matching. Includes optional data transform.",
+      "properties": ["source_column", "normalised_pattern", "target_column", "target_report", "data_type", "transform", "confidence"],
+      "required": ["source_column", "target_column"]
+    },
+    {
+      "type": "OperatingUnit",
+      "description": "An Oracle EBS Multi-Org operating unit identified by ORG_ID. Required as a filter on all _ALL tables to prevent cross-org data exposure.",
+      "properties": ["org_id", "name", "short_code", "currency", "country"],
+      "required": ["org_id", "name"]
+    },
+    {
+      "type": "DocumentTemplate",
+      "description": "A document type generated by the Doc Generator tab — Technical Design Document or Functional Specification — with cover page, SVG diagrams, and structured sections.",
+      "properties": ["template_id", "template_type", "sections", "svg_diagrams", "export_format"],
+      "required": ["template_id", "template_type"]
+    },
+    {
+      "type": "DeleteRequest",
+      "description": "An employee request to delete a report, pending Technical approval",
+      "properties": ["request_id", "report_key", "reason", "notes", "status", "submitted_by_role"],
+      "required": ["request_id", "report_key", "status"]
+    },
+    {
+      "type": "RecycleBinEntry",
+      "description": "A snapshot of a deleted report stored for possible restoration",
+      "properties": ["entry_key", "report_key", "report_title", "deleted_at", "columns", "row_count"],
+      "required": ["entry_key", "report_key"]
+    },
+    {
+      "type": "Employee",
+      "description": "A sample Oracle EBS employee entity",
+      "properties": ["employee_number", "full_name", "department", "job_title", "supervisor_id", "org_id"],
+      "required": ["employee_number"]
+    },
+    {
+      "type": "Supplier",
+      "description": "A sample Oracle EBS supplier/vendor entity",
+      "properties": ["vendor_id", "vendor_name", "vendor_type", "enabled_flag", "hold_flag", "org_id"],
+      "required": ["vendor_id", "vendor_name"]
+    },
+    {
+      "type": "RICEComponent",
+      "description": "A RICE customisation/development component: Report (R), Interface (I), Conversion (C), or Extension (E). Also covers AME, Workflow, OAF, SOA, APEX, ADF, Redwood.",
+      "properties": ["componentId", "componentName", "riceCategory", "componentType", "module", "complexity", "status", "technicalStack", "relatedTables"],
+      "required": ["componentId", "componentName", "riceCategory", "module"]
+    },
+    {
+      "type": "AMEConfiguration",
+      "description": "An Oracle AME (Approval Management Engine) configuration with conditions, rules, and approval hierarchies for a transaction type",
+      "properties": ["ameId", "ameName", "transactionType", "module", "approvalType", "conditions", "rules", "thresholds"],
+      "required": ["ameId", "ameName", "transactionType", "module"]
+    },
+    {
+      "type": "OracleWorkflow",
+      "description": "An Oracle Workflow process (itemType + processName) for approval routing or notification within Oracle EBS",
+      "properties": ["workflowId", "workflowName", "itemType", "processName", "module", "workflowType", "triggerEvent", "diagnosticTables"],
+      "required": ["workflowId", "workflowName", "itemType", "module"]
+    },
+    {
+      "type": "OAFComponent",
+      "description": "An Oracle Application Framework (OAF) component: page, region, controller extension, or VO extension",
+      "properties": ["oafId", "componentName", "componentType", "extensionType", "module", "javaControllerClass", "basePagePath"],
+      "required": ["oafId", "componentName", "module"]
+    },
+    {
+      "type": "SOAService",
+      "description": "An Oracle SOA Suite composite or REST/SOAP service integrating with Oracle EBS",
+      "properties": ["soaId", "serviceName", "serviceType", "module", "namespace", "endpointURL", "integrationPattern", "securityPolicy"],
+      "required": ["soaId", "serviceName", "module"]
+    },
+    {
+      "type": "APEXApplication",
+      "description": "An Oracle APEX application integrated with Oracle EBS for reporting, approval, or data entry",
+      "properties": ["apexId", "appName", "appAlias", "module", "authenticationScheme", "pages"],
+      "required": ["apexId", "appName", "module"]
+    },
+    {
+      "type": "ADFApplication",
+      "description": "An Oracle ADF application with EO/VO/AM business components deployed on WebLogic for Oracle EBS",
+      "properties": ["adfId", "appName", "module", "adfVersion", "deploymentTarget", "businessComponents"],
+      "required": ["adfId", "appName", "module"]
+    },
+    {
+      "type": "RedwoodComponent",
+      "description": "An Oracle Redwood UI component (Oracle JET + VBCS) for modernising Oracle EBS interfaces",
+      "properties": ["redwoodId", "componentName", "componentType", "module", "oracleJETVersion", "vbcsVersion", "deploymentTarget", "dataSourceType"],
+      "required": ["redwoodId", "componentName", "module"]
+    },
+    {
+      "type": "ModuleKnowledge",
+      "description": "A structured learning topic for an Oracle EBS module covering setup, functional processing, technical integration, troubleshooting, SQL examples, and interview Q&A",
+      "properties": ["knowledgeId", "moduleCode", "topicName", "topicCategory", "difficulty", "businessProcess", "learningObjectives", "troubleshootingGuide", "interviewQuestions"],
+      "required": ["knowledgeId", "moduleCode", "topicName"]
+    },
+    {
+      "type": "BusinessProcess",
+      "description": "An end-to-end Oracle EBS business process spanning multiple modules: P2P, O2C, H2R, or R2R",
+      "properties": ["processCode", "processName", "startEvent", "endEvent", "primaryModules", "secondaryModules", "keyMilestones", "accountingEntries"],
+      "required": ["processCode", "processName"]
+    },
+    {
+      "type": "ComplianceRule",
+      "description": "An Oracle EBS SQL coding compliance rule (COMP-001 to COMP-010) or detailed code review check (RULE_001 to RULE_028)",
+      "properties": ["ruleId", "ruleName", "category", "severity", "affectedModules", "correctUsage", "incorrectUsage", "violationImpact"],
+      "required": ["ruleId", "ruleName", "severity"]
+    },
+    {
+      "type": "SQLPattern",
+      "description": "A reusable SQL query template with all mandatory Oracle EBS compliance filters, required for the specified module and scenario",
+      "properties": ["patternId", "module", "difficulty", "requiredFilters", "templateSQL"],
+      "required": ["patternId", "module"]
+    }
+  ],
+  "data_connect_mapping": {
+    "function": "dcAutoMap()",
+    "algorithm": "normalise(str) = str.toLowerCase().replace(/[\\s_\\/\\-\\.#]/g, '')",
+    "match_logic": "tn === norm || tn.includes(norm) || norm.includes(tn)",
+    "column_mapping_rules_csv": "ica-schema/csv/column_mapping_rules.csv",
+    "rules_count": 100,
+    "supported_transforms": ["trim", "upper", "lower", "title", "date_fmt", "num_fmt"],
+    "type_detection_function": "_dcDetectType()",
+    "type_detection_sample_rows": 50,
+    "detected_types": ["number", "date", "text", "bool", "mixed"],
+    "excel_source": "SheetJS xlsx 0.18.5",
+    "db_simulated_tables": ["ap_invoices_all","ap_suppliers","ar_customers","gl_je_headers","per_all_people_f","po_headers_all","fnd_concurrent_requests"],
+    "live_db_proxy_contract": {
+      "method": "POST",
+      "endpoint": "/query",
+      "body": { "sql": "string", "host": "string", "port": "string", "sid": "string", "user": "string", "pass": "string" },
+      "response": { "columns": "string[]", "rows": "any[][]" }
+    }
+  },
+  "edge_types": [
+    {
+      "type": "module_has_report",
+      "from": "OracleModule",
+      "to": "EBSReport",
+      "cardinality": "1:many",
+      "description": "Module owns the report"
+    },
+    {
+      "type": "report_uses_table",
+      "from": "EBSReport",
+      "to": "OracleTable",
+      "cardinality": "many:many",
+      "properties": ["join_type", "required"],
+      "description": "Report queries this Oracle table"
+    },
+    {
+      "type": "table_has_rule",
+      "from": "OracleTable",
+      "to": "BusinessRule",
+      "cardinality": "many:many",
+      "description": "Table requires this business/compliance rule"
+    },
+    {
+      "type": "query_maps_to_report",
+      "from": "NLQuery",
+      "to": "EBSReport",
+      "cardinality": "many:1",
+      "description": "NL query resolves to this report"
+    },
+    {
+      "type": "query_maps_to_tab",
+      "from": "NLQuery",
+      "to": "AppTab",
+      "cardinality": "many:1",
+      "description": "NL query navigates to this tab/feature"
+    },
+    {
+      "type": "role_sees_tab",
+      "from": "UserRole",
+      "to": "AppTab",
+      "cardinality": "many:many",
+      "description": "Role has visibility of this tab"
+    },
+    {
+      "type": "academy_module_has_topic",
+      "from": "AcademyModule",
+      "to": "AcademyTopic",
+      "cardinality": "1:many",
+      "description": "Academy module contains this topic"
+    },
+    {
+      "type": "topic_uses_table",
+      "from": "AcademyTopic",
+      "to": "OracleTable",
+      "cardinality": "many:many",
+      "description": "Academy topic references this Oracle table"
+    },
+    {
+      "type": "sql_query_in_category",
+      "from": "SQLQuery",
+      "to": "SQLCategory",
+      "cardinality": "many:1",
+      "description": "SQL query belongs to this library category"
+    },
+    {
+      "type": "sql_query_uses_table",
+      "from": "SQLQuery",
+      "to": "OracleTable",
+      "cardinality": "many:many",
+      "description": "SQL Library query references this table"
+    },
+    {
+      "type": "data_connect_targets_report",
+      "from": "DataConnectSource",
+      "to": "EBSReport",
+      "cardinality": "many:many",
+      "description": "Data Connect can push data to this report"
+    },
+    {
+      "type": "delete_request_targets_report",
+      "from": "DeleteRequest",
+      "to": "EBSReport",
+      "cardinality": "many:1",
+      "description": "Delete request is for this report"
+    },
+    {
+      "type": "recycle_bin_was_report",
+      "from": "RecycleBinEntry",
+      "to": "EBSReport",
+      "cardinality": "1:1",
+      "description": "Recycle bin entry is a snapshot of this report"
+    },
+    {
+      "type": "module_has_rice_component",
+      "from": "OracleModule",
+      "to": "RICEComponent",
+      "cardinality": "1:many",
+      "description": "Module owns RICE components (Reports/Interfaces/Conversions/Extensions/AME/WF/OAF/SOA/APEX/ADF/Redwood)"
+    },
+    {
+      "type": "ame_governs_workflow",
+      "from": "AMEConfiguration",
+      "to": "OracleWorkflow",
+      "cardinality": "1:1",
+      "description": "AME Configuration drives routing logic for a Workflow process"
+    },
+    {
+      "type": "module_has_ame_config",
+      "from": "OracleModule",
+      "to": "AMEConfiguration",
+      "cardinality": "1:many",
+      "description": "Module has one or more AME approval configurations"
+    },
+    {
+      "type": "module_has_workflow",
+      "from": "OracleModule",
+      "to": "OracleWorkflow",
+      "cardinality": "1:many",
+      "description": "Module has one or more Oracle Workflow processes"
+    },
+    {
+      "type": "module_has_knowledge_topic",
+      "from": "OracleModule",
+      "to": "ModuleKnowledge",
+      "cardinality": "1:many",
+      "description": "Module has structured knowledge topics for learning and troubleshooting"
+    },
+    {
+      "type": "knowledge_topic_for_process",
+      "from": "ModuleKnowledge",
+      "to": "BusinessProcess",
+      "cardinality": "many:many",
+      "description": "Knowledge topic covers a specific business process"
+    },
+    {
+      "type": "rice_component_uses_table",
+      "from": "RICEComponent",
+      "to": "OracleTable",
+      "cardinality": "many:many",
+      "description": "RICE component reads or writes to an Oracle EBS base table"
+    },
+    {
+      "type": "process_spans_module",
+      "from": "BusinessProcess",
+      "to": "OracleModule",
+      "cardinality": "many:many",
+      "description": "Business process (P2P/O2C/H2R/R2R) spans primary and secondary modules"
+    },
+    {
+      "type": "compliance_rule_applies_to_table",
+      "from": "ComplianceRule",
+      "to": "OracleTable",
+      "cardinality": "many:many",
+      "description": "Compliance rule must be applied when querying this table"
+    },
+    {
+      "type": "sql_pattern_implements_rule",
+      "from": "SQLPattern",
+      "to": "ComplianceRule",
+      "cardinality": "many:many",
+      "description": "SQL pattern template implements one or more compliance rules"
+    },
+    {
+      "type": "redwood_calls_soa",
+      "from": "RedwoodComponent",
+      "to": "SOAService",
+      "cardinality": "many:many",
+      "description": "Redwood component calls SOA REST/SOAP services for EBS data access"
+    }
+  ]
+}

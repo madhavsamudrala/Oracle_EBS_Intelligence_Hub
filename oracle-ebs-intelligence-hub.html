@@ -1,0 +1,2899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Oracle EBS Intelligence Hub — AI-powered reporting, SQL Lab, EBS Academy, Data Connect for Oracle EBS R12">
+    <meta name="keywords" content="Oracle EBS, Intelligence Hub, Reports, SQL Lab, Academy, iExpense, Payables, Receivables, GL, HRMS, AI Assistant">
+    <meta name="author" content="Oracle EBS Team | IBM ICA">
+    <title>Oracle EBS Intelligence Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="ebs-reports.css?v=20">
+    <link rel="stylesheet" href="ebs-reports-additions.css?v=20">
+    <link rel="stylesheet" href="ebs-requirements-studio.css?v=20">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- FileSaver.js for downloads -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <!-- XLSX for Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  LANDING / LOGIN SCREEN                                          -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div id="roleLanding" class="role-landing">
+
+      <!-- LEFT PANEL — Branding -->
+      <div class="role-landing-left">
+
+        <!-- IBM logo bar -->
+        <div class="rl-ibm-bar">
+          <div class="rl-ibm-wordmark" aria-label="IBM">
+            <span class="rl-ibm-letter">I</span><span class="rl-ibm-letter">B</span><span class="rl-ibm-letter">M</span>
+          </div>
+          <span class="rl-ibm-sep">|</span>
+          <span class="rl-ibm-label">ICA Context Studio</span>
+        </div>
+
+        <!-- App identity -->
+        <div class="rl-app-identity">
+          <div class="rl-app-icon">
+            <svg viewBox="0 0 48 48" fill="none" width="52" height="52">
+              <rect width="48" height="48" rx="12" fill="rgba(255,255,255,0.12)"/>
+              <ellipse cx="24" cy="14" rx="10" ry="4" stroke="white" stroke-width="2"/>
+              <path d="M14 14 C14 14 14 34 24 34 C34 34 34 14 34 14" stroke="white" stroke-width="2"/>
+              <path d="M14 22 Q24 26 34 22" stroke="white" stroke-width="1.5" stroke-dasharray="2 2"/>
+              <path d="M14 28 Q24 32 34 28" stroke="white" stroke-width="1.5" stroke-dasharray="2 2"/>
+            </svg>
+          </div>
+          <h1 class="rl-app-title">Oracle EBS<br>Intelligence Hub</h1>
+          <p class="rl-app-subtitle">v6.0 · R12 Enterprise · AI-Powered · IBM BoB Challenge</p>
+        </div>
+
+        <!-- Feature pills -->
+        <div class="rl-feature-pills">
+          <span class="rl-pill">📊 26 Reports</span>
+          <span class="rl-pill">🤖 ICA AI Chat</span>
+          <span class="rl-pill">🔍 SQL Advisor</span>
+          <span class="rl-pill">🎓 EBS Academy</span>
+          <span class="rl-pill">🔌 Data Connect</span>
+          <span class="rl-pill">📄 Doc Generator</span>
+          <span class="rl-pill">🛡️ DASC Security</span>
+        </div>
+
+        <!-- Powered by -->
+        <div class="rl-powered">
+          <div class="rl-powered-label">Powered by</div>
+          <div class="rl-powered-stack">
+            <div class="rl-powered-chip">
+              <svg viewBox="0 0 20 20" fill="none" width="14" height="14"><circle cx="10" cy="10" r="8" stroke="white" stroke-width="1.5"/><path d="M6 10h8M10 6v8" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+              IBM BOB
+            </div>
+            <div class="rl-powered-chip rl-powered-ica">
+              <svg viewBox="0 0 20 20" fill="none" width="14" height="14"><rect x="2" y="2" width="16" height="16" rx="3" stroke="white" stroke-width="1.5"/><path d="M6 7h8M6 10h5M6 13h7" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+              ICA Context Studio
+            </div>
+            <div class="rl-powered-chip">
+              <svg viewBox="0 0 20 20" fill="none" width="14" height="14"><path d="M3 10a7 7 0 1014 0A7 7 0 003 10z" stroke="white" stroke-width="1.5"/><path d="M10 7v3l2 2" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+              MCP Gateway
+            </div>
+            <div class="rl-powered-chip" style="background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3)">
+              <svg viewBox="0 0 20 20" fill="none" width="14" height="14"><rect x="3" y="3" width="14" height="14" rx="2" stroke="white" stroke-width="1.5"/><path d="M7 10h6M10 7v6" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+              FastAPI Backend
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom note with team name prominent -->
+        <div style="margin-top:auto;padding-top:12px;border-top:1px solid rgba(255,255,255,0.15);text-align:center">
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.45);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px">IBM BoB Challenge · Team</div>
+          <div style="font-size:1.05rem;font-weight:700;color:#62c6e8;letter-spacing:0.06em">CookCountyBoB</div>
+          <div style="font-size:0.65rem;color:rgba(255,255,255,0.35);margin-top:3px">Oracle EBS R12 · v6.0 · DASC-Compliant</div>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL — Login -->
+      <div class="role-landing-right">
+
+        <!-- Step 1: Choose Role -->
+        <div id="rlStepRole" class="rl-step">
+          <h2 class="rl-step-title">Sign In</h2>
+          <p class="rl-step-sub">Select your access profile to continue</p>
+
+          <!-- DASC security model label -->
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:8px 12px;background:#f0f7f4;border:1px solid #a7d9c0;border-radius:8px;">
+            <span style="font-size:1rem">🛡️</span>
+            <div>
+              <div style="font-size:0.7rem;font-weight:700;color:#1a6b45;letter-spacing:0.08em;text-transform:uppercase">DASC Security Model Active</div>
+              <div style="font-size:0.67rem;color:#5a7a6a;margin-top:1px">Role-based access · Least privilege · Zero-trust API · Audit trail</div>
+            </div>
+          </div>
+
+          <div class="rl-role-options">
+
+            <div class="rl-role-opt" id="rlOptEmployee" onclick="rlSelectOpt('employee')">
+              <div class="rl-role-opt-icon">👤</div>
+              <div class="rl-role-opt-body">
+                <div class="rl-role-opt-title">Employee / Business User</div>
+                <div class="rl-role-opt-desc">Reports, Chat, Data Connect · <strong style="color:#0572CE">DASC Clearance: Standard</strong></div>
+                <div style="font-size:0.65rem;color:#8a9aaa;margin-top:3px">✅ Chat &nbsp;✅ Reports &nbsp;✅ Data Connect</div>
+              </div>
+              <div class="rl-role-opt-check" id="rlCheckEmployee">✓</div>
+            </div>
+
+            <div class="rl-role-opt" id="rlOptTechnical" onclick="rlSelectOpt('technical')">
+              <div class="rl-role-opt-icon">⚙️</div>
+              <div class="rl-role-opt-body">
+                <div class="rl-role-opt-title">Technical / Power User</div>
+                <div class="rl-role-opt-desc">All 7 tabs · SQL Lab · Academy · <strong style="color:#198038">DASC Clearance: Full</strong></div>
+                <div style="font-size:0.65rem;color:#8a9aaa;margin-top:3px">✅ All tabs &nbsp;✅ SQL Advisor &nbsp;✅ Doc Gen &nbsp;✅ Governance</div>
+              </div>
+              <div class="rl-role-opt-check" id="rlCheckTechnical">✓</div>
+            </div>
+
+          </div>
+
+          <button class="rl-next-btn" id="rlNextBtn" onclick="rlGoToLogin()" disabled>
+            Continue →
+          </button>
+
+          <p class="rl-step-hint">For demo: select <strong>Technical</strong> to see all 7 tabs.</p>
+        </div>
+
+        <!-- Step 2: Password -->
+        <div id="rlStepLogin" class="rl-step" style="display:none;">
+          <button class="rl-back-btn" onclick="rlGoToRole()">← Back</button>
+
+          <div class="rl-login-role-badge" id="rlLoginRoleBadge">
+            <span id="rlLoginRoleIcon">👤</span>
+            <span id="rlLoginRoleLabel">Employee</span>
+          </div>
+
+          <h2 class="rl-step-title" style="margin-top:14px;">Enter Password</h2>
+          <p class="rl-step-sub" id="rlLoginHint">Enter your employee access password</p>
+
+          <div class="rl-input-wrap">
+            <label class="rl-input-label">Password</label>
+            <div class="rl-pw-row">
+              <input type="password" id="rlPassword" class="rl-input"
+                     placeholder="••••••••••"
+                     onkeydown="if(event.key==='Enter') rlDoLogin()"
+                     autocomplete="current-password" />
+              <button class="rl-pw-toggle" onclick="rlTogglePw()" title="Show / hide password" id="rlPwToggle">👁</button>
+            </div>
+            <div class="rl-error-msg" id="rlErrorMsg" style="display:none;">
+              ⚠ Incorrect password. Please try again.
+            </div>
+          </div>
+
+          <button class="rl-login-btn" onclick="rlDoLogin()">
+            <svg viewBox="0 0 20 20" fill="none" width="16" height="16"><path d="M3 10h14M10 4l7 6-7 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Sign In
+          </button>
+
+        </div>
+
+      </div><!-- /role-landing-right -->
+
+    </div><!-- /roleLanding -->
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  GLOBAL HEADER                                                   -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <header class="cds-shell-header" id="appHeader" style="display:none;">
+      <div class="cds-shell-header-name">
+        <span class="cds-ibm-logo">IBM</span>
+        <span class="cds-header-separator">|</span>
+        <span class="cds-header-name">Oracle EBS Intelligence Hub</span>
+        <!-- Team + DASC badge always visible in header during demo -->
+        <span style="margin-left:14px;padding:2px 10px;background:rgba(98,198,232,0.18);border:1px solid rgba(98,198,232,0.4);border-radius:12px;font-size:0.65rem;font-weight:700;color:#62c6e8;letter-spacing:0.08em;text-transform:uppercase;">CookCountyBoB</span>
+        <span style="margin-left:6px;padding:2px 10px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.35);border-radius:12px;font-size:0.65rem;font-weight:700;color:#d4f5e2;letter-spacing:0.08em;text-transform:uppercase;">🛡️ DASC</span>
+      </div>
+      <div class="cds-shell-header-global">
+        <button class="cds-header-action" onclick="goHome()" title="Go to Chat Assistant home screen">
+          <svg viewBox="0 0 32 32" fill="currentColor" width="20" height="20"><path d="M16 2L2 14h4v16h8v-10h4v10h8V14h4z"/></svg>
+          <span>Home</span>
+        </button>
+        <button class="cds-header-action" onclick="goBack()" title="Navigate back to previous view">
+          <svg viewBox="0 0 32 32" fill="currentColor" width="20" height="20"><path d="M14 26L4 16 14 6l1.4 1.4L6.8 16l8.6 8.6z"/><path d="M5 15h23v2H5z"/></svg>
+          <span>Back</span>
+        </button>
+        <!-- Notification bell — Technical only; shows pending delete requests -->
+        <button class="cds-header-action notif-bell-btn" id="notifBellBtn"
+                style="display:none; position:relative;"
+                onclick="openNotifPanel()"
+                title="Delete Requests &amp; Recycle Bin">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span id="notifBadge" class="notif-badge" style="display:none;">0</span>
+        </button>
+        <!-- Logged-in user pill -->
+        <div class="rl-user-pill" id="rlUserPill">
+          <span id="rlUserPillIcon">👤</span>
+          <span id="rlUserPillName">Employee</span>
+          <span class="rl-user-pill-role" id="rlUserPillRole">Business User</span>
+        </div>
+        <!-- Logout -->
+        <button class="cds-header-action rl-logout-btn" onclick="rlLogout()" title="Sign out and return to login">
+          <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Sign Out</span>
+        </button>
+        <div class="cds-header-badge">Oracle EBS R12</div>
+      </div>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  MAIN TAB NAVIGATION                                             -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="tabs-wrapper" id="appTabsWrapper" style="display:none;">
+        <div class="tab-bar">
+            <button class="tab-btn active" data-tab="tab-chat" onclick="switchTab('tab-chat', this)">
+                <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M8 12H8.01M12 12H12.01M16 12H16.01M21 12C21 16.4183 16.9706 20 12 20C10.4607 20 9.01172 19.6565 7.74467 19.0511L3 20L4.39499 16.28C3.51156 15.0423 3 13.5743 3 12C3 7.58172 7.02944 4 12 4C16.9706 4 21 7.58172 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Chat Assistant
+            </button>
+            <button class="tab-btn" data-tab="tab-reports" onclick="switchTab('tab-reports', this)">
+                <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15M9 5C9 6.10457 9.89543 7 11 7H13C14.1046 7 15 6.10457 15 5M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                EBS Reports
+            </button>
+            <button class="tab-btn" data-tab="tab-sql" data-role="technical" onclick="switchTab('tab-sql', this)">
+                <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M10 20L14 4M18 8L22 12L18 16M6 16L2 12L6 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                SQL Advisor
+            </button>
+            <button class="tab-btn" data-tab="tab-docgen" data-role="technical" onclick="switchTab('tab-docgen', this)">
+                <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M9 12H15M9 16H12M13 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V9L13 3ZM13 3V9H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Doc Generator
+            </button>
+            <button class="tab-btn" data-tab="tab-sqllab" data-role="technical" onclick="switchTab('tab-sqllab', this)">
+                <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M4 6H20M4 10H20M4 14H14M4 18H10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="19" cy="17" r="3" stroke="currentColor" stroke-width="2"/><path d="M21 20L22.5 21.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                SQL Lab
+            </button>
+            <button class="tab-btn" data-tab="tab-academy" data-role="technical" onclick="switchTab('tab-academy', this)">
+                <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                EBS Academy
+            </button>
+            <button class="tab-btn" data-tab="tab-dataconnect" onclick="switchTab('tab-dataconnect', this)">
+                <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><ellipse cx="12" cy="5" rx="9" ry="3" stroke="currentColor" stroke-width="2"/><path d="M3 5V19C3 20.657 7.029 22 12 22C16.971 22 21 20.657 21 19V5" stroke="currentColor" stroke-width="2"/><path d="M3 12C3 13.657 7.029 15 12 15C16.971 15 21 13.657 21 12" stroke="currentColor" stroke-width="2"/></svg>
+                Data Connect
+            </button>
+            <button class="tab-btn" data-tab="tab-reqanalyzer" data-role="technical" data-hidden="true" onclick="switchTab('tab-reqanalyzer', this)" style="display:none;">
+                <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15M9 5C9 6.10457 9.89543 7 11 7H13C14.1046 7 15 6.10457 15 5M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17" cy="17" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M17 15v2l1 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                Req Analyzer
+            </button>
+            <button class="tab-btn" data-tab="tab-reqstudio" data-role="technical" data-hidden="true" onclick="switchTab('tab-reqstudio', this)" style="display:none;">
+                <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2V8H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 15L11 17L15 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 9H10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 9H15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                Req Studio
+            </button>
+            <button class="tab-btn" data-tab="tab-ica" data-role="technical" data-hidden="true" onclick="switchTab('tab-ica', this)" style="display:none;">
+                <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><circle cx="4" cy="6" r="2" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="6" r="2" stroke="currentColor" stroke-width="2"/><circle cx="4" cy="18" r="2" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="18" r="2" stroke="currentColor" stroke-width="2"/><path d="M6 7L10 10M18 7L14 10M6 17L10 14M18 17L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                ICA Context Studio
+            </button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  DASC SECURITY INFO BAR (shown for Employee role)               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div id="dascInfoBar" style="display:none;">
+
+      <!-- Employee role: access restriction notice -->
+      <div id="dascBarEmployee" style="display:none;background:#f0f7f4;border-bottom:1px solid #a7d9c0;padding:6px 24px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;max-width:1400px;margin:0 auto;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:0.85rem">🛡️</span>
+            <div>
+              <span style="font-size:0.68rem;font-weight:700;color:#1a6b45;letter-spacing:0.08em;text-transform:uppercase;">DASC Security Active</span>
+              <span style="font-size:0.68rem;color:#4a6a5a;margin-left:8px;">Your access is ready — Chat, EBS Reports &amp; Data Connect available</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
+            <span style="padding:2px 8px;background:#e0f2ea;border:1px solid #a7d9c0;border-radius:8px;font-size:0.64rem;font-weight:600;color:#1a6b45;">✓ Chat Assistant</span>
+            <span style="padding:2px 8px;background:#e0f2ea;border:1px solid #a7d9c0;border-radius:8px;font-size:0.64rem;font-weight:600;color:#1a6b45;">✓ EBS Reports</span>
+            <span style="padding:2px 8px;background:#e0f2ea;border:1px solid #a7d9c0;border-radius:8px;font-size:0.64rem;font-weight:600;color:#1a6b45;">✓ Data Connect</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Technical role: full access notice -->
+      <div id="dascBarTechnical" style="display:none;background:#f0f5ff;border-bottom:1px solid #b8ccf0;padding:6px 24px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;max-width:1400px;margin:0 auto;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:0.85rem">🛡️</span>
+            <div>
+              <span style="font-size:0.68rem;font-weight:700;color:#1a3a8f;letter-spacing:0.08em;text-transform:uppercase;">DASC Full Clearance</span>
+              <span style="font-size:0.68rem;color:#3a4a7a;margin-left:8px;">Technical user — full access · governance authority · deletion approval</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
+            <span style="padding:2px 8px;background:#e0e8ff;border:1px solid #b8ccf0;border-radius:8px;font-size:0.64rem;font-weight:600;color:#1a3a8f;">✓ All 7 Tabs</span>
+            <span style="padding:2px 8px;background:#e0e8ff;border:1px solid #b8ccf0;border-radius:8px;font-size:0.64rem;font-weight:600;color:#1a3a8f;">✓ SQL Tools</span>
+            <span style="padding:2px 8px;background:#e0e8ff;border:1px solid #b8ccf0;border-radius:8px;font-size:0.64rem;font-weight:600;color:#1a3a8f;">✓ Deletion Approval</span>
+            <span style="padding:2px 8px;background:#e0e8ff;border:1px solid #b8ccf0;border-radius:8px;font-size:0.64rem;font-weight:600;color:#1a3a8f;">✓ Recycle Bin</span>
+            <span style="padding:2px 8px;background:#e0e8ff;border:1px solid #b8ccf0;border-radius:8px;font-size:0.64rem;font-weight:600;color:#1a3a8f;">✓ Audit Trail</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /dascInfoBar -->
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  TAB 1 — CHAT ASSISTANT                                          -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div id="tab-chat" class="tab-content active">
+        <div class="chat-layout">
+            <div class="chat-sidebar">
+                <div class="chat-sidebar-header">
+                    <h3>Quick Actions</h3>
+                </div>
+                <div class="quick-actions">
+                    <button class="quick-btn" onclick="injectQuery('Show me aged payables for last 30 days')">📊 Aged Payables</button>
+                    <button class="quick-btn" onclick="injectQuery('List all suppliers with payments over $100,000 in last 3 years')">🏢 Supplier Report</button>
+                    <button class="quick-btn" onclick="injectQuery('Show iExpense reports pending approval')">💳 iExpense Status</button>
+                    <button class="quick-btn" onclick="injectQuery('GL Journal entries for current period')">📒 GL Journals</button>
+                    <button class="quick-btn" onclick="injectQuery('Active employees with expense allocation')">👥 HRMS Employees</button>
+                    <button class="quick-btn" onclick="injectQuery('Purchase orders pending receipt this month')">📦 PO Status</button>
+                    <button class="quick-btn" onclick="injectQuery('Invoice register for AP module')">🧾 Invoice Register</button>
+                    <button class="quick-btn" onclick="injectQuery('Withholding tax by supplier summary')">💰 Tax Report</button>
+                </div>
+                <div class="chat-history-section">
+                    <h4>Recent Sessions</h4>
+                    <div id="chatHistory" class="chat-history-list">
+                        <!-- Populated by initRecentSessions() in ebs-reports.js -->
+                        <div class="history-item clickable" onclick="openRecentSession(0)">
+                          <span class="history-icon">📊</span>
+                          <div class="history-text"><span class="history-label">iExpense Approval Report</span><span class="history-age">Today</span></div>
+                          <span class="history-arrow">›</span>
+                        </div>
+                        <div class="history-item clickable" onclick="openRecentSession(1)">
+                          <span class="history-icon">📊</span>
+                          <div class="history-text"><span class="history-label">Supplier High Payments Analysis</span><span class="history-age">Yesterday</span></div>
+                          <span class="history-arrow">›</span>
+                        </div>
+                        <div class="history-item clickable" onclick="openRecentSession(2)">
+                          <span class="history-icon">📊</span>
+                          <div class="history-text"><span class="history-label">GL Trial Balance Q4</span><span class="history-age">2 days ago</span></div>
+                          <span class="history-arrow">›</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-main">
+                <div class="chat-header">
+                 <!--    <div class="chat-status"> -->
+                   <!--      <span class="status-dot active"></span> -->
+                  <!--       <span>Oracle EBS AI Assistant — Powered by ICA + BOB</span> -->
+                  <!--   </div> -->
+				  <div class="chat-status">
+					<span class="status-dot active"></span>
+					<span>Oracle EBS AI Assistant — Powered by ICA + BOB</span>
+					<span id="icaStatusBadge" style="
+						margin-left:10px;
+						padding:2px 10px;
+						border-radius:20px;
+						font-size:0.7rem;
+						font-weight:700;
+						letter-spacing:0.5px;
+						background:#F4F4F4;
+						color:#8D8D8D;
+						border:1px solid #C8C8C8;
+						transition:all 0.3s ease;">
+						○ ICA Connecting...
+					</span>
+				</div>
+                    <div class="chat-actions">
+                        <button class="icon-btn" onclick="clearChat()" title="Clear all chat messages">
+                          🗑️ <span>Clear</span>
+                        </button>
+                        <button class="icon-btn" onclick="downloadChatReport()" title="Download last report as CSV">
+                          ⬇️ <span>Download</span>
+                        </button>
+                        <label class="icon-btn chat-upload-label" title="Upload an Excel (.xlsx) or CSV file to load your own data into the current report slot">
+                            📂 <span>Upload Data</span>
+                            <input type="file" id="chatDataUpload" accept=".xlsx,.xls,.csv" style="display:none;" onchange="handleChatDataUpload(this)">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message assistant">
+                        <div class="msg-avatar">🤖</div>
+                        <div class="msg-bubble">
+                            <p>👋 Welcome to <strong>Oracle EBS Intelligence Hub v6.0</strong> — built with <strong>IBM Bob</strong>, powered by <strong>IBM ICA Context Studio</strong> via <strong>MCP Gateway</strong>.</p>
+                            <p style="margin-top:6px;">Ask me anything about Oracle EBS R12. Every answer is grounded in enterprise knowledge retrieved live from ICA — not a generic AI response.</p>
+                            <hr style="border:none;border-top:1px solid #C8DFF5;margin:10px 0;">
+                            <p style="margin-bottom:6px;font-weight:600;color:#00274D;">📋 I can help with reports across 7 modules:</p>
+                            <ul>
+                                <li>💳 <strong>Accounts Payable (AP)</strong> — Aged payables, invoice register, supplier payments, withholding tax</li>
+                                <li>🏢 <strong>Purchasing (PO)</strong> — PO details, receipt adjustments, savings analysis</li>
+                                <li>📒 <strong>General Ledger (GL)</strong> — Journals, trial balance, account analysis</li>
+                                <li>💸 <strong>iExpense</strong> — Expense reports, credit cards, workflow approvals</li>
+                                <li>👥 <strong>HRMS</strong> — Employee details, payroll, cost allocation</li>
+                                <li>💰 <strong>Accounts Receivable (AR)</strong> — Customer transactions, aging</li>
+                                <li>📦 <strong>Inventory (INV)</strong> — Stock levels, movement reports</li>
+                            </ul>
+                            <hr style="border:none;border-top:1px solid #C8DFF5;margin:10px 0;">
+                            <p style="font-size:0.8rem;color:#0572CE;font-weight:600;">💡 Try these demo queries:</p>
+                            <ul style="font-size:0.8rem;color:#3D5A73;margin-top:4px;">
+                                <li>→ <em>"List all AP module reports"</em></li>
+                                <li>→ <em>"What SQL rules apply to AP invoices?"</em></li>
+                                <li>→ <em>"Show aged payables for last 30 days"</em></li>
+                                <li>→ <em>"Explain the DASC security model in this app"</em></li>
+                            </ul>
+                            <hr style="border:none;border-top:1px solid #C8DFF5;margin:10px 0;">
+                            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                              <span style="padding:3px 10px;background:#e8f5ee;border:1px solid #a7d9c0;border-radius:12px;font-size:0.72rem;font-weight:700;color:#1a6b45;">🛡️ DASC-Compliant</span>
+                              <span style="padding:3px 10px;background:#e8f8ee;color:#198038;border-radius:12px;font-size:0.72rem;font-weight:700;">✅ IBM Bob Built</span>
+                              <span style="padding:3px 10px;background:#fff8e8;color:#8B6A00;border-radius:12px;font-size:0.72rem;font-weight:700;">⚡ ICA MCP Live</span>
+                              <span style="padding:3px 10px;background:#f5f0ff;color:#6929c4;border-radius:12px;font-size:0.72rem;font-weight:700;">♻️ Reusable Accelerator</span>
+                            </div>
+
+                            <!-- DASC Security Model inline card -->
+                            <div style="margin-top:10px;background:#f4f8f6;border:1px solid #c0ddd0;border-radius:8px;padding:10px 14px;">
+                              <div style="font-size:0.7rem;font-weight:700;color:#1a5c3a;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:6px;">🛡️ DASC Security Model — Role-Based Access Control</div>
+                              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                                <div style="background:#fff;border:1px solid #d8ede5;border-radius:6px;padding:7px 10px;">
+                                  <div style="font-size:0.7rem;font-weight:700;color:#2a3a2e;margin-bottom:4px;">👤 Employee Role — Standard Clearance</div>
+                                  <div style="font-size:0.67rem;color:#4a6a5a;line-height:1.5;">✓ Chat Assistant &nbsp; ✓ EBS Reports &nbsp; ✓ Data Connect<br>AI-powered queries · 26 pre-built reports · Excel import/export</div>
+                                </div>
+                                <div style="background:#fff;border:1px solid #d8ede5;border-radius:6px;padding:7px 10px;">
+                                  <div style="font-size:0.7rem;font-weight:700;color:#2a3a2e;margin-bottom:4px;">⚙️ Technical Role — Full Clearance</div>
+                                  <div style="font-size:0.67rem;color:#4a6a5a;line-height:1.5;">✓ All 7 tabs &nbsp; ✓ SQL tools &nbsp; ✓ Deletion approval<br>✓ Recycle bin restore &nbsp; ✓ Immutable audit trail</div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Team Reuse Strategy inline card -->
+                            <div style="margin-top:8px;background:linear-gradient(135deg,#001a33,#002a4a);border:1px solid #62c6e8;border-radius:8px;padding:10px 14px;">
+                              <div style="font-size:0.72rem;font-weight:800;color:#62c6e8;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;">♻️ Team Reuse Strategy — IBM Consulting Accelerator</div>
+                              <div style="font-size:0.72rem;color:rgba(255,255,255,0.75);line-height:1.65;">
+                                This is <strong style="color:#fff;">not a personal tool</strong> — it is a <strong style="color:#fff;">reusable IBM Consulting accelerator</strong> for team-wide deployment.<br>
+                                Any Oracle EBS engagement team can deploy this portal in <strong style="color:#62c6e8;">under one hour</strong> — just run <code style="background:rgba(255,255,255,0.12);padding:1px 6px;border-radius:4px;font-size:0.68rem;">start-all.bat</code>.<br>
+                                The ICA Context Studio knowledge graph is <strong style="color:#fff;">shared across the entire team</strong> — every consultant gets the same grounded enterprise responses.<br>
+                                New joiners onboard in <strong style="color:#62c6e8;">days instead of weeks</strong>. Senior consultants stop answering the same questions repeatedly.
+                              </div>
+                              <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:7px;">
+                                <span style="padding:2px 8px;background:rgba(98,198,232,0.15);border:1px solid #62c6e8;border-radius:10px;font-size:0.66rem;font-weight:700;color:#62c6e8;">&lt; 1 Hour Deploy</span>
+                                <span style="padding:2px 8px;background:rgba(98,198,232,0.15);border:1px solid #62c6e8;border-radius:10px;font-size:0.66rem;font-weight:700;color:#62c6e8;">Shared ICA Knowledge</span>
+                                <span style="padding:2px 8px;background:rgba(98,198,232,0.15);border:1px solid #62c6e8;border-radius:10px;font-size:0.66rem;font-weight:700;color:#62c6e8;">Days → Onboard</span>
+                                <span style="padding:2px 8px;background:rgba(98,198,232,0.15);border:1px solid #62c6e8;border-radius:10px;font-size:0.66rem;font-weight:700;color:#62c6e8;">Any Engagement</span>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-report-preview" id="chatReportPreview" style="display:none;">
+                    <div class="report-preview-header">
+                        <h4 id="previewTitle">Report Preview</h4>
+                        <div class="preview-actions">
+                            <button class="btn-sm btn-primary" onclick="downloadCurrentReport('csv')">⬇️ CSV</button>
+                            <button class="btn-sm btn-secondary" onclick="downloadCurrentReport('excel')">📊 Excel</button>
+                            <button class="btn-sm btn-tertiary" onclick="downloadCurrentReport('pdf')">📄 PDF</button>
+                            <button class="btn-sm btn-close" onclick="closePreview()">✕ Close</button>
+                        </div>
+                    </div>
+                    <div id="previewTableContainer" class="preview-table-container"></div>
+                    <div id="previewChartContainer" class="preview-chart-container">
+                        <canvas id="chatReportChart" width="800" height="300"></canvas>
+                    </div>
+                </div>
+
+                <div class="chat-input-area">
+                    <div class="chat-input-wrapper">
+                        <textarea id="chatInput" class="chat-textarea" 
+                                  placeholder="Ask me anything about Oracle EBS reports... e.g., 'Show aged payables report for October 2024' or 'List suppliers with highest payments'"
+                                  rows="2" onkeydown="handleChatKeydown(event)"></textarea>
+                        <div class="chat-input-controls">
+                            <select id="chatModuleSelect" class="module-select">
+                                <option value="auto">🔍 Auto-detect</option>
+                                <option value="payables">💳 Payables</option>
+                                <option value="purchasing">📦 Purchasing</option>
+                                <option value="gl">📒 General Ledger</option>
+                                <option value="iexpense">💸 iExpense</option>
+                                <option value="hrms">👥 HRMS</option>
+                                <option value="receivables">💰 Receivables</option>
+                                <option value="inventory">📦 Inventory</option>
+                            </select>
+                            <button class="send-btn" onclick="sendChatMessage()" title="Send your question to the AI assistant. You can ask things like: Show aged payables for October 2024, or Which suppliers got the highest payments last year?">
+                                <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  TAB 2 — EBS REPORTS (Module Browser)                            -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div id="tab-reports" class="tab-content">
+        <div class="reports-layout">
+            <!-- Module Navigation Sidebar -->
+            <div class="reports-sidebar">
+                <div class="module-nav-header">
+                    <h3>📂 Report Modules</h3>
+                </div>
+                <div class="module-tree">
+                    <div class="module-group active" data-module="supplier" onclick="selectModule('supplier', this)">
+                        <div class="module-group-header">
+                            <span class="module-icon">🏢</span>
+                            <span>Supplier Reports</span>
+                            <svg class="chevron" viewBox="0 0 24 24" fill="none" width="14"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2"/></svg>
+                        </div>
+                        <div class="module-items">
+                            <div class="report-item" onclick="loadReport('suppliers_list', event)">Suppliers Report</div>
+                            <div class="report-item" onclick="loadReport('suppliers_high_payments', event)">High Payment Suppliers (3yr)</div>
+                            <div class="report-item report-item-special" onclick="openYearSelector(event)" title="Select fiscal year for high payments report">
+                              <span>💰 High Payments by Year</span>
+                              <select class="inline-year-select" id="inlineYearSelect" onclick="event.stopPropagation()" onchange="loadSupplierHighPaymentsByYear(this.value); this.closest('.report-item').classList.add('active')">
+                                <option value="">Select Year…</option>
+                              </select>
+                            </div>
+                            <div class="report-item" onclick="loadReport('supplier_paid_invoice_history', event)">Paid Invoice History</div>
+                            <div class="report-item" onclick="loadReport('supplier_payment_history', event)">Payment History</div>
+                            <div class="report-item" onclick="loadReport('supplier_audit', event)">Supplier Audit Report</div>
+                        </div>
+                    </div>
+
+                    <div class="module-group" data-module="purchasing" onclick="selectModule('purchasing', this)">
+                        <div class="module-group-header">
+                            <span class="module-icon">📦</span>
+                            <span>Purchasing (PO) Reports</span>
+                            <svg class="chevron" viewBox="0 0 24 24" fill="none" width="14"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2"/></svg>
+                        </div>
+                        <div class="module-items">
+                            <div class="report-item" onclick="loadReport('po_detail', event)">PO Detail Report</div>
+                            <div class="report-item" onclick="loadReport('po_distribution', event)">PO Distribution Detail</div>
+                            <div class="report-item" onclick="loadReport('receipt_adjustments', event)">Receipt Adjustments</div>
+                            <div class="report-item" onclick="loadReport('savings_analysis', event)">Savings Analysis Report</div>
+                        </div>
+                    </div>
+
+                    <div class="module-group" data-module="payables" onclick="selectModule('payables', this)">
+                        <div class="module-group-header">
+                            <span class="module-icon">💳</span>
+                            <span>Payables Reports</span>
+                            <svg class="chevron" viewBox="0 0 24 24" fill="none" width="14"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2"/></svg>
+                        </div>
+                        <div class="module-items">
+                            <div class="report-item" onclick="loadReport('aged_payables_detail', event)">Aged Payables Detail</div>
+                            <div class="report-item" onclick="loadReport('aged_payables_summary', event)">Aged Payables Summary</div>
+                            <div class="report-item" onclick="loadReport('ap_trial_balance', event)">AP Trial Balance</div>
+                            <div class="report-item" onclick="loadReport('invoice_register', event)">Invoice Register</div>
+                            <div class="report-item" onclick="loadReport('withholding_tax', event)">Withholding Tax by Supplier</div>
+                        </div>
+                    </div>
+
+                    <div class="module-group" data-module="iexpense" onclick="selectModule('iexpense', this)">
+                        <div class="module-group-header">
+                            <span class="module-icon">💸</span>
+                            <span>iExpense Reports</span>
+                            <svg class="chevron" viewBox="0 0 24 24" fill="none" width="14"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2"/></svg>
+                        </div>
+                        <div class="module-items">
+                            <div class="report-item" onclick="loadReport('iexpense_detail', event)">iExpense Detail Report</div>
+                            <div class="report-item" onclick="loadReport('credit_card_report', event)">Credit Card Report</div>
+                            <div class="report-item" onclick="loadReport('workflow_approvals', event)">Workflow & Approvals</div>
+                        </div>
+                    </div>
+
+                    <div class="module-group" data-module="hrms" onclick="selectModule('hrms', this)">
+                        <div class="module-group-header">
+                            <span class="module-icon">👥</span>
+                            <span>HRMS Reports</span>
+                            <svg class="chevron" viewBox="0 0 24 24" fill="none" width="14"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2"/></svg>
+                        </div>
+                        <div class="module-items">
+                            <div class="report-item" onclick="loadReport('employee_report', event)">Employee Report</div>
+                            <div class="report-item" onclick="loadReport('active_employees', event)">Active Employees</div>
+                            <div class="report-item" onclick="loadReport('contingent_workers', event)">Contingent Workers</div>
+                            <div class="report-item" onclick="loadReport('terminated_employees', event)">Terminated Employees</div>
+                            <div class="report-item" onclick="loadReport('supervisor_details', event)">Supervisor Details</div>
+                            <div class="report-item" onclick="loadReport('expense_cost_allocation', event)">Expense Cost Allocation</div>
+                        </div>
+                    </div>
+
+                    <div class="module-group" data-module="gl" onclick="selectModule('gl', this)">
+                        <div class="module-group-header">
+                            <span class="module-icon">📒</span>
+                            <span>General Ledger</span>
+                            <svg class="chevron" viewBox="0 0 24 24" fill="none" width="14"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2"/></svg>
+                        </div>
+                        <div class="module-items">
+                            <div class="report-item" onclick="loadReport('gl_journals', event)">Journal Entry Report</div>
+                            <div class="report-item" onclick="loadReport('gl_trial_balance', event)">Trial Balance</div>
+                            <div class="report-item" onclick="loadReport('gl_account_analysis', event)">Account Analysis</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Imported / Pushed Reports ──────────────────── -->
+                <div class="imported-reports-section" id="importedReportsSection" style="display:none;">
+                  <div class="imported-reports-header">
+                    <span>📥 Imported Reports</span>
+                    <span class="imported-reports-count" id="importedReportsCount">0</span>
+                  </div>
+                  <div class="imported-reports-list" id="importedReportsList">
+                    <!-- Populated dynamically by renderImportedReportsSidebar() -->
+                  </div>
+                </div>
+            </div>
+
+            <!-- Report Display Area -->
+            <div class="reports-main" id="reportsMain">
+                <!-- Default Welcome Screen -->
+                <div id="reportWelcome" class="report-welcome">
+                    <div class="welcome-icon">📊</div>
+                    <h2>Oracle EBS Report Portal</h2>
+                    <p style="max-width:540px;margin:0 auto 6px;">26 pre-built reports across 7 EBS modules — AP, AR, GL, PO, iExpense, HRMS, Inventory. Select any module from the left panel.</p>
+                    <p style="font-size:0.8rem;color:#0572CE;font-weight:600;margin-bottom:18px;">🛡️ DASC-Compliant &nbsp;·&nbsp; ✅ Built with IBM Bob &nbsp;·&nbsp; ⚡ Powered by ICA MCP Gateway</p>
+                    <div class="welcome-features">
+                        <div class="feature-card">
+                            <span>📈</span>
+                            <h4>Interactive Charts</h4>
+                            <p>Bar, line, pie &amp; doughnut — one click, any report</p>
+                        </div>
+                        <div class="feature-card">
+                            <span>⬇️</span>
+                            <h4>Export: CSV · Excel · PDF</h4>
+                            <p>Download any report instantly, no Oracle EBS login needed</p>
+                        </div>
+                        <div class="feature-card">
+                            <span>🔍</span>
+                            <h4>Smart Filters</h4>
+                            <p>Filter by year, month, supplier, employee, search</p>
+                        </div>
+                        <div class="feature-card">
+                            <span>💻</span>
+                            <h4>View Oracle SQL</h4>
+                            <p>See &amp; copy the underlying EBS SQL · push to SQL Advisor</p>
+                        </div>
+                        <div class="feature-card">
+                            <span>🛡️</span>
+                            <h4>DASC Security</h4>
+                            <p>Role-based access · approval workflow · audit trail</p>
+                        </div>
+                        <div class="feature-card">
+                            <span>🔌</span>
+                            <h4>Data Connect</h4>
+                            <p>Import client Excel/CSV · auto-map to EBS fields</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report Content (shown when report selected) -->
+                <div id="reportContent" style="display:none;" class="report-content-area">
+
+                    <!-- Per-Report Parameters Bar (dynamically populated) -->
+                    <div id="reportParamsBar" class="report-params-bar" style="display:none;"></div>
+
+                    <!-- Report Header -->
+                    <div class="report-header-bar">
+                        <div class="report-title-area">
+                            <h2 id="reportTitle">Report Name</h2>
+                            <div class="report-meta" id="reportMeta">
+                                <span id="reportModule">Module</span>
+                                <span>|</span>
+                                <span id="reportRecordCount">0 records</span>
+                                <span>|</span>
+                                <span id="reportDate">Generated: Today</span>
+                            </div>
+                        </div>
+                        <div class="report-actions-bar">
+                            <button class="btn-report btn-chart" title="Show or hide an interactive chart for this report." onclick="toggleChart()">
+                                <svg viewBox="0 0 24 24" fill="none" width="14"><path d="M18 20V10M12 20V4M6 20V14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                                Charts
+                            </button>
+                            <!-- SQL button — technical role only -->
+                            <button class="btn-report btn-sql" id="btnShowSQL" title="Show the Oracle SQL query for this report." onclick="toggleSQL()">
+                                <svg viewBox="0 0 24 24" fill="none" width="14"><path d="M10 20L14 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                                SQL
+                            </button>
+                            <button class="btn-report btn-download" onclick="downloadReport('csv')">⬇️ CSV</button>
+                            <button class="btn-report btn-download" onclick="downloadReport('excel')">📊 Excel</button>
+                            <button class="btn-report btn-download" onclick="downloadReport('pdf')">📄 PDF</button>
+                            <!-- Import Data — available to all roles -->
+                            <label class="btn-report btn-upload-report" title="Import data from Excel/CSV to replace this report's data" style="cursor:pointer;margin:0;">
+                                📂 Import Data
+                                <input type="file" accept=".xlsx,.xls,.csv" style="display:none;" onchange="handleReportDataUpload(this)">
+                            </label>
+                            <!-- Delete imported report — shown only when report is imported -->
+                            <button class="btn-report btn-delete-report" id="btnDeleteReport"
+                                    title="Remove this imported report from the portal"
+                                    onclick="deleteCurrentReport()">
+                                <span class="del-icon">🗑 Delete</span>
+                            </button>
+                            <!-- New Custom Report — technical role only -->
+                            <button class="btn-report btn-new-report" id="btnNewReport"
+                                    style="display:none;"
+                                    title="Create a new blank custom report"
+                                    onclick="openNewCustomReportDialog()">
+                                ➕ New Report
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filters Bar -->
+                    <div class="filters-bar" id="filtersBar">
+                        <div class="filter-group">
+                            <label>📅 Year:</label>
+                            <select id="filterYear" onchange="applyFilters()">
+                                <option value="all">All Years</option>
+                                <!-- Dynamically populated by populateYearFilter() on report load -->
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>📆 Month:</label>
+                            <select id="filterMonth" onchange="applyFilters()">
+                                <option value="all">All Months</option>
+                                <option value="01">January</option><option value="02">February</option>
+                                <option value="03">March</option><option value="04">April</option>
+                                <option value="05">May</option><option value="06">June</option>
+                                <option value="07">July</option><option value="08">August</option>
+                                <option value="09">September</option><option value="10">October</option>
+                                <option value="11">November</option><option value="12">December</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>🔍 Search:</label>
+                            <input type="text" id="filterSearch" placeholder="Search..." oninput="applyFilters()">
+                        </div>
+                        <button class="btn-filter-reset" title="Clear all filters (date range, year, search) and show all 100 records for this report." onclick="resetFilters()">↺ Reset</button>
+                    </div>
+
+                    <!-- SQL Panel (hidden by default) -->
+                    <div id="sqlPanel" class="sql-panel" style="display:none;">
+                        <div class="sql-panel-header">
+                            <h4>🔍 Oracle EBS SQL Query</h4>
+                            <div class="sql-panel-actions">
+                                <button class="btn-sm btn-copy" title="Copy the Oracle SQL query for this report to your clipboard. Paste it into SQL Developer, Toad, or any Oracle tool." onclick="copySQL()">📋 Copy SQL</button>
+                                <button class="btn-sm" onclick="switchTab('tab-sql', document.querySelector('[data-tab=tab-sql]')); loadSQLInAdvisor()">⚡ Analyze in SQL Advisor</button>
+                                <button class="btn-sm btn-close-sm" onclick="toggleSQL()">✕</button>
+                            </div>
+                        </div>
+                        <pre id="sqlContent" class="sql-code-block"></pre>
+                    </div>
+
+                    <!-- Chart Panel (hidden by default) -->
+                    <div id="chartPanel" class="chart-panel" style="display:none;">
+                        <div class="chart-panel-header">
+                            <h4 id="chartTitle">📈 Chart View</h4>
+                            <div class="chart-controls">
+                                <button class="chart-type-btn active" onclick="changeChartType('bar', this)">📊 Bar</button>
+                                <button class="chart-type-btn" onclick="changeChartType('line', this)">📈 Line</button>
+                                <button class="chart-type-btn" onclick="changeChartType('pie', this)">🥧 Pie</button>
+                                <button class="chart-type-btn" onclick="changeChartType('doughnut', this)">⭕ Doughnut</button>
+                                <select id="chartDimension" onchange="updateChart()">
+                                    <option value="month">Month-wise</option>
+                                    <option value="year">Year-wise</option>
+                                    <option value="supplier">By Supplier</option>
+                                    <option value="category">By Category</option>
+                                </select>
+                                <button class="btn-sm btn-close-sm" onclick="toggleChart()">✕</button>
+                            </div>
+                        </div>
+                        <div class="chart-canvas-wrapper">
+                            <canvas id="reportChart" width="900" height="350"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Data Table -->
+                    <div class="report-table-wrapper">
+                        <table class="report-table" id="reportDataTable">
+                            <thead id="reportTableHead"></thead>
+                            <tbody id="reportTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination-bar" id="paginationBar">
+                        <button onclick="changePage(-1)" id="prevPageBtn">◀ Previous</button>
+                        <span id="pageInfo">Page 1 of 1</span>
+                        <button onclick="changePage(1)" id="nextPageBtn">Next ▶</button>
+                        <select id="pageSize" onchange="changePageSize()">
+                            <option value="10">10 per page</option>
+                            <option value="25" selected>25 per page</option>
+                            <option value="50">50 per page</option>
+                            <option value="100">100 per page</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  TAB 3 — SQL ADVISOR                                             -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         TAB 3 — SQL ADVISOR & CODE REVIEW
+    ═══════════════════════════════════════════════════════════════════════ -->
+    <div id="tab-sql" class="tab-content">
+        <div class="sql-page-wrapper">
+
+            <!-- Sub-tab navigation bar -->
+            <div class="sql-subtab-bar">
+                <button class="sql-subtab-btn active" data-subtab="sql-perf-tab"
+                    onclick="switchSQLSubTab('sql-perf-tab', this)"
+                    title="Check how fast your SQL runs. Get an estimated cost, find bottlenecks like missing indexes or bad joins, and see a faster rewritten version.">
+                    ⚡ Performance Advisor
+                </button>
+                <button class="sql-subtab-btn" data-subtab="sql-codereview-tab"
+                    onclick="switchSQLSubTab('sql-codereview-tab', this)"
+                    title="Check your SQL against Oracle EBS coding standards. Finds 13 types of issues including multi-org compliance, N+1 subqueries, and gives a quality score out of 100.">
+                    🔍 Code Review
+                </button>
+                <button class="sql-subtab-btn" data-subtab="sql-formatter-tab"
+                    onclick="switchSQLSubTab('sql-formatter-tab', this)"
+                    title="Beautify and reformat your Oracle SQL with consistent indentation, capitalised keywords, aligned columns, and clean spacing. Works for SELECT, INSERT, UPDATE, PL/SQL blocks.">
+                    ✨ Code Formatter
+                </button>
+            </div>
+
+            <!-- ════════════════════════════════════════════════════════════
+                 SUB-TAB A: PERFORMANCE ADVISOR
+            ════════════════════════════════════════════════════════════ -->
+            <div id="sql-perf-tab" class="sql-subtab-content active">
+                <div class="sql-advisor-header">
+                    <h2>⚡ Oracle SQL Performance Advisor</h2>
+                    <p>Paste your slow Oracle EBS SQL below. Get instant cost estimates, bottleneck analysis, index recommendations, and a faster rewritten version.</p>
+                </div>
+                <div class="sql-advisor-workspace" id="sqlAdvisorWorkspace">
+
+                    <!-- Input Panel -->
+                    <div class="sql-input-panel">
+                        <div class="panel-header">
+                            <h3>📝 Your SQL Query</h3>
+                            <div class="panel-actions">
+                                <button class="btn-sm btn-secondary" onclick="loadSampleSQL()"
+                                    title="Load a sample Oracle EBS Accounts Payable query so you can see how the Performance Advisor works without pasting your own SQL.">
+                                    📄 Load Sample SQL
+                                </button>
+                                <button class="btn-sm btn-secondary" onclick="clearSQL()"
+                                    title="Clear the SQL input area so you can paste a different query.">
+                                    🗑️ Clear
+                                </button>
+                                <button class="btn-sm btn-primary" onclick="analyzeSQL()"
+                                    title="Analyse the SQL you pasted. Estimates run cost, finds slow patterns (missing indexes, bad joins), and gives you a faster rewrite.">
+                                    ⚡ Analyse &amp; Optimise
+                                </button>
+                            </div>
+                        </div>
+                        <div class="sql-metadata">
+                            <div class="meta-group">
+                                <label>Module:</label>
+                                <select id="sqlModule" title="Which Oracle EBS module does this query belong to?">
+                                    <option value="payables">AP - Payables</option>
+                                    <option value="purchasing">PO - Purchasing</option>
+                                    <option value="gl">GL - General Ledger</option>
+                                    <option value="iexpense">iExpense</option>
+                                    <option value="hrms">HRMS</option>
+                                    <option value="receivables">AR - Receivables</option>
+                                    <option value="inventory">INV - Inventory</option>
+                                </select>
+                            </div>
+                            <div class="meta-group">
+                                <label>DB Version:</label>
+                                <select id="dbVersion" title="Which Oracle database version is this query running on?">
+                                    <option value="19c">Oracle 19c</option>
+                                    <option value="12c">Oracle 12c</option>
+                                    <option value="11g">Oracle 11g</option>
+                                </select>
+                            </div>
+                            <div class="meta-group">
+                                <label>Est. Rows:</label>
+                                <input type="number" id="estRows" value="1000000"
+                                    title="Approximate number of rows in the main table — helps the advisor estimate query cost." placeholder="Est. row count">
+                            </div>
+                        </div>
+                        <textarea id="sqlInputArea" class="sql-textarea"
+                            placeholder="-- Paste your Oracle EBS SQL query here&#10;-- Example:&#10;SELECT aps.vendor_name, SUM(apia.amount) total&#10;FROM   ap_suppliers aps, ap_invoices_all apia&#10;WHERE  aps.vendor_id = apia.vendor_id&#10;AND    apia.invoice_date BETWEEN :p_start AND :p_end&#10;GROUP BY aps.vendor_name&#10;ORDER BY total DESC"></textarea>
+                    </div>
+
+                    <!-- Analysis Results Panel (side-by-side with input) -->
+                    <div class="sql-results-panel" id="sqlResultsPanel" style="display:none;">
+                        <div class="sql-scorecard">
+                            <div class="score-card red">
+                                <div class="score-label">BEFORE Optimisation</div>
+                                <div class="score-value" id="costBefore">—</div>
+                                <div class="score-unit">Est. Cost Units</div>
+                            </div>
+                            <div class="score-arrow">→</div>
+                            <div class="score-card green">
+                                <div class="score-label">AFTER Optimisation</div>
+                                <div class="score-value" id="costAfter">—</div>
+                                <div class="score-unit">Est. Cost Units</div>
+                            </div>
+                            <div class="score-savings">
+                                <div class="savings-label">💡 Improvement</div>
+                                <div class="savings-value" id="costSavings">—</div>
+                            </div>
+                        </div>
+                        <div class="analysis-section">
+                            <h3>⚠️ Issues Identified</h3>
+                            <div id="sqlIssues" class="issues-list"></div>
+                        </div>
+                        <div class="analysis-section">
+                            <h3>📋 Tables, Joins &amp; Key Columns</h3>
+                            <div id="sqlTableAnalysis" class="table-analysis"></div>
+                        </div>
+                        <div class="analysis-section">
+                            <h3>✅ Optimisation Recommendations</h3>
+                            <div id="sqlRecommendations" class="recommendations-list"></div>
+                        </div>
+                        <div class="analysis-section">
+                            <h3>🚀 Optimised SQL Query</h3>
+                            <div class="optimized-sql-actions">
+                                <button class="btn-sm btn-copy" onclick="copyOptimizedSQL()"
+                                    title="Copy the optimised (faster) version of your SQL to the clipboard.">
+                                    📋 Copy
+                                </button>
+                                <button class="btn-sm btn-secondary" onclick="compareSQL()"
+                                    title="Show your original SQL and the optimised SQL side by side so you can see exactly what changed and why.">
+                                    🔄 Side-by-Side Compare
+                                </button>
+                            </div>
+                            <pre id="optimizedSQL" class="sql-code-block optimized"></pre>
+                        </div>
+                        <div id="compareSection" class="compare-section" style="display:none;">
+                            <h3>🔄 Before vs After Comparison</h3>
+                            <div class="compare-grid">
+                                <div class="compare-panel">
+                                    <h4>❌ Original (Slow)</h4>
+                                    <pre id="compareOriginal" class="sql-code-block compare-old"></pre>
+                                </div>
+                                <div class="compare-panel">
+                                    <h4>✅ Optimised (Fast)</h4>
+                                    <pre id="compareOptimized" class="sql-code-block compare-new"></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- end sqlResultsPanel -->
+
+                </div><!-- end sql-advisor-workspace -->
+            </div><!-- end sql-perf-tab -->
+
+            <!-- ════════════════════════════════════════════════════════════
+                 SUB-TAB B: CODE REVIEW
+            ════════════════════════════════════════════════════════════ -->
+            <div id="sql-codereview-tab" class="sql-subtab-content" style="display:none;">
+                <div class="sql-advisor-header">
+                    <h2>🔍 Oracle EBS SQL Code Review</h2>
+                    <p>Paste your SQL for a full quality check — covers 13 Oracle EBS standards, gives a score out of 100, and shows a before/after fix for every issue found.</p>
+                </div>
+                <div class="code-review-workspace">
+
+                    <!-- Input Panel -->
+                    <div class="cr-input-panel">
+                        <div class="cr-panel-header">
+                            <h3>📝 SQL Query Input</h3>
+                            <div class="cr-panel-actions">
+                                <button class="btn-sm btn-secondary" onclick="loadSQLToReview()"
+                                    title="If you already pasted a query in the Performance Advisor tab, click here to copy it across automatically — no need to paste it again.">
+                                    📥 Load from Perf Advisor
+                                </button>
+                                <button class="btn-sm btn-secondary" onclick="clearReviewSQL()"
+                                    title="Clear the SQL input and results so you can review a different query.">
+                                    🗑️ Clear
+                                </button>
+                                <button class="btn-sm btn-primary" onclick="performCodeReview()"
+                                    title="Run the full code quality check. Checks 13 Oracle EBS standards: multi-org ORG_ID compliance, DateTrack filters on HR tables, N+1 correlated subqueries, implicit comma joins, TRUNC on columns, SELECT *, NLS date literals, FOR UPDATE, and more. Returns a score out of 100 with before/after fix for each issue.">
+                                    🔍 Run Code Review
+                                </button>
+                            </div>
+                        </div>
+                        <div class="cr-meta-bar">
+                            <div class="cr-meta-item">
+                                <label>Module:</label>
+                                <select id="crModule" title="Selecting the module applies module-specific rules (e.g. multi-org rules for AP, DateTrack rules for HRMS).">
+                                    <option value="ap">AP - Accounts Payable</option>
+                                    <option value="po">PO - Purchasing</option>
+                                    <option value="gl">GL - General Ledger</option>
+                                    <option value="iexp">iExpense</option>
+                                    <option value="hrms">HRMS</option>
+                                    <option value="ar">AR - Receivables</option>
+                                    <option value="inv">INV - Inventory</option>
+                                </select>
+                            </div>
+                            <div class="cr-meta-item">
+                                <label>Standard:</label>
+                                <select id="crStandard" title="Which set of coding standards to check against.">
+                                    <option value="oracle-ebs">Oracle EBS R12 Standards</option>
+                                    <option value="ansi">ANSI SQL-99</option>
+                                    <option value="oracle-19c">Oracle 19c Best Practices</option>
+                                </select>
+                            </div>
+                        </div>
+                        <textarea id="codeReviewInput" class="sql-textarea cr-textarea"
+                            placeholder="-- Paste your Oracle EBS SQL query here for code review&#10;--&#10;-- What the review checks:&#10;--  ✓ ORG_ID filter on _ALL multi-org tables (AP_INVOICES_ALL etc.)&#10;--  ✓ Date-effective filters on HR DateTrack tables (PER_PEOPLE_F etc.)&#10;--  ✓ Implicit comma joins vs explicit ANSI JOIN&#10;--  ✓ Correlated subqueries in SELECT list (N+1 performance trap)&#10;--  ✓ TRUNC() on columns blocking index range scans&#10;--  ✓ SELECT * wildcard usage&#10;--  ✓ NVL vs COALESCE (ANSI compliance)&#10;--  ✓ ORDER BY without row limit&#10;--  ✓ FOR UPDATE in reporting queries&#10;--  ✓ NLS-dependent date literals (DD-MON-YYYY)&#10;--  ✓ SELECT DISTINCT hiding join problems&#10;--  ✓ Missing optimizer hints on large joins&#10;--  ✓ Header comment documentation"></textarea>
+                    </div>
+
+                    <!-- Results Panel — starts hidden, shown by performCodeReview() -->
+                    <div class="cr-results-panel" id="codeReviewPanel" style="display:none;">
+                        <div class="cr-results-header">
+                            <h3>📋 Code Review Results</h3>
+                            <div class="cr-results-actions">
+                                <button class="btn-sm btn-secondary" onclick="copyCodeReviewSQL()"
+                                    title="Copy the SQL from the input area above to your clipboard.">
+                                    📋 Copy SQL
+                                </button>
+                            </div>
+                        </div>
+                        <div id="codeReviewOutput" class="cr-output">
+                            <!-- Populated by performCodeReview() -->
+                        </div>
+                    </div><!-- end codeReviewPanel -->
+
+                </div><!-- end code-review-workspace -->
+            </div><!-- end sql-codereview-tab -->
+
+            <!-- ════════════════════════════════════════════════════════════
+                 SUB-TAB C: CODE FORMATTER
+            ════════════════════════════════════════════════════════════ -->
+            <div id="sql-formatter-tab" class="sql-subtab-content" style="display:none;">
+                <div class="sql-advisor-header">
+                    <h2>✨ Oracle SQL Code Formatter</h2>
+                    <p>Paste any Oracle SQL or PL/SQL block below. The formatter will rewrite it with consistent indentation, capitalised keywords, aligned aliases, and clean structure — ready for peer review or documentation.</p>
+                </div>
+                <div class="formatter-workspace">
+                    <div class="formatter-options-bar">
+                        <label title="Indent each nested level with this many spaces">
+                            Indent:
+                            <select id="fmtIndent">
+                                <option value="2">2 spaces</option>
+                                <option value="4" selected>4 spaces</option>
+                                <option value="tab">Tab</option>
+                            </select>
+                        </label>
+                        <label title="Convert SQL keywords (SELECT, FROM, WHERE etc.) to UPPERCASE">
+                            Keywords:
+                            <select id="fmtKeywords">
+                                <option value="upper" selected>UPPERCASE</option>
+                                <option value="lower">lowercase</option>
+                                <option value="keep">Keep as-is</option>
+                            </select>
+                        </label>
+                        <label title="Each SELECT column on its own line, aligned after SELECT">
+                            <input type="checkbox" id="fmtOneColPerLine" checked> One column per line
+                        </label>
+                        <label title="Each JOIN clause on its own line">
+                            <input type="checkbox" id="fmtOneJoinPerLine" checked> One JOIN per line
+                        </label>
+                        <label title="Add an Oracle EBS standard header comment block at the top">
+                            <input type="checkbox" id="fmtAddHeader"> Add header comment
+                        </label>
+                        <button class="btn-sm btn-primary" onclick="formatSQL()"
+                            title="Format the SQL — applies indentation, keyword casing, and clean layout. The original SQL is shown on the left, the formatted version on the right.">
+                            ✨ Format SQL
+                        </button>
+                        <button class="btn-sm btn-secondary" onclick="clearFormatter()"
+                            title="Clear both input and output areas to start fresh.">
+                            🗑️ Clear
+                        </button>
+                    </div>
+
+                    <div class="formatter-grid">
+                        <div class="formatter-col">
+                            <div class="formatter-col-header">
+                                <span>📝 Input SQL</span>
+                                <button class="btn-sm" onclick="loadSampleSQLToFormatter()"
+                                    title="Load a sample Oracle EBS SQL query to see how the formatter works.">
+                                    📄 Load Sample
+                                </button>
+                            </div>
+                            <textarea id="fmtInput" class="sql-textarea formatter-textarea"
+                                placeholder="-- Paste any Oracle SQL or PL/SQL here&#10;-- Supports: SELECT, INSERT, UPDATE, DELETE,&#10;--           CREATE, MERGE, WITH (CTEs),&#10;--           PL/SQL BEGIN...END blocks&#10;&#10;SELECT aps.vendor_name,apia.invoice_num,apia.invoice_amount FROM ap_suppliers aps,ap_invoices_all apia WHERE aps.vendor_id=apia.vendor_id AND apia.invoice_date>=:p_start ORDER BY aps.vendor_name"></textarea>
+                        </div>
+                        <div class="formatter-col">
+                            <div class="formatter-col-header">
+                                <span>✅ Formatted SQL</span>
+                                <div class="fmt-output-actions">
+                                    <button class="btn-sm" onclick="copyFormattedSQL()"
+                                        title="Copy the formatted SQL to your clipboard.">
+                                        📋 Copy
+                                    </button>
+                                    <button class="btn-sm" onclick="useFormattedInAdvisor()"
+                                        title="Send the formatted SQL to the Performance Advisor tab to check its execution cost and get optimisation suggestions.">
+                                        ⚡ Send to Perf Advisor
+                                    </button>
+                                    <button class="btn-sm" onclick="useFormattedInReview()"
+                                        title="Send the formatted SQL to the Code Review tab to check it against Oracle EBS standards.">
+                                        🔍 Send to Code Review
+                                    </button>
+                                </div>
+                            </div>
+                            <pre id="fmtOutput" class="sql-pre formatter-output">-- Formatted SQL will appear here after clicking Format SQL</pre>
+                        </div>
+                    </div>
+
+                    <div id="fmtStats" class="formatter-stats" style="display:none;">
+                        <span id="fmtStatLines">Lines: —</span>
+                        <span id="fmtStatKeywords">Keywords: —</span>
+                        <span id="fmtStatTables">Tables found: —</span>
+                        <span id="fmtStatJoins">Joins: —</span>
+                        <span id="fmtStatComplexity">Complexity: —</span>
+                    </div>
+                </div>
+            </div><!-- end sql-formatter-tab -->
+
+        </div><!-- end sql-page-wrapper -->
+    </div><!-- end tab-sql -->
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  TAB 4 — DOCUMENT GENERATOR                                      -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div id="tab-docgen" class="tab-content">
+        <div class="docgen-layout">
+            <div class="docgen-header">
+                <h2>📄 Technical & Functional Document Generator</h2>
+                <p>Generate standardized Oracle EBS Technical and Functional specification documents. Fill in the details below and download a complete Word-compatible document.</p>
+                <div class="template-notice">
+                    📁 <strong>Word Template:</strong> Place your <code>.docx</code> template files in
+                    <code>C:\Madhav\ICA Oracle\BoB\Oracle-EBS-Intelligence-HUB\docs\templates\</code>.
+                    The generator uses your template's structure and branding. Currently generating in HTML format
+                    (open in Word → Save As .docx for full Word formatting).
+                </div>
+            </div>
+
+            <div class="docgen-workspace">
+                <!-- Form Panel -->
+                <div class="docgen-form-panel">
+                    <div class="form-section">
+                        <h3>📌 Program Information</h3>
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label>Document Type *</label>
+                                <select id="docType">
+                                    <option value="technical">Technical Specification</option>
+                                    <option value="functional">Functional Specification</option>
+                                    <option value="both">Both (Technical + Functional)</option>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label>Module *</label>
+                                <select id="docModule">
+                                    <option value="AP">AP - Accounts Payable</option>
+                                    <option value="AR">AR - Accounts Receivable</option>
+                                    <option value="GL">GL - General Ledger</option>
+                                    <option value="PO">PO - Purchasing</option>
+                                    <option value="INV">INV - Inventory</option>
+                                    <option value="HRMS">HRMS - Human Resources</option>
+                                    <option value="PAY">PAY - Payroll</option>
+                                    <option value="iExp">iExp - iExpense</option>
+                                </select>
+                            </div>
+                            <div class="form-field full-width">
+                                <label>Concurrent Program Name *</label>
+                                <input type="text" id="progName" placeholder="e.g., XXCUST_AP_SUPPLIER_REPORT">
+                            </div>
+                            <div class="form-field full-width">
+                                <label>Program Short Name</label>
+                                <input type="text" id="progShortName" placeholder="e.g., XXCUST_AP_SUP_RPT">
+                            </div>
+                            <div class="form-field full-width">
+                                <label>Package Name</label>
+                                <input type="text" id="packageName" placeholder="e.g., XXCUST_AP_SUPPLIER_PKG">
+                            </div>
+                            <div class="form-field full-width">
+                                <label>Procedure/Function Name</label>
+                                <input type="text" id="procName" placeholder="e.g., generate_supplier_report">
+                            </div>
+                            <div class="form-field full-width">
+                                <label>Description *</label>
+                                <textarea id="progDescription" rows="4" placeholder="Describe the program purpose, business need, and expected output..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>⚙️ Parameters</h3>
+                        <div id="parametersContainer">
+                            <div class="param-row" id="paramRow0">
+                                <input type="text" placeholder="Parameter Name" class="param-name">
+                                <input type="text" placeholder="Data Type" class="param-type">
+                                <input type="text" placeholder="LOV / Value Set" class="param-lov">
+                                <input type="text" placeholder="Description" class="param-desc">
+                                <button class="btn-remove-param" onclick="removeParam(0)">✕</button>
+                            </div>
+                        </div>
+                        <button class="btn-add-param" onclick="addParameter()">+ Add Parameter</button>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>📊 Tables Used</h3>
+                        <div id="tablesContainer">
+                            <div class="table-row" id="tableRow0">
+                                <input type="text" placeholder="Table/View Name" class="table-name">
+                                <input type="text" placeholder="Alias" class="table-alias">
+                                <input type="text" placeholder="Description / Usage" class="table-desc">
+                                <button class="btn-remove-param" onclick="removeTable(0)">✕</button>
+                            </div>
+                        </div>
+                        <button class="btn-add-param" title="Add a database table or view that this program reads from or writes to. Include the alias and a brief description of how it is used." onclick="addTable()">+ Add Table</button>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>🔗 Value Sets</h3>
+                        <div id="valueSetsContainer">
+                            <div class="vs-row" id="vsRow0">
+                                <input type="text" placeholder="Value Set Name (or leave blank)" class="vs-name">
+                                <input type="text" placeholder="Used For Parameter" class="vs-param">
+                                <input type="text" placeholder="Type (Table/Independent/Dependent)" class="vs-type">
+                                <button class="btn-remove-param" onclick="removeVS(0)">✕</button>
+                            </div>
+                        </div>
+                        <button class="btn-add-param" onclick="addValueSet()">+ Add Value Set</button>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>📝 Additional Sections</h3>
+                        <div class="form-grid">
+                            <div class="form-field full-width">
+                                <label>Business Rules / Logic</label>
+                                <textarea id="businessRules" rows="4" placeholder="Describe the business rules and logic applied..."></textarea>
+                            </div>
+                            <div class="form-field full-width">
+                                <label>Error Handling</label>
+                                <textarea id="errorHandling" rows="3" placeholder="Describe error handling approach..."></textarea>
+                            </div>
+                            <div class="form-field full-width">
+                                <label>Output / Report Layout</label>
+                                <textarea id="outputLayout" rows="3" placeholder="Describe the output format, columns, grouping..."></textarea>
+                            </div>
+                            <div class="form-field">
+                                <label>Author</label>
+                                <input type="text" id="docAuthor" placeholder="Your Name">
+                            </div>
+                            <div class="form-field">
+                                <label>Version</label>
+                                <input type="text" id="docVersion" value="1.0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="docgen-actions">
+                        <button class="btn-generate" title="Generate the full Technical or Functional Specification document based on what you filled in. A preview will appear on the right — then download it." onclick="generateDocument()">
+                            📄 Generate Document
+                        </button>
+                        <button class="btn-secondary" title="Fill all fields with a sample AP Supplier Payments program so you can see what a complete specification looks like before filling in your own details." onclick="loadSampleDoc()">
+                            📋 Load Sample
+                        </button>
+                        <button class="btn-secondary" title="Clear all form fields and start a blank specification document." onclick="clearDocForm()">
+                            🗑️ Clear All
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Preview Panel -->
+                <div class="docgen-preview-panel" id="docPreviewPanel" style="display:none;">
+                    <div class="preview-header-bar">
+                        <h3>📄 Document Preview</h3>
+                        <div class="preview-download-actions">
+                            <button class="btn-download-doc btn-primary" title="Download the document as an HTML file. Open it in Microsoft Word and save as .docx to get full Word formatting. Or open in a browser and print as PDF." onclick="downloadDoc('html')">⬇️ HTML</button>
+                            <button class="btn-download-doc btn-secondary" title="Download the document as plain text. Useful for copying content into an existing Word template." onclick="downloadDoc('txt')">📄 Text</button>
+                        </div>
+                    </div>
+                    <div id="docPreviewContent" class="doc-preview-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  TAB 5 — SQL LAB (Generator + DBA Reference)                    -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div id="tab-sqllab" class="tab-content">
+      <div class="sqllab-layout">
+
+        <!-- LEFT SIDEBAR: Category Tree -->
+        <div class="sqllab-sidebar">
+          <div class="sqllab-sidebar-header">
+            <h3>📚 SQL Library</h3>
+          </div>
+
+          <!-- AI Generator Prompt -->
+          <div class="sqllab-generator-box">
+            <label class="sqllab-gen-label">🤖 AI Query Generator</label>
+            <textarea id="sqlLabPrompt" class="sqllab-prompt-input" rows="3"
+              placeholder="Describe what you need...&#10;e.g. 'List all concurrent programs submitted by a specific request ID with their status and runtime'"></textarea>
+            <button class="sqllab-gen-btn" onclick="generateSqlFromPrompt()">⚡ Generate SQL</button>
+          </div>
+
+          <!-- Search -->
+          <div class="sqllab-search-box">
+            <input type="text" id="sqlLabSearch" class="sqllab-search-input"
+              placeholder="🔍  Search queries, tags, tables..."
+              oninput="searchSqlLib(this.value)">
+          </div>
+
+          <!-- Category tree (rendered by JS) -->
+          <div id="sqlLabCategoryTree" class="sqllab-cat-tree"></div>
+        </div>
+
+        <!-- MAIN CONTENT: Code Display -->
+        <div class="sqllab-main">
+          <!-- Welcome screen -->
+          <div id="sqlLabWelcome" class="sqllab-welcome">
+            <div class="sqllab-welcome-icon">⚡</div>
+            <h2>Oracle EBS SQL Lab</h2>
+            <p>500+ production-ready Oracle EBS SQL queries — concurrent programs, AP, AR, GL, HRMS, Payroll, SCM, DBA/DDL/DML/TCL, PL/SQL patterns, Unix commands</p>
+            <div class="sqllab-feature-grid">
+              <div class="sqllab-feat-card">
+                <span>⚙️</span>
+                <h4>Concurrent Programs</h4>
+                <p>Long-running, request sets, responsibilities, performance</p>
+              </div>
+              <div class="sqllab-feat-card">
+                <span>🏗️</span>
+                <h4>DBA / DDL / TCL</h4>
+                <p>Table creation, indexes, grants, commits, savepoints</p>
+              </div>
+              <div class="sqllab-feat-card">
+                <span>🔧</span>
+                <h4>PL/SQL Patterns</h4>
+                <p>Procedures, packages, triggers, cursors, exception handling</p>
+              </div>
+              <div class="sqllab-feat-card">
+                <span>🐚</span>
+                <h4>Unix Shell</h4>
+                <p>EBS shell scripts, log monitoring, concurrent wrappers</p>
+              </div>
+              <div class="sqllab-feat-card">
+                <span>🤖</span>
+                <h4>AI Generator</h4>
+                <p>Describe your need — get full SQL generated instantly</p>
+              </div>
+              <div class="sqllab-feat-card">
+                <span>📋</span>
+                <h4>All EBS Modules</h4>
+                <p>AP, AR, GL, HRMS, Payroll, SCM, CM, iExpense and more</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Query Display Panel -->
+          <div id="sqlLabDisplay" class="sqllab-display" style="display:none;">
+            <!-- Query Header -->
+            <div class="sqllab-query-header">
+              <div class="sqllab-query-meta">
+                <h2 id="sqlLabQueryTitle">Query Title</h2>
+                <p id="sqlLabQueryDesc" class="sqllab-query-desc"></p>
+                <div id="sqlLabQueryTags" class="sqllab-tags"></div>
+              </div>
+              <div class="sqllab-query-actions">
+                <button class="sqllab-action-btn" onclick="sqlLabBackToWelcome()" title="Back to SQL Lab home">← Home</button>
+                <button class="sqllab-action-btn" onclick="copySqlLabQuery()" title="Copy SQL to clipboard">📋 Copy</button>
+                <button class="sqllab-action-btn" onclick="sendSqlLabToAdvisor()" title="Open in SQL Advisor for performance analysis">⚡ Analyse</button>
+                <button class="sqllab-action-btn" onclick="sendSqlLabToFormatter()" title="Open in Code Formatter to beautify">✨ Format</button>
+              </div>
+            </div>
+
+            <!-- Code Block with syntax highlighting -->
+            <div class="sqllab-code-container">
+              <div class="sqllab-code-toolbar">
+                <span class="sqllab-code-lang">Oracle SQL / PL/SQL</span>
+                <button class="sqllab-copy-btn" onclick="copySqlLabQuery()">📋 Copy to clipboard</button>
+              </div>
+              <pre id="sqlLabCode" class="sqllab-code-block"></pre>
+            </div>
+          </div>
+
+          <!-- Search Results Panel -->
+          <div id="sqlLabSearchResults" class="sqllab-search-results" style="display:none;">
+            <h3 id="sqlLabSearchTitle">Search Results</h3>
+            <div id="sqlLabResultsList" class="sqllab-results-list"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  TAB 6 — EBS ACADEMY (Learning Portal)                         -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div id="tab-academy" class="tab-content">
+      <div class="academy-layout" id="academyLayout">
+
+        <!-- LEFT SIDEBAR: Module Tree -->
+        <div class="academy-sidebar">
+          <div class="academy-sidebar-header">
+            <h3>🎓 EBS Academy</h3>
+            <p>Oracle EBS R12+ Complete Learning</p>
+          </div>
+          <div class="academy-search-wrap">
+            <input type="text" id="academySearch" class="academy-search-input"
+              placeholder="🔍 Search modules, topics..."
+              oninput="searchAcademy(this.value)">
+          </div>
+          <!-- Module tree (rendered by JS) -->
+          <div id="academyModuleTree" class="academy-module-tree"></div>
+        </div>
+
+        <!-- MAIN CONTENT WRAPPER (content + assistant side-by-side) -->
+        <div class="academy-main" id="academyMain">
+
+          <!-- LEFT: Content Area -->
+          <div class="academy-content-area" id="academyContentArea">
+
+            <!-- Welcome -->
+            <div id="academyWelcome" class="academy-welcome">
+              <div class="academy-welcome-hero">
+                <div class="academy-hero-icon">🎓</div>
+                <h1>Oracle EBS Academy</h1>
+                <p>Master Oracle EBS R12+ — functional cycles, technical tables, SQL queries, and implementation best practices. Every module covered from end-to-end.</p>
+                <div style="margin-top:16px;">
+                  <button class="academy-asst-quick-btn" style="font-size:0.8rem;padding:8px 18px;border-radius:20px;" onclick="openAcademyAssistant()">🤖 Ask EBS Assistant anything →</button>
+                </div>
+              </div>
+              <div class="academy-module-cards" id="academyModuleCards"></div>
+            </div>
+
+            <!-- Topic Content -->
+            <div id="academyContent" class="academy-content" style="display:none;">
+              <!-- Breadcrumb -->
+              <div class="academy-breadcrumb" id="academyBreadcrumb"></div>
+
+              <!-- Content Header with Ask button -->
+              <div class="academy-content-header" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+                <div style="flex:1;">
+                  <h2 id="academyTopicTitle"></h2>
+                  <p id="academyTopicSummary" class="academy-topic-summary"></p>
+                </div>
+                <button class="sqllab-action-btn" onclick="openAcademyAssistant()" style="white-space:nowrap;flex-shrink:0;margin-top:4px;">🤖 Ask Assistant</button>
+              </div>
+
+              <!-- Two-column: Functional + Technical -->
+              <div class="academy-two-col">
+                <div class="academy-col functional">
+                  <div class="academy-col-header">
+                    <span class="academy-col-icon">🏢</span>
+                    <h3>Functional View</h3>
+                  </div>
+                  <ul id="academyFunctional" class="academy-points-list"></ul>
+                </div>
+                <div class="academy-col technical">
+                  <div class="academy-col-header">
+                    <span class="academy-col-icon">💻</span>
+                    <h3>Technical View</h3>
+                  </div>
+                  <ul id="academyTechnical" class="academy-points-list"></ul>
+                </div>
+              </div>
+
+              <!-- Flowchart / Diagram Section -->
+              <div class="academy-sql-section" style="background:#F0F7FF;border-top:2px solid #C8DFF5;">
+                <div class="academy-sql-header" style="background:#E8F2FF;border-bottom:1px solid #C8DFF5;">
+                  <h3 style="color:#00274D;">📊 Process Flow Diagram</h3>
+                  <button class="sqllab-action-btn" onclick="toggleAcademyDiagram()" id="academyDiagramToggle">▼ Show Diagram</button>
+                </div>
+                <div id="academyDiagramArea" style="display:none;padding:16px 24px;overflow-x:auto;background:#fff;"></div>
+              </div>
+
+              <!-- SQL Section -->
+              <div class="academy-sql-section">
+                <div class="academy-sql-header">
+                  <h3>🔍 Reference SQL Query</h3>
+                  <div class="academy-sql-actions">
+                    <button class="sqllab-action-btn" onclick="copyAcademySql()" title="Copy SQL">📋 Copy SQL</button>
+                    <button class="sqllab-action-btn" onclick="sendAcademySqlToAdvisor()" title="Analyse in SQL Advisor">⚡ Analyse</button>
+                  </div>
+                </div>
+                <div class="sqllab-code-container" style="max-height:320px;">
+                  <div class="sqllab-code-toolbar">
+                    <span class="sqllab-code-lang">Oracle SQL — EBS R12</span>
+                    <button class="sqllab-copy-btn" onclick="copyAcademySql()">📋 Copy</button>
+                  </div>
+                  <pre id="academySqlBlock" class="sqllab-code-block" style="max-height:280px;overflow:auto;"></pre>
+                </div>
+              </div>
+
+              <!-- Topic Navigation -->
+              <div class="academy-topic-nav" id="academyTopicNav"></div>
+            </div>
+
+          </div><!-- end academy-content-area -->
+
+          <!-- RIGHT: AI Assistant Panel (hidden by default) -->
+          <div class="academy-assistant-panel" id="academyAsstPanel">
+            <div class="academy-asst-header">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span>🤖</span>
+                <h4>EBS Academy Assistant</h4>
+              </div>
+              <button class="academy-asst-close" onclick="closeAcademyAssistant()" title="Close assistant">✕</button>
+            </div>
+            <div class="academy-asst-messages" id="academyAsstMessages">
+              <!-- Welcome message injected by JS -->
+            </div>
+            <div class="academy-asst-input-area">
+              <div class="academy-asst-quick-btns" id="academyAsstQuickBtns">
+                <button class="academy-asst-quick-btn" onclick="askAcademyAssistant('Explain P2P cycle with diagram')">P2P Cycle</button>
+                <button class="academy-asst-quick-btn" onclick="askAcademyAssistant('Explain O2C cycle with flowchart')">O2C Cycle</button>
+                <button class="academy-asst-quick-btn" onclick="askAcademyAssistant('How does HRMS hire to retire work?')">Hire-to-Retire</button>
+                <button class="academy-asst-quick-btn" onclick="askAcademyAssistant('Explain GL period close steps')">Period Close</button>
+                <button class="academy-asst-quick-btn" onclick="askAcademyAssistant('What is Oracle Workflow?')">Workflow</button>
+                <button class="academy-asst-quick-btn" onclick="askAcademyAssistant('How to create a custom OAF page?')">OAF Dev</button>
+                <button class="academy-asst-quick-btn" onclick="askAcademyAssistant('Explain BIP report development steps')">BIP Reports</button>
+                <button class="academy-asst-quick-btn" onclick="askAcademyAssistant('How does payroll run cycle work in Oracle EBS?')">Payroll Run</button>
+              </div>
+              <div class="academy-asst-input-row">
+                <textarea id="academyAsstInput" class="academy-asst-textarea" rows="2"
+                  placeholder="Ask anything about Oracle EBS — concepts, cycles, tables, SQL, implementation..."
+                  onkeydown="handleAcademyAsstKey(event)"></textarea>
+                <button class="academy-asst-send" onclick="sendAcademyAsstMessage()" title="Send">
+                  <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+                    <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div><!-- end academy-assistant-panel -->
+
+        </div><!-- end academy-main -->
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  TAB 7 — DATA CONNECT                                            -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div id="tab-dataconnect" class="tab-content">
+      <div class="dc-layout">
+
+        <!-- ── LEFT SIDEBAR: Sources ──────────────────────────────── -->
+        <div class="dc-sidebar">
+          <div class="dc-sidebar-header">
+            <span class="dc-sidebar-icon">🔌</span>
+            <div>
+              <h3>Data Connect</h3>
+              <p>Live data from Excel, CSV or DB</p>
+            </div>
+          </div>
+
+          <!-- Source Type Selector -->
+          <div class="dc-source-tabs">
+            <button class="dc-src-btn active" id="dcSrcExcel" onclick="dcSwitchSource('excel')">
+              📊 Excel / CSV
+            </button>
+            <button class="dc-src-btn" id="dcSrcDb" onclick="dcSwitchSource('db')">
+              🗄️ DB Query
+            </button>
+          </div>
+
+          <!-- ── EXCEL / CSV panel ─────────────────────────────── -->
+          <div id="dcExcelPanel" class="dc-panel-section">
+            <!-- Drop zone -->
+            <div class="dc-drop-zone" id="dcDropZone"
+                 ondragover="dcDragOver(event)" ondragleave="dcDragLeave(event)" ondrop="dcDrop(event)"
+                 onclick="document.getElementById('dcFileInput').click()">
+              <div class="dc-drop-icon">📂</div>
+              <p class="dc-drop-title">Drop Excel / CSV here</p>
+              <p class="dc-drop-hint">or click to browse</p>
+              <p class="dc-drop-formats">Supports: .xlsx · .xls · .csv</p>
+              <input type="file" id="dcFileInput" accept=".xlsx,.xls,.csv"
+                     style="display:none" onchange="dcFileSelected(this)">
+            </div>
+
+            <!-- Sheet selector (hidden until file loaded) -->
+            <div id="dcSheetSelector" class="dc-sheet-selector" style="display:none;">
+              <label class="dc-label">Sheet / Table</label>
+              <select id="dcSheetSelect" class="dc-select" onchange="dcSelectSheet()"></select>
+            </div>
+
+            <!-- Row range -->
+            <div id="dcRowRange" class="dc-row-range" style="display:none;">
+              <label class="dc-label">Data rows</label>
+              <div class="dc-range-row">
+                <span class="dc-range-hint">Header row:</span>
+                <input type="number" id="dcHeaderRow" class="dc-num-input" value="1" min="1" max="10" onchange="dcReparseFile()">
+                <span class="dc-range-hint">Max rows:</span>
+                <input type="number" id="dcMaxRows" class="dc-num-input" value="500" min="1" max="5000" onchange="dcReparseFile()">
+              </div>
+            </div>
+          </div>
+
+          <!-- ── DB Query panel ────────────────────────────────── -->
+          <div id="dcDbPanel" class="dc-panel-section" style="display:none;">
+
+            <!-- Connection mode tabs -->
+            <div class="dc-conn-mode-tabs">
+              <button class="dc-conn-tab active" id="dcConnTabSim" onclick="dcSwitchConnMode('sim')">🔒 Simulated</button>
+              <button class="dc-conn-tab" id="dcConnTabLive" onclick="dcSwitchConnMode('live')">🔌 Live DB</button>
+            </div>
+
+            <!-- Simulation mode -->
+            <div id="dcConnSim">
+              <div class="dc-db-info">
+                <div class="dc-db-badge">🔒 Read-only simulation</div>
+                <p>Paste a SELECT query. The engine matches EBS demo tables and returns realistic results — no real DB needed.</p>
+              </div>
+              <label class="dc-label">SELECT Query</label>
+              <textarea id="dcDbQuery" class="dc-db-textarea"
+                placeholder="SELECT * FROM ap_invoices_all WHERE org_id = :p_org_id AND invoice_date >= SYSDATE - 30 ORDER BY invoice_date DESC;"
+                rows="6"></textarea>
+              <button class="dc-run-btn" onclick="dcRunDbQuery()">▶ Run Query</button>
+              <div class="dc-db-hint">
+                Tables: <code>ap_invoices_all</code>, <code>ap_suppliers</code>,
+                <code>ar_customers</code>, <code>gl_je_headers</code>, <code>per_all_people_f</code>,
+                <code>po_headers_all</code>, <code>fnd_concurrent_requests</code> and more.
+              </div>
+            </div>
+
+            <!-- Live DB config mode -->
+            <div id="dcConnLive" style="display:none;">
+              <div class="dc-db-info dc-db-info-live">
+                <div class="dc-db-badge dc-db-badge-live">🔌 Live Oracle DB</div>
+                <p>Configure your Oracle EBS connection. Requires a backend proxy (Node.js / Python) to relay JDBC/cx_Oracle queries to this browser app.</p>
+              </div>
+
+              <!-- Connection form -->
+              <div class="dc-conn-form">
+                <div class="dc-conn-field">
+                  <label class="dc-label">Host / IP</label>
+                  <input type="text" id="dcConnHost" class="dc-conn-input" placeholder="ebs-db.yourcompany.com" />
+                </div>
+                <div class="dc-conn-row2">
+                  <div class="dc-conn-field">
+                    <label class="dc-label">Port</label>
+                    <input type="number" id="dcConnPort" class="dc-conn-input" value="1521" min="1" max="65535" />
+                  </div>
+                  <div class="dc-conn-field" style="flex:2;">
+                    <label class="dc-label">Service / SID</label>
+                    <input type="text" id="dcConnSid" class="dc-conn-input" placeholder="EBSPROD" />
+                  </div>
+                </div>
+                <div class="dc-conn-field">
+                  <label class="dc-label">Username</label>
+                  <input type="text" id="dcConnUser" class="dc-conn-input" placeholder="apps" />
+                </div>
+                <div class="dc-conn-field">
+                  <label class="dc-label">Password</label>
+                  <input type="password" id="dcConnPass" class="dc-conn-input" placeholder="••••••••" />
+                </div>
+                <div class="dc-conn-field">
+                  <label class="dc-label">Proxy URL</label>
+                  <input type="text" id="dcConnProxy" class="dc-conn-input" placeholder="http://localhost:3001/query" />
+                </div>
+
+                <!-- Connection string preview -->
+                <div class="dc-conn-str-wrap">
+                  <label class="dc-label">JDBC String Preview</label>
+                  <div class="dc-conn-str" id="dcConnStrPreview">jdbc:oracle:thin:@//host:1521/SID</div>
+                </div>
+
+                <div class="dc-conn-actions">
+                  <button class="dc-run-btn dc-test-btn" onclick="dcTestConnection()">🔍 Test Connection</button>
+                  <div class="dc-conn-status" id="dcConnStatus"></div>
+                </div>
+              </div>
+
+              <label class="dc-label" style="margin-top:12px;">SELECT Query</label>
+              <textarea id="dcDbQueryLive" class="dc-db-textarea"
+                placeholder="SELECT i.invoice_id, i.invoice_num, i.vendor_id, i.invoice_amount, i.invoice_date FROM ap_invoices_all i WHERE ROWNUM <= 200 ORDER BY i.invoice_date DESC"
+                rows="5"></textarea>
+              <button class="dc-run-btn" onclick="dcRunLiveQuery()" id="dcRunLiveBtn" disabled>▶ Run on DB</button>
+              <div class="dc-db-hint">
+                ⚠ Live query requires a running backend proxy that connects to Oracle via JDBC / cx_Oracle and returns JSON. See <strong>README → Data Connect → Live DB Setup</strong> for setup guide.
+              </div>
+            </div>
+          </div>
+
+          <!-- Loaded file info badge -->
+          <div id="dcFileBadge" class="dc-file-badge" style="display:none;">
+            <span id="dcFileBadgeName"></span>
+            <button class="dc-clear-btn" onclick="dcClearFile()" title="Remove file">✕</button>
+          </div>
+        </div>
+
+        <!-- ── MAIN AREA ───────────────────────────────────────────── -->
+        <div class="dc-main">
+
+          <!-- ── WELCOME (before file loaded) ───────────────────── -->
+          <div id="dcWelcome" class="dc-welcome">
+            <div class="dc-welcome-icon">🔌</div>
+            <h2>Oracle EBS Data Connect</h2>
+            <p>Import your own data from an Excel spreadsheet, CSV file, or simulate a live Oracle DB query — then map columns to any EBS report and view results instantly.</p>
+            <div class="dc-welcome-grid">
+              <div class="dc-feat-card">
+                <span>📊</span>
+                <h4>Excel / CSV Import</h4>
+                <p>Drop any .xlsx or .csv. Auto-detects headers and data types.</p>
+              </div>
+              <div class="dc-feat-card">
+                <span>🗄️</span>
+                <h4>DB Query Simulator</h4>
+                <p>Paste a SELECT query. Engine matches EBS demo tables and returns realistic results.</p>
+              </div>
+              <div class="dc-feat-card">
+                <span>🔀</span>
+                <h4>Smart Column Mapping</h4>
+                <p>Map your source columns to EBS report fields with one click — or use auto-map.</p>
+              </div>
+              <div class="dc-feat-card">
+                <span>📋</span>
+                <h4>Live Preview</h4>
+                <p>See mapped data in a paginated grid. Export to Excel or push to EBS Reports tab.</p>
+              </div>
+              <div class="dc-feat-card">
+                <span>⚡</span>
+                <h4>Push to Reports</h4>
+                <p>Inject mapped data into an EBS report — browse it with filters, charts & SQL.</p>
+              </div>
+              <div class="dc-feat-card">
+                <span>🔍</span>
+                <h4>Data Profiling</h4>
+                <p>Auto-generates row count, nulls %, unique values and type hints per column.</p>
+              </div>
+            </div>
+            <button class="dc-guide-welcome-btn" onclick="dcShowMappingGuide()">
+              🔀 How does mapping work? <span>View full guide →</span>
+            </button>
+          </div>
+
+          <!-- ── MAPPING STEP (after file loaded, before confirm) ── -->
+          <div id="dcMappingArea" class="dc-mapping-area" style="display:none;">
+
+            <!-- Step bar -->
+            <div class="dc-steps">
+              <div class="dc-step done"  id="dcStep1"><span class="dc-step-num">1</span><span>Load Data</span></div>
+              <div class="dc-step-arrow">›</div>
+              <div class="dc-step active" id="dcStep2"><span class="dc-step-num">2</span><span>Map Columns</span></div>
+              <div class="dc-step-arrow">›</div>
+              <div class="dc-step" id="dcStep3"><span class="dc-step-num">3</span><span>Preview</span></div>
+              <div class="dc-step-arrow">›</div>
+              <div class="dc-step" id="dcStep4"><span class="dc-step-num">4</span><span>Push to Reports</span></div>
+            </div>
+
+            <!-- Source summary bar -->
+            <div class="dc-source-bar">
+              <div class="dc-source-stats" id="dcSourceStats">
+                <!-- Populated by JS -->
+              </div>
+              <div class="dc-source-actions">
+                <button class="dc-action-btn" onclick="dcShowMappingGuide()">❓ How Mapping Works</button>
+                <button class="dc-action-btn" onclick="dcAutoMap()">🪄 Auto-Map</button>
+                <button class="dc-action-btn" onclick="dcClearMapping()">🗑️ Clear</button>
+                <button class="dc-action-btn primary" onclick="dcApplyMapping()">✅ Apply & Preview →</button>
+              </div>
+            </div>
+
+            <!-- Target report selector -->
+            <div class="dc-target-row">
+              <label class="dc-label">Map to EBS Report:</label>
+              <select id="dcTargetReport" class="dc-select dc-target-select" onchange="dcTargetChanged()">
+                <option value="">— choose target report —</option>
+              </select>
+              <span class="dc-label" style="margin-left:16px;">or</span>
+              <button class="dc-action-btn" onclick="dcCreateCustomReport()" style="margin-left:8px;">
+                ➕ New Custom Report
+              </button>
+            </div>
+
+            <!-- Mapping table -->
+            <div class="dc-mapping-table-wrap">
+              <table class="dc-mapping-table">
+                <thead>
+                  <tr>
+                    <th>Source Column</th>
+                    <th>Sample Values</th>
+                    <th>Detected Type</th>
+                    <th>→ Map to EBS Field</th>
+                    <th>Transform</th>
+                  </tr>
+                </thead>
+                <tbody id="dcMappingTableBody">
+                  <!-- Rows generated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ── PREVIEW STEP ─────────────────────────────────────── -->
+          <div id="dcPreviewArea" class="dc-preview-area" style="display:none;">
+
+            <!-- Step bar (clone, same IDs will be updated by JS class) -->
+            <div class="dc-steps">
+              <div class="dc-step done"  id="dcPStep1"><span class="dc-step-num">1</span><span>Load Data</span></div>
+              <div class="dc-step-arrow">›</div>
+              <div class="dc-step done" id="dcPStep2"><span class="dc-step-num">2</span><span>Map Columns</span></div>
+              <div class="dc-step-arrow">›</div>
+              <div class="dc-step active" id="dcPStep3"><span class="dc-step-num">3</span><span>Preview</span></div>
+              <div class="dc-step-arrow">›</div>
+              <div class="dc-step" id="dcPStep4"><span class="dc-step-num">4</span><span>Push to Reports</span></div>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="dc-preview-toolbar">
+              <div class="dc-preview-info" id="dcPreviewInfo"></div>
+              <div class="dc-preview-btns">
+                <button class="dc-action-btn" onclick="dcBackToMapping()">← Back to Mapping</button>
+                <button class="dc-action-btn" onclick="dcExportPreview()">⬇ Export Excel</button>
+                <button class="dc-action-btn primary" onclick="dcPushToReports()">🚀 Push to Reports Tab</button>
+              </div>
+            </div>
+
+            <!-- Data profile row -->
+            <div id="dcProfileBar" class="dc-profile-bar"></div>
+
+            <!-- Paginated grid -->
+            <div class="dc-grid-wrap">
+              <table class="dc-grid" id="dcPreviewGrid">
+                <thead id="dcGridHead"></thead>
+                <tbody id="dcGridBody"></tbody>
+              </table>
+            </div>
+            <div class="dc-grid-pager" id="dcGridPager"></div>
+          </div>
+
+        </div><!-- /dc-main -->
+      </div><!-- /dc-layout -->
+    </div><!-- /tab-dataconnect -->
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  TAB 9 — REQUIREMENTS ANALYZER                                   -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div id="tab-reqanalyzer" class="tab-content">
+      <div class="rqa-layout">
+
+        <!-- ── LEFT PANEL: Upload + Controls ─────────────────────────── -->
+        <div class="rqa-sidebar">
+          <div class="rqa-sidebar-header">
+            <div class="rqa-sidebar-icon">📋</div>
+            <div>
+              <h3>Requirements Analyzer</h3>
+              <p>Upload · Analyse · Generate Artefacts</p>
+            </div>
+          </div>
+
+          <!-- Upload zone -->
+          <div class="rqa-upload-zone" id="rqaDropZone"
+               ondragover="rqaDragOver(event)" ondragleave="rqaDragLeave(event)" ondrop="rqaDrop(event)"
+               onclick="document.getElementById('rqaFileInput').click()">
+            <div class="rqa-upload-icon">📄</div>
+            <p class="rqa-upload-title">Drop requirement document here</p>
+            <p class="rqa-upload-hint">or click to browse</p>
+            <p class="rqa-upload-formats">Supports: .txt · .md · .docx · .pdf</p>
+            <input type="file" id="rqaFileInput" accept=".txt,.md,.docx,.pdf"
+                   style="display:none" onchange="rqaFileSelected(this)">
+          </div>
+
+          <!-- Or type / paste requirement -->
+          <div class="rqa-or-divider"><span>or type / paste</span></div>
+          <textarea id="rqaManualText" class="rqa-manual-input"
+            rows="7"
+            placeholder="Paste your requirement here…&#10;&#10;e.g. Create a concurrent program to extract all AP invoices with payment status 'Unpaid' for a given date range and operating unit, and load them into a staging table XX_AP_INVOICE_STG for downstream processing."></textarea>
+
+          <!-- Module selector -->
+          <div class="rqa-control-row">
+            <label class="rqa-label">EBS Module</label>
+            <select id="rqaModule" class="rqa-select">
+              <option value="AP">AP — Accounts Payable</option>
+              <option value="AR">AR — Accounts Receivable</option>
+              <option value="GL">GL — General Ledger</option>
+              <option value="PO">PO — Purchasing</option>
+              <option value="HRMS">HRMS — Human Resources</option>
+              <option value="iExpense">iExpense</option>
+              <option value="INV">INV — Inventory</option>
+              <option value="FND">FND — Foundation / System</option>
+            </select>
+          </div>
+
+          <!-- RICE type selector -->
+          <div class="rqa-control-row">
+            <label class="rqa-label">RICE Type</label>
+            <select id="rqaRiceType" class="rqa-select">
+              <option value="auto">Auto-detect</option>
+              <option value="R">R — Report</option>
+              <option value="I">I — Interface</option>
+              <option value="C">C — Conversion</option>
+              <option value="E">E — Extension</option>
+            </select>
+          </div>
+
+          <!-- What to generate -->
+          <div class="rqa-control-row">
+            <label class="rqa-label">Generate</label>
+            <div class="rqa-checkbox-group">
+              <label class="rqa-check"><input type="checkbox" id="rqaGenSQL"      checked> SQL Query</label>
+              <label class="rqa-check"><input type="checkbox" id="rqaGenPkg"      checked> PL/SQL Package</label>
+              <label class="rqa-check"><input type="checkbox" id="rqaGenTrigger"        > Trigger</label>
+              <label class="rqa-check"><input type="checkbox" id="rqaGenStaging"  checked> Staging Table DDL</label>
+              <label class="rqa-check"><input type="checkbox" id="rqaGenTestCases"checked> Test Cases</label>
+              <label class="rqa-check"><input type="checkbox" id="rqaGenTechDoc"  checked> Technical Document</label>
+              <label class="rqa-check"><input type="checkbox" id="rqaGenFuncDoc"        > Functional Document</label>
+            </div>
+          </div>
+
+          <!-- Analyse button -->
+          <button class="rqa-analyse-btn" onclick="rqaAnalyse()">
+            ⚡ Analyse &amp; Generate
+          </button>
+
+          <!-- File badge -->
+          <div id="rqaFileBadge" class="rqa-file-badge" style="display:none;">
+            <span class="rqa-file-icon">📄</span>
+            <span id="rqaFileBadgeName"></span>
+            <button class="rqa-clear-btn" onclick="rqaClearFile()" title="Remove file">✕</button>
+          </div>
+        </div>
+
+        <!-- ── MAIN AREA: Results ─────────────────────────────────────── -->
+        <div class="rqa-main">
+
+          <!-- Welcome state -->
+          <div id="rqaWelcome" class="rqa-welcome">
+            <div class="rqa-welcome-icon">📋</div>
+            <h2>Requirements Analyzer</h2>
+            <p>Upload a Functional Specification, BRD, or plain-text requirement — or paste it directly — and generate all required Oracle EBS development artefacts in seconds.</p>
+            <div class="rqa-welcome-grid">
+              <div class="rqa-feat-card"><span>🔍</span><h4>SQL Query</h4><p>Oracle EBS–compliant SELECT with ORG_ID, DateTrack, multi-org filters applied automatically.</p></div>
+              <div class="rqa-feat-card"><span>📦</span><h4>PL/SQL Package</h4><p>Complete package spec + body with main procedure, error handling, FND_LOG, and parameter validation.</p></div>
+              <div class="rqa-feat-card"><span>⚡</span><h4>Trigger</h4><p>BEFORE/AFTER row triggers with :NEW/:OLD references and exception block.</p></div>
+              <div class="rqa-feat-card"><span>🗄️</span><h4>Staging Table DDL</h4><p>XX_ prefixed staging table with status, error, audit columns and sequence + synonym.</p></div>
+              <div class="rqa-feat-card"><span>✅</span><h4>Test Cases</h4><p>Positive, negative, boundary, and security test scenarios with expected results.</p></div>
+              <div class="rqa-feat-card"><span>📄</span><h4>Technical Document</h4><p>Full Technical Design Document following your org template — cover, tables, parameters, flow diagrams.</p></div>
+            </div>
+          </div>
+
+          <!-- Results area (shown after analysis) -->
+          <div id="rqaResults" style="display:none;">
+
+            <!-- Requirement summary bar -->
+            <div class="rqa-summary-bar" id="rqaSummaryBar"></div>
+
+            <!-- Output tab bar -->
+            <div class="rqa-out-tabs" id="rqaOutTabs"></div>
+
+            <!-- Output panels — one per artefact -->
+            <div id="rqaOutputPanels"></div>
+
+          </div>
+
+          <!-- Spinner -->
+          <div id="rqaSpinner" class="rqa-spinner-wrap" style="display:none;">
+            <div class="rqa-spinner-box">
+              <div class="ica-spinner" style="width:28px;height:28px;border-width:3px;"></div>
+              <p>Analysing requirement &amp; generating artefacts…</p>
+            </div>
+          </div>
+
+        </div><!-- /rqa-main -->
+      </div><!-- /rqa-layout -->
+    </div><!-- /tab-reqanalyzer -->
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  TAB — REQUIREMENTS STUDIO (SQL/PLSQL/TDD/Test Case Generator)  -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div id="tab-reqstudio" class="tab-content">
+      <div class="rs-layout">
+
+        <!-- ── LEFT SIDEBAR ─────────────────────────────────────────── -->
+        <div class="rs-sidebar">
+          <div class="rs-sidebar-header">
+            <div class="rs-sidebar-header-row">
+              <div class="rs-sidebar-icon">🧩</div>
+              <h3>Requirements Studio</h3>
+            </div>
+            <p>Upload a Functional / Requirements document and generate all Oracle EBS technical artifacts.</p>
+          </div>
+
+          <div class="rs-sidebar-body">
+
+            <!-- UPLOAD ZONE -->
+            <div>
+              <div class="rs-section-label">1. Upload Document</div>
+              <div class="rs-upload-zone" id="rs-upload-zone">
+                <input type="file" id="rs-file-input" accept=".txt,.pdf,.docx,.doc,.md">
+                <div class="rs-upload-icon">📄</div>
+                <div class="rs-upload-title">Drop file here or click to browse</div>
+                <div class="rs-upload-hint">Supports .TXT, .PDF, .DOCX, .MD</div>
+              </div>
+              <div class="rs-upload-file-name" id="rs-file-name"></div>
+            </div>
+
+            <!-- OR PASTE -->
+            <div class="rs-or-divider">OR</div>
+            <div>
+              <div class="rs-section-label">Paste Requirement Text</div>
+              <textarea class="rs-textarea" id="rs-req-textarea" placeholder="Paste your functional / requirements document text here…&#10;&#10;E.g.:&#10;REQ-001: System shall provide a report of all AP invoices pending payment…&#10;REQ-002: The system should calculate total AP liability by supplier…"></textarea>
+            </div>
+
+            <!-- EBS MODULE SELECTION -->
+            <div>
+              <div class="rs-section-label">2. EBS Modules (auto-detected or select)</div>
+              <div class="rs-modules-grid">
+                <label class="rs-module-chip"><input type="checkbox" class="rs-mod-cb" value="GL"> GL</label>
+                <label class="rs-module-chip"><input type="checkbox" class="rs-mod-cb" value="AP"> AP</label>
+                <label class="rs-module-chip"><input type="checkbox" class="rs-mod-cb" value="AR"> AR</label>
+                <label class="rs-module-chip"><input type="checkbox" class="rs-mod-cb" value="PO"> PO</label>
+                <label class="rs-module-chip"><input type="checkbox" class="rs-mod-cb" value="INV"> INV</label>
+                <label class="rs-module-chip"><input type="checkbox" class="rs-mod-cb" value="OM"> OM</label>
+                <label class="rs-module-chip"><input type="checkbox" class="rs-mod-cb" value="HR"> HR</label>
+                <label class="rs-module-chip"><input type="checkbox" class="rs-mod-cb" value="FA"> FA</label>
+                <label class="rs-module-chip"><input type="checkbox" class="rs-mod-cb" value="CM"> CM</label>
+                <label class="rs-module-chip"><input type="checkbox" class="rs-mod-cb" value="PA"> PA</label>
+              </div>
+            </div>
+
+            <!-- ARTIFACTS TO GENERATE -->
+            <div>
+              <div class="rs-section-label">3. Artifacts to Generate</div>
+              <div class="rs-artifact-checks">
+                <label class="rs-artifact-check"><input type="checkbox" class="rs-artifact-type-cb" value="sql" checked><span class="rs-ac-icon">🔍</span> SQL Queries</label>
+                <label class="rs-artifact-check"><input type="checkbox" class="rs-artifact-type-cb" value="package" checked><span class="rs-ac-icon">📦</span> PL/SQL Package</label>
+                <label class="rs-artifact-check"><input type="checkbox" class="rs-artifact-type-cb" value="procedure" checked><span class="rs-ac-icon">⚙️</span> Procedures</label>
+                <label class="rs-artifact-check"><input type="checkbox" class="rs-artifact-type-cb" value="trigger" checked><span class="rs-ac-icon">⚡</span> Triggers</label>
+                <label class="rs-artifact-check"><input type="checkbox" class="rs-artifact-type-cb" value="staging" checked><span class="rs-ac-icon">🗃️</span> Staging Tables (DDL)</label>
+                <label class="rs-artifact-check"><input type="checkbox" class="rs-artifact-type-cb" value="testcases" checked><span class="rs-ac-icon">✅</span> Test Cases</label>
+                <label class="rs-artifact-check"><input type="checkbox" class="rs-artifact-type-cb" value="tdd" checked><span class="rs-ac-icon">📝</span> Tech Design Doc (TDD)</label>
+              </div>
+            </div>
+
+            <!-- DATA SOURCE OPTIONS -->
+            <div>
+              <div class="rs-section-label">4. Data Source (Optional)</div>
+              <!-- Excel / CSV Data Toggle -->
+              <div class="rs-db-toggle-row" style="margin-bottom:6px;">
+                <span class="rs-db-toggle-label">📊 Use Excel / CSV Column Data</span>
+                <label class="rs-toggle-switch">
+                  <input type="checkbox" id="rs-data-toggle">
+                  <span class="rs-toggle-slider"></span>
+                </label>
+              </div>
+              <div class="rs-excel-paste" id="rs-excel-paste">
+                <div class="rs-section-label" style="font-size:10px;margin-bottom:4px;">Paste header row from Excel (tab or comma separated):</div>
+                <textarea class="rs-textarea" id="rs-data-paste" rows="3" style="min-height:60px;" placeholder="COL1&#9;COL2&#9;COL3&#9;AMOUNT&#9;STATUS&#9;DATE&#10;or comma-separated column names…"></textarea>
+                <div class="rs-mapping-box">
+                  <strong>📌 Column Mapping Info</strong>
+                  Pasted column headers will be used as exact column names in the generated SQL SELECT list and Staging Table DDL. This allows the output to match your source data schema precisely.
+                </div>
+              </div>
+
+              <!-- DB Connection Toggle -->
+              <div class="rs-db-toggle-row">
+                <span class="rs-db-toggle-label">🔌 Connect to EBS Database</span>
+                <label class="rs-toggle-switch">
+                  <input type="checkbox" id="rs-db-toggle">
+                  <span class="rs-toggle-slider"></span>
+                </label>
+              </div>
+              <div class="rs-db-fields" id="rs-db-fields">
+                <input type="text"     class="rs-db-input" id="rs-db-host" placeholder="Host (e.g. ebs-db.company.com)">
+                <input type="text"     class="rs-db-input" id="rs-db-port" placeholder="Port (default 1521)" value="1521">
+                <input type="text"     class="rs-db-input" id="rs-db-sid"  placeholder="SID / Service Name (e.g. EBSPROD)">
+                <input type="text"     class="rs-db-input" id="rs-db-user" placeholder="Username">
+                <input type="password" class="rs-db-input" id="rs-db-pass" placeholder="Password">
+                <div class="rs-mapping-box" style="font-size:10px;">
+                  <strong>🔒 Connection Info</strong>
+                  DB connection is used to introspect table columns and validate schema. Credentials are not stored.
+                </div>
+              </div>
+            </div>
+
+            <!-- PROGRESS BAR -->
+            <div class="rs-progress-wrap">
+              <div class="rs-progress-bar-outer">
+                <div class="rs-progress-bar-inner" id="rs-progress-bar"></div>
+              </div>
+              <div class="rs-progress-status" id="rs-progress-status">Ready to generate</div>
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <button class="rs-generate-btn" id="rs-generate-btn">
+              <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Generate All Artifacts
+            </button>
+            <button class="rs-clear-btn" id="rs-clear-btn">🗑 Clear &amp; Reset</button>
+
+          </div><!-- /.rs-sidebar-body -->
+        </div><!-- /.rs-sidebar -->
+
+        <!-- ── MAIN CONTENT ──────────────────────────────────────────── -->
+        <div class="rs-main">
+
+          <!-- Toolbar -->
+          <div class="rs-toolbar">
+            <div class="rs-toolbar-title">
+              <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 2V8H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              Generated Artifacts
+              <span class="rs-status-badge" id="rs-status-badge">Ready</span>
+            </div>
+            <button class="rs-download-all-btn" id="rs-download-all-btn" onclick="RequirementsStudio.downloadAll()" disabled>
+              <svg viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="M21 15V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V15M7 10L12 15L17 10M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Download All
+            </button>
+          </div>
+
+          <!-- Artifact Sub-tabs -->
+          <div class="rs-artifact-tabs">
+            <button class="rs-art-tab active" data-artifact="sql">
+              🔍 SQL Queries <span class="rs-art-count" id="rs-cnt-sql"></span>
+            </button>
+            <button class="rs-art-tab" data-artifact="package">
+              📦 PL/SQL Package <span class="rs-art-count" id="rs-cnt-package"></span>
+            </button>
+            <button class="rs-art-tab" data-artifact="procedure">
+              ⚙️ Procedures <span class="rs-art-count" id="rs-cnt-procedure"></span>
+            </button>
+            <button class="rs-art-tab" data-artifact="trigger">
+              ⚡ Triggers <span class="rs-art-count" id="rs-cnt-trigger"></span>
+            </button>
+            <button class="rs-art-tab" data-artifact="staging">
+              🗃️ Staging Tables <span class="rs-art-count" id="rs-cnt-staging"></span>
+            </button>
+            <button class="rs-art-tab" data-artifact="testcases">
+              ✅ Test Cases <span class="rs-art-count" id="rs-cnt-testcases"></span>
+            </button>
+            <button class="rs-art-tab" data-artifact="tdd">
+              📝 Tech Design Doc <span class="rs-art-count" id="rs-cnt-tdd"></span>
+            </button>
+          </div>
+
+          <!-- Artifact Panels -->
+          <div class="rs-artifact-content">
+
+            <div class="rs-art-panel active" id="rs-panel-sql">
+              <div class="rs-empty-state">
+                <div class="rs-empty-icon">🔍</div>
+                <h4>SQL Queries</h4>
+                <p>Upload a requirements document and click <strong>Generate All Artifacts</strong> to create Oracle EBS SQL queries tailored to your requirements.</p>
+              </div>
+            </div>
+
+            <div class="rs-art-panel" id="rs-panel-package">
+              <div class="rs-empty-state">
+                <div class="rs-empty-icon">📦</div>
+                <h4>PL/SQL Package</h4>
+                <p>A complete Oracle PL/SQL Package (Spec + Body) will be generated with one procedure per requirement, FND_LOG integration, and standard error handling.</p>
+              </div>
+            </div>
+
+            <div class="rs-art-panel" id="rs-panel-procedure">
+              <div class="rs-empty-state">
+                <div class="rs-empty-icon">⚙️</div>
+                <h4>Standalone Procedures</h4>
+                <p>Individual Oracle PL/SQL Procedures will be generated — one per requirement — with IN/OUT parameters, validation, and EXCEPTION handling.</p>
+              </div>
+            </div>
+
+            <div class="rs-art-panel" id="rs-panel-trigger">
+              <div class="rs-empty-state">
+                <div class="rs-empty-icon">⚡</div>
+                <h4>Database Triggers</h4>
+                <p>BEFORE INSERT OR UPDATE triggers will be generated with WHO-column population, ORG_ID validation, and audit logging via XX_AUDIT_LOG.</p>
+              </div>
+            </div>
+
+            <div class="rs-art-panel" id="rs-panel-staging">
+              <div class="rs-empty-state">
+                <div class="rs-empty-icon">🗃️</div>
+                <h4>Staging Tables (DDL)</h4>
+                <p>Complete DDL for Oracle EBS staging tables — includes sequences, indexes, comments, BATCH_ID, STATUS, and ERROR_MSG columns. Column names from your Excel data will be included automatically.</p>
+              </div>
+            </div>
+
+            <div class="rs-art-panel" id="rs-panel-testcases">
+              <div class="rs-empty-state">
+                <div class="rs-empty-icon">✅</div>
+                <h4>Test Cases</h4>
+                <p>Positive, Negative, and Boundary test scenarios will be generated for each requirement. Downloadable as CSV for test management tools.</p>
+              </div>
+            </div>
+
+            <div class="rs-art-panel" id="rs-panel-tdd">
+              <div class="rs-empty-state">
+                <div class="rs-empty-icon">📝</div>
+                <h4>Technical Design Document</h4>
+                <p>A structured TDD covering: overview, requirements summary, EBS modules &amp; tables, data source, artifact inventory, error handling, security, and deployment checklist.</p>
+              </div>
+            </div>
+
+          </div><!-- /.rs-artifact-content -->
+        </div><!-- /.rs-main -->
+
+      </div><!-- /.rs-layout -->
+    </div><!-- /tab-reqstudio -->
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  TAB 8 — ICA CONTEXT STUDIO (Knowledge Graph + Ontology)        -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div id="tab-ica" class="tab-content">
+      <div class="ica-layout">
+
+        <!-- ── LEFT SIDEBAR ──────────────────────────────────────────── -->
+        <div class="ica-sidebar">
+          <div class="ica-sidebar-header">
+            <div class="ica-sidebar-icon">🧠</div>
+            <div>
+              <h3>ICA Context Studio</h3>
+              <p>EBS Knowledge Graph · Ontology v5.2</p>
+            </div>
+          </div>
+
+          <!-- Ontology stats -->
+          <div class="ica-stat-group">
+            <div class="ica-stat-label">📦 Ontology Schema</div>
+            <div class="ica-stat-row"><span class="ica-stat-key">OWL Classes</span><span class="ica-stat-val">30+</span></div>
+            <div class="ica-stat-row"><span class="ica-stat-key">Properties</span><span class="ica-stat-val">52+</span></div>
+            <div class="ica-stat-row"><span class="ica-stat-key">Schema Version</span><span class="ica-stat-val">v5.2</span></div>
+            <div class="ica-stat-row"><span class="ica-stat-key">Ontology Format</span><span class="ica-stat-val">JSON-LD / OWL</span></div>
+          </div>
+
+          <!-- Graph stats -->
+          <div class="ica-stat-group">
+            <div class="ica-stat-label">🕸️ Knowledge Graph</div>
+            <div class="ica-stat-row"><span class="ica-stat-key">Total Nodes</span><span class="ica-stat-val">80+</span></div>
+            <div class="ica-stat-row"><span class="ica-stat-key">Node Types</span><span class="ica-stat-val">10</span></div>
+            <div class="ica-stat-row"><span class="ica-stat-key">Relationships</span><span class="ica-stat-val">30</span></div>
+            <div class="ica-stat-row"><span class="ica-stat-key">Compliance Rules</span><span class="ica-stat-val">28</span></div>
+          </div>
+
+          <!-- Rule stats -->
+          <div class="ica-stat-group">
+            <div class="ica-stat-label">📋 Mapping Rules</div>
+            <div class="ica-stat-row"><span class="ica-stat-key">Column Rules</span><span class="ica-stat-val">100</span></div>
+            <div class="ica-stat-row"><span class="ica-stat-key">EBS Modules</span><span class="ica-stat-val">AP, AR, GL, PO, HR</span></div>
+            <div class="ica-stat-row"><span class="ica-stat-key">Confidence Range</span><span class="ica-stat-val">0.75 – 1.0</span></div>
+          </div>
+
+          <!-- Download buttons -->
+          <div class="ica-sidebar-actions">
+            <div class="ica-action-label">📥 Schema Files</div>
+            <a class="ica-download-btn" href="ica-schema/ebs-knowledge-graph-schema.json" download>
+              🕸️ KG Schema (JSON)
+            </a>
+            <a class="ica-download-btn" href="ica-schema/ebs-complete-ontology.jsonld" download>
+              📘 Full Ontology (JSON-LD)
+            </a>
+            <a class="ica-download-btn" href="ica-schema/01-nodes.json" download>
+              🟦 Nodes (JSON)
+            </a>
+            <a class="ica-download-btn" href="ica-schema/02-rules.json" download>
+              📏 Rules (JSON)
+            </a>
+            <a class="ica-download-btn" href="ica-schema/csv/column_mapping_rules.csv" download>
+              🔀 Column Mapping Rules (CSV)
+            </a>
+          </div>
+        </div>
+
+        <!-- ── MAIN AREA ──────────────────────────────────────────────── -->
+        <div class="ica-main">
+
+          <!-- Hero banner -->
+          <div class="ica-hero">
+            <div class="ica-hero-left">
+              <div class="ica-hero-badge">v5.2 · RICE Taxonomy · AME / Workflow</div>
+              <h2 class="ica-hero-title">ICA Context Studio</h2>
+              <p class="ica-hero-sub">The semantic backbone of the Oracle EBS Intelligence Hub — a structured knowledge graph, OWL ontology, and 100-rule column-mapping layer that powers AI-driven report generation, SQL compliance, and Data Connect auto-mapping.</p>
+            </div>
+            <div class="ica-hero-right">
+              <div class="ica-hero-stat-box">
+                <div class="ica-hero-num">80+</div><div class="ica-hero-lbl">Graph Nodes</div>
+              </div>
+              <div class="ica-hero-stat-box">
+                <div class="ica-hero-num">30</div><div class="ica-hero-lbl">Relationships</div>
+              </div>
+              <div class="ica-hero-stat-box">
+                <div class="ica-hero-num">28</div><div class="ica-hero-lbl">SQL Rules</div>
+              </div>
+              <div class="ica-hero-stat-box">
+                <div class="ica-hero-num">100</div><div class="ica-hero-lbl">Mapping Rules</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Node Types Grid ── -->
+          <div class="ica-section">
+            <div class="ica-section-header">
+              <h3>🟦 Knowledge Graph — 10 Node Types</h3>
+              <span class="ica-section-badge">v5.2 · 80+ nodes</span>
+            </div>
+            <div class="ica-node-grid">
+              <div class="ica-node-card ica-node-rice">
+                <div class="ica-node-icon">📊</div>
+                <div class="ica-node-name">RICEComponent</div>
+                <div class="ica-node-desc">Reports, Interfaces, Conversions, Extensions — the 4 EBS customisation pillars. 11 nodes covering AP, AR, GL, PO, HRMS modules.</div>
+                <div class="ica-node-count">11 nodes</div>
+              </div>
+              <div class="ica-node-card ica-node-module">
+                <div class="ica-node-icon">📦</div>
+                <div class="ica-node-name">EBSModule</div>
+                <div class="ica-node-desc">Core Oracle EBS modules: Payables, Receivables, GL, Purchasing, HRMS, iExpense, Inventory, Fixed Assets, Treasury.</div>
+                <div class="ica-node-count">9 nodes</div>
+              </div>
+              <div class="ica-node-card ica-node-table">
+                <div class="ica-node-icon">🗄️</div>
+                <div class="ica-node-name">EBSTable</div>
+                <div class="ica-node-desc">Oracle EBS R12 base tables and views. ap_invoices_all, gl_je_headers, per_all_people_f and 20+ others.</div>
+                <div class="ica-node-count">20+ nodes</div>
+              </div>
+              <div class="ica-node-card ica-node-bp">
+                <div class="ica-node-icon">⚙️</div>
+                <div class="ica-node-name">BusinessProcess</div>
+                <div class="ica-node-desc">End-to-end EBS business processes: Procure-to-Pay, Order-to-Cash, Record-to-Report, Hire-to-Retire, Expense Management.</div>
+                <div class="ica-node-count">5 nodes</div>
+              </div>
+              <div class="ica-node-card ica-node-sql">
+                <div class="ica-node-icon">🔍</div>
+                <div class="ica-node-name">SQLPattern</div>
+                <div class="ica-node-desc">Reusable Oracle SQL constructs: date range filters, multi-org queries, period-close patterns, CONNECT BY hierarchies.</div>
+                <div class="ica-node-count">8 nodes</div>
+              </div>
+              <div class="ica-node-card ica-node-comp">
+                <div class="ica-node-icon">📏</div>
+                <div class="ica-node-name">ComplianceRule</div>
+                <div class="ica-node-desc">28 SQL compliance rules (RULE_001–RULE_028). Covers performance, security, multi-org, date handling, and data quality.</div>
+                <div class="ica-node-count">28 rules</div>
+              </div>
+              <div class="ica-node-card ica-node-ame">
+                <div class="ica-node-icon">✅</div>
+                <div class="ica-node-name">AMEConfiguration</div>
+                <div class="ica-node-desc">Oracle Approvals Management Engine configurations: iExpense, PO, AP Invoice, Timecard approval hierarchies and rule sets.</div>
+                <div class="ica-node-count">4 nodes</div>
+              </div>
+              <div class="ica-node-card ica-node-wf">
+                <div class="ica-node-icon">🔄</div>
+                <div class="ica-node-name">OracleWorkflow</div>
+                <div class="ica-node-desc">Seeded Oracle Workflow processes: PO Approval, AP Invoice Approval, iExpense Workflow, HR Self-Service workflows.</div>
+                <div class="ica-node-count">4 nodes</div>
+              </div>
+              <div class="ica-node-card ica-node-mk">
+                <div class="ica-node-icon">🎓</div>
+                <div class="ica-node-name">ModuleKnowledge</div>
+                <div class="ica-node-desc">15 Academy learning topics — AP Functional, GL Setup, HRMS DateTrack, iExpense Config, SQL Optimisation, Interview Prep and more.</div>
+                <div class="ica-node-count">15 nodes</div>
+              </div>
+              <div class="ica-node-card ica-node-tech">
+                <div class="ica-node-icon">🛠️</div>
+                <div class="ica-node-name">Tech Stack</div>
+                <div class="ica-node-desc">OAF Components, SOA Services, APEX Applications, ADF Applications, Redwood Components — Oracle extensibility technologies.</div>
+                <div class="ica-node-count">5 nodes</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── RICE Taxonomy ── -->
+          <div class="ica-section">
+            <div class="ica-section-header">
+              <h3>🏗️ RICE Taxonomy — OWL Class Hierarchy</h3>
+              <span class="ica-section-badge">4 subclasses · 11 instances</span>
+            </div>
+            <div class="ica-rice-grid">
+              <div class="ica-rice-card ica-rice-r">
+                <div class="ica-rice-letter">R</div>
+                <div class="ica-rice-body">
+                  <div class="ica-rice-title">Reports</div>
+                  <div class="ica-rice-class">owl:Class → EBSReport</div>
+                  <div class="ica-rice-desc">Custom Oracle EBS reports developed using XML Publisher, BI Publisher, RDF, or Oracle Reports. Maps to the 26 reports in the EBS Reports tab.</div>
+                  <div class="ica-rice-examples">AP Invoice Register · GL Trial Balance · iExpense Audit · PO Detail</div>
+                </div>
+              </div>
+              <div class="ica-rice-card ica-rice-i">
+                <div class="ica-rice-letter">I</div>
+                <div class="ica-rice-body">
+                  <div class="ica-rice-title">Interfaces</div>
+                  <div class="ica-rice-class">owl:Class → EBSInterface</div>
+                  <div class="ica-rice-desc">Data exchange programs between Oracle EBS and external systems. Inbound (loading data) or outbound (extracting data) batch processes.</div>
+                  <div class="ica-rice-examples">Supplier Interface · Bank Statement Import · GL Interface</div>
+                </div>
+              </div>
+              <div class="ica-rice-card ica-rice-c">
+                <div class="ica-rice-letter">C</div>
+                <div class="ica-rice-body">
+                  <div class="ica-rice-title">Conversions</div>
+                  <div class="ica-rice-class">owl:Class → EBSConversion</div>
+                  <div class="ica-rice-desc">One-time data migration programs that move legacy data into Oracle EBS during implementation. Uses standard Oracle open interfaces.</div>
+                  <div class="ica-rice-examples">Customer Conversion · Open Invoices · Historical Payments</div>
+                </div>
+              </div>
+              <div class="ica-rice-card ica-rice-e">
+                <div class="ica-rice-letter">E</div>
+                <div class="ica-rice-body">
+                  <div class="ica-rice-title">Extensions</div>
+                  <div class="ica-rice-class">owl:Class → EBSExtension</div>
+                  <div class="ica-rice-desc">Custom programs that extend Oracle EBS functionality beyond standard: custom forms, workflows, API extensions, approval overrides.</div>
+                  <div class="ica-rice-examples">Custom Workflow · OAF Extension · AME Rule Override</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── SQL Compliance Rules ── -->
+          <div class="ica-section">
+            <div class="ica-section-header">
+              <h3>📏 SQL Compliance Rules — RULE_001 to RULE_028</h3>
+              <span class="ica-section-badge">28 rules · 5 categories</span>
+            </div>
+            <div class="ica-rules-grid">
+              <div class="ica-rule-group">
+                <div class="ica-rule-group-title">🔒 Security</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_001</span> Always filter by ORG_ID</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_002</span> Use bind variables, not literals</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_003</span> Restrict SELECT * usage</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_016</span> Avoid DDL in reports</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_017</span> No DML in SELECT queries</div>
+              </div>
+              <div class="ica-rule-group">
+                <div class="ica-rule-group-title">⚡ Performance</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_004</span> Avoid function on indexed column</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_005</span> Use EXISTS not IN for subqueries</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_006</span> Add ROWNUM limits on large tables</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_018</span> Avoid implicit type conversion</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_019</span> Use table aliases consistently</div>
+              </div>
+              <div class="ica-rule-group">
+                <div class="ica-rule-group-title">📅 Date Handling</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_007</span> Use TRUNC for date comparisons</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_008</span> Avoid SYSDATE arithmetic strings</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_020</span> Use TO_DATE with explicit format</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_021</span> Consistent NLS date format</div>
+              </div>
+              <div class="ica-rule-group">
+                <div class="ica-rule-group-title">🏢 Multi-Org</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_009</span> Use MO_GLOBAL for multi-org</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_010</span> Filter LEDGER_ID where applicable</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_022</span> Validate SET_OF_BOOKS_ID joins</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_023</span> Use FND_PROFILE for org context</div>
+              </div>
+              <div class="ica-rule-group">
+                <div class="ica-rule-group-title">✅ Data Quality</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_011</span> Check STATUS / FLAG columns</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_024</span> Handle NULL with NVL/COALESCE</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_025</span> Validate EFFECTIVE_DATE ranges</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_026</span> Avoid DISTINCT on large result sets</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_027</span> Use WITH clause for repeated subqueries</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_028</span> Document all custom parameters</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Relationship Types ── -->
+          <div class="ica-section">
+            <div class="ica-section-header">
+              <h3>🔗 Relationship Types — REL_001 to REL_030</h3>
+              <span class="ica-section-badge">30 edge types · v5.2</span>
+            </div>
+            <div class="ica-rel-chips">
+              <span class="ica-rel-chip">HAS_TABLE</span>
+              <span class="ica-rel-chip">USES_TABLE</span>
+              <span class="ica-rel-chip">BELONGS_TO</span>
+              <span class="ica-rel-chip">JOINS_TO</span>
+              <span class="ica-rel-chip">HAS_REPORT</span>
+              <span class="ica-rel-chip">VALIDATES_WITH</span>
+              <span class="ica-rel-chip">GOVERNED_BY</span>
+              <span class="ica-rel-chip">IMPLEMENTS</span>
+              <span class="ica-rel-chip">PART_OF</span>
+              <span class="ica-rel-chip">HAS_WORKFLOW</span>
+              <span class="ica-rel-chip">TRIGGERS</span>
+              <span class="ica-rel-chip">APPROVES_VIA</span>
+              <span class="ica-rel-chip">EXTENDS</span>
+              <span class="ica-rel-chip">HAS_RICE_COMPONENT</span>
+              <span class="ica-rel-chip">COVERED_BY</span>
+              <span class="ica-rel-chip">TEACHES</span>
+              <span class="ica-rel-chip">HAS_AME_CONFIG</span>
+              <span class="ica-rel-chip">RUNS_ON</span>
+              <span class="ica-rel-chip">MIGRATES_TO</span>
+              <span class="ica-rel-chip">INTEGRATES_WITH</span>
+              <span class="ica-rel-chip">USES_PATTERN</span>
+              <span class="ica-rel-chip">MAPS_TO</span>
+              <span class="ica-rel-chip">DERIVED_FROM</span>
+              <span class="ica-rel-chip">HAS_COMPLIANCE_RULE</span>
+              <span class="ica-rel-chip">OVERLAPS_WITH</span>
+              <span class="ica-rel-chip">FEEDS_INTO</span>
+              <span class="ica-rel-chip">PREREQUISITE_OF</span>
+              <span class="ica-rel-chip">REFERENCES</span>
+              <span class="ica-rel-chip">CONFIGURED_BY</span>
+              <span class="ica-rel-chip">AUDITS</span>
+            </div>
+          </div>
+
+          <!-- ── Column Mapping Rules Preview ── -->
+          <div class="ica-section">
+            <div class="ica-section-header">
+              <h3>🔀 Column Mapping Rules — 100 Rules Powering Data Connect</h3>
+              <span class="ica-section-badge">AP · AR · GL · PO · HR · iExpense</span>
+            </div>
+            <p class="ica-section-desc">These rules enable the <strong>Data Connect</strong> auto-mapping engine to intelligently match your Excel/CSV column names (or DB query result columns) to the correct EBS report fields — regardless of naming variations, abbreviations, or synonyms.</p>
+            <div class="ica-mapping-sample">
+              <table class="ica-map-table">
+                <thead>
+                  <tr>
+                    <th>Source Pattern</th>
+                    <th>Normalised</th>
+                    <th>→ EBS Target Field</th>
+                    <th>Module</th>
+                    <th>Transform</th>
+                    <th>Confidence</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>VENDOR_NAME</td><td>vendorname</td><td>VENDOR_NAME</td><td>AP</td><td>title</td><td class="ica-conf-high">1.00</td></tr>
+                  <tr><td>Supplier Name</td><td>suppliername</td><td>VENDOR_NAME</td><td>AP</td><td>title</td><td class="ica-conf-high">0.85</td></tr>
+                  <tr><td>Invoice Number</td><td>invoicenumber</td><td>INVOICE_NUM</td><td>AP</td><td>upper</td><td class="ica-conf-high">0.90</td></tr>
+                  <tr><td>Amt</td><td>amt</td><td>INVOICE_AMOUNT</td><td>AP</td><td>num_fmt</td><td class="ica-conf-med">0.75</td></tr>
+                  <tr><td>Payment Due</td><td>paymentdue</td><td>DUE_DATE</td><td>AP</td><td>date_fmt</td><td class="ica-conf-med">0.82</td></tr>
+                  <tr><td>EMP_NUM</td><td>empnum</td><td>EMPLOYEE_NUMBER</td><td>HR</td><td>none</td><td class="ica-conf-high">1.00</td></tr>
+                  <tr><td>GL Account</td><td>glaccount</td><td>ACCOUNT_CODE</td><td>GL</td><td>upper</td><td class="ica-conf-high">0.88</td></tr>
+                  <tr><td>PO Number</td><td>ponumber</td><td>PO_NUMBER</td><td>PO</td><td>upper</td><td class="ica-conf-high">0.90</td></tr>
+                </tbody>
+              </table>
+              <div class="ica-map-hint">Showing 8 of 100 rules. Download the full <code>column_mapping_rules.csv</code> from the sidebar.</div>
+            </div>
+          </div>
+
+          <!-- ── Academy Modules ── -->
+          <div class="ica-section">
+            <div class="ica-section-header">
+              <h3>🎓 ModuleKnowledge — 15 Academy Topics</h3>
+              <span class="ica-section-badge">Linked to EBS Academy tab</span>
+            </div>
+            <div class="ica-mk-grid">
+              <div class="ica-mk-chip" title="AP Functional Knowledge">AP-FUNC-001<br><small>AP Functional</small></div>
+              <div class="ica-mk-chip" title="AP Technical Tables">AP-TECH-001<br><small>AP Technical</small></div>
+              <div class="ica-mk-chip" title="GL Setup & Configuration">GL-SETUP-001<br><small>GL Setup</small></div>
+              <div class="ica-mk-chip" title="GL Reporting & Enquiries">GL-RPT-001<br><small>GL Reporting</small></div>
+              <div class="ica-mk-chip" title="HRMS DateTrack & History">HRMS-DT-001<br><small>HRMS DateTrack</small></div>
+              <div class="ica-mk-chip" title="iExpense Configuration">IEXP-CONF-001<br><small>iExpense Config</small></div>
+              <div class="ica-mk-chip" title="PO Purchasing Cycle">PO-CYCLE-001<br><small>PO Cycle</small></div>
+              <div class="ica-mk-chip" title="AR Customer Management">AR-CUST-001<br><small>AR Customers</small></div>
+              <div class="ica-mk-chip" title="SQL Performance Tuning">SQL-PERF-001<br><small>SQL Tuning</small></div>
+              <div class="ica-mk-chip" title="AME Setup & Approvals">AME-SETUP-001<br><small>AME Setup</small></div>
+              <div class="ica-mk-chip" title="Oracle Workflow">WF-BASICS-001<br><small>Workflow</small></div>
+              <div class="ica-mk-chip" title="RICE Development">RICE-DEV-001<br><small>RICE Dev</small></div>
+              <div class="ica-mk-chip" title="Data Migration">CONV-METH-001<br><small>Conversions</small></div>
+              <div class="ica-mk-chip" title="EBS Security">SEC-RESP-001<br><small>Security</small></div>
+              <div class="ica-mk-chip" title="Interview Preparation">INTERVIEW-001<br><small>Interview Prep</small></div>
+            </div>
+          </div>
+
+        </div><!-- /ica-main -->
+      </div><!-- /ica-layout -->
+    </div><!-- /tab-ica -->
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HOW MAPPING WORKS — Modal Overlay                               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div id="dcMappingGuideModal" class="dc-guide-overlay" style="display:none;" onclick="dcCloseMappingGuide(event)">
+      <div class="dc-guide-modal">
+        <div class="dc-guide-header">
+          <h2>🔀 How Data Mapping Works</h2>
+          <button class="dc-guide-close" onclick="dcCloseMappingGuide()">✕</button>
+        </div>
+
+        <!-- Flow diagram -->
+        <div class="dc-guide-flow">
+          <!-- Step 1: Source -->
+          <div class="dc-guide-box dc-guide-src">
+            <div class="dc-guide-box-icon">📂</div>
+            <div class="dc-guide-box-title">Source Data</div>
+            <div class="dc-guide-box-sub">Excel / CSV / DB Query</div>
+            <div class="dc-guide-cols" id="dcGuideSourceCols">
+              <span class="dc-guide-col-pill">Invoice_No</span>
+              <span class="dc-guide-col-pill">Vendor_Name</span>
+              <span class="dc-guide-col-pill">Amt</span>
+              <span class="dc-guide-col-pill">Inv_Date</span>
+              <span class="dc-guide-col-pill">Status</span>
+            </div>
+          </div>
+
+          <!-- Arrow -->
+          <div class="dc-guide-arrow-col">
+            <div class="dc-guide-arrow-label">Auto-detect types</div>
+            <div class="dc-guide-arrow">→</div>
+          </div>
+
+          <!-- Step 2: Transform -->
+          <div class="dc-guide-box dc-guide-tfm">
+            <div class="dc-guide-box-icon">⚙️</div>
+            <div class="dc-guide-box-title">Transforms</div>
+            <div class="dc-guide-box-sub">Optional per-column</div>
+            <div class="dc-guide-tfm-list">
+              <div class="dc-tfm-chip">TRIM whitespace</div>
+              <div class="dc-tfm-chip">UPPER / lower</div>
+              <div class="dc-tfm-chip">Format Date</div>
+              <div class="dc-tfm-chip">Format Number</div>
+              <div class="dc-tfm-chip">Title Case</div>
+            </div>
+          </div>
+
+          <!-- Arrow -->
+          <div class="dc-guide-arrow-col">
+            <div class="dc-guide-arrow-label">Map to EBS field</div>
+            <div class="dc-guide-arrow">→</div>
+          </div>
+
+          <!-- Step 3: EBS Report -->
+          <div class="dc-guide-box dc-guide-tgt">
+            <div class="dc-guide-box-icon">📋</div>
+            <div class="dc-guide-box-title">EBS Report Fields</div>
+            <div class="dc-guide-box-sub">Target column names</div>
+            <div class="dc-guide-cols" id="dcGuideTargetCols">
+              <span class="dc-guide-col-pill dc-guide-col-tgt">Invoice Number</span>
+              <span class="dc-guide-col-pill dc-guide-col-tgt">Vendor Name</span>
+              <span class="dc-guide-col-pill dc-guide-col-tgt">Invoice Amount</span>
+              <span class="dc-guide-col-pill dc-guide-col-tgt">Invoice Date</span>
+              <span class="dc-guide-col-pill dc-guide-col-tgt">Status</span>
+            </div>
+          </div>
+
+          <!-- Arrow -->
+          <div class="dc-guide-arrow-col">
+            <div class="dc-guide-arrow-label">Push to Reports tab</div>
+            <div class="dc-guide-arrow">→</div>
+          </div>
+
+          <!-- Step 4: Preview -->
+          <div class="dc-guide-box dc-guide-out">
+            <div class="dc-guide-box-icon">🚀</div>
+            <div class="dc-guide-box-title">EBS Reports Tab</div>
+            <div class="dc-guide-box-sub">Live grid · Charts · SQL</div>
+            <div class="dc-guide-out-list">
+              <div class="dc-out-chip">✅ Paginated grid</div>
+              <div class="dc-out-chip">✅ Column filters</div>
+              <div class="dc-out-chip">✅ Export Excel</div>
+              <div class="dc-out-chip">✅ SQL Advisor</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step-by-step text guide -->
+        <div class="dc-guide-steps">
+          <div class="dc-guide-step">
+            <div class="dc-guide-step-num">1</div>
+            <div>
+              <strong>Load your data</strong> — drop an Excel/CSV file or paste a SELECT query in DB mode.
+              The app reads all sheets, detects column headers and auto-classifies each column as
+              <em>text</em>, <em>number</em>, <em>date</em>, <em>bool</em>, or <em>mixed</em>.
+            </div>
+          </div>
+          <div class="dc-guide-step">
+            <div class="dc-guide-step-num">2</div>
+            <div>
+              <strong>Choose a target EBS Report</strong> — pick from the dropdown (e.g. <em>AP Invoice Register</em>)
+              or click <em>➕ New Custom Report</em> to create one on-the-fly using your own column names.
+            </div>
+          </div>
+          <div class="dc-guide-step">
+            <div class="dc-guide-step-num">3</div>
+            <div>
+              <strong>Map columns</strong> — use <em>🪄 Auto-Map</em> for intelligent fuzzy matching
+              (e.g. <code>Inv_No</code> → <code>Invoice Number</code>), or manually select from the dropdown per row.
+              Columns left as <em>— skip —</em> are excluded from the output.
+            </div>
+          </div>
+          <div class="dc-guide-step">
+            <div class="dc-guide-step-num">4</div>
+            <div>
+              <strong>Apply transforms</strong> — optionally clean each column: TRIM spaces, UPPER/lower case,
+              format dates as <code>YYYY-MM-DD</code>, format numbers with 2 decimal places, or Title Case.
+            </div>
+          </div>
+          <div class="dc-guide-step">
+            <div class="dc-guide-step-num">5</div>
+            <div>
+              <strong>Preview &amp; Push</strong> — the mapped data shows in a paginated grid with
+              <em>data profiling</em> (nulls %, unique count, samples). Click <em>🚀 Push to Reports Tab</em>
+              to inject your data into the EBS Reports tab where you can filter, chart and export it.
+            </div>
+          </div>
+        </div>
+
+        <!-- DB Connection explainer -->
+        <div class="dc-guide-db-section">
+          <h3>🔌 Connecting to a Real Oracle DB</h3>
+          <div class="dc-guide-db-grid">
+            <div class="dc-guide-db-card">
+              <div class="dc-guide-db-card-title">🔒 Simulated Mode (current)</div>
+              <p>No real DB needed. The app recognises EBS table names in your SQL
+                (<code>ap_invoices_all</code>, <code>gl_je_headers</code>, etc.) and returns
+                matching demo data — perfect for testing, demos, and training.</p>
+            </div>
+            <div class="dc-guide-db-card">
+              <div class="dc-guide-db-card-title">🔌 Live DB Mode (with proxy)</div>
+              <p>Switch to <strong>Live DB</strong> in the DB Query panel. Enter your Oracle host,
+                port, SID and credentials. A lightweight backend proxy
+                (Node.js or Python) relays your SELECT query to the DB via
+                <strong>JDBC</strong> or <strong>cx_Oracle</strong> and returns results as JSON.
+                The app then loads them exactly like an Excel import.</p>
+              <div class="dc-guide-proxy-code">
+POST http://localhost:3001/query<br>
+{ "sql": "SELECT ...", "host": "...", "sid": "...", "user": "...", "pass": "..." }<br>
+→ { "columns": [...], "rows": [[...], ...] }
+              </div>
+            </div>
+            <div class="dc-guide-db-card">
+              <div class="dc-guide-db-card-title">📊 Excel / CSV (recommended)</div>
+              <p>Run your Oracle report/query in SQL*Plus, Toad, or SQL Developer.
+                Export to <strong>.xlsx</strong> or <strong>.csv</strong>.
+                Drop it here — headers auto-detected, up to <strong>5,000 rows</strong>,
+                multi-sheet workbooks supported. No DB credentials needed in the browser.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="dc-guide-footer">
+          <button class="dc-action-btn primary" onclick="dcCloseMappingGuide()">Got it — Start Mapping</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  TOAST NOTIFICATIONS                                             -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  NEW CUSTOM REPORT DIALOG                                        -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div id="newReportDialog" class="nr-overlay" style="display:none;" onclick="closeNewReportDialog(event)">
+      <div class="nr-modal">
+        <div class="nr-header">
+          <h3>➕ Create New Custom Report</h3>
+          <button class="nr-close" onclick="closeNewReportDialog()">✕</button>
+        </div>
+        <div class="nr-body">
+          <div class="nr-field">
+            <label class="nr-label">Report Title <span class="nr-req">*</span></label>
+            <input type="text" id="nrTitle" class="nr-input" placeholder="e.g. My AP Summary Report" maxlength="80" />
+          </div>
+          <div class="nr-field">
+            <label class="nr-label">Module / Category</label>
+            <select id="nrModule" class="nr-input">
+              <option value="Custom">Custom</option>
+              <option value="Payables">Payables</option>
+              <option value="Purchasing">Purchasing (PO)</option>
+              <option value="Receivables">Receivables (AR)</option>
+              <option value="General Ledger">General Ledger</option>
+              <option value="HRMS">HRMS</option>
+              <option value="iExpense">iExpense</option>
+              <option value="Data Connect Import">Data Connect Import</option>
+            </select>
+          </div>
+          <div class="nr-field">
+            <label class="nr-label">Column Headers <span class="nr-req">*</span></label>
+            <input type="text" id="nrColumns" class="nr-input"
+                   placeholder="e.g. Invoice No, Vendor Name, Amount, Date, Status"
+                   title="Comma-separated column names" />
+            <span class="nr-hint">Comma-separated. You can add data later via Import Data or Data Connect.</span>
+          </div>
+          <div class="nr-field">
+            <label class="nr-label">Description / Notes</label>
+            <textarea id="nrDesc" class="nr-input nr-textarea" rows="3"
+                      placeholder="Optional: describe what this report contains..."></textarea>
+          </div>
+        </div>
+        <div class="nr-footer">
+          <button class="nr-btn nr-btn-cancel" onclick="closeNewReportDialog()">Cancel</button>
+          <button class="nr-btn nr-btn-create" onclick="doCreateNewReport()">✅ Create Report</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  FOOTER                                                          -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <footer class="ebs-footer" id="appFooter" style="display:none;">
+        <div class="footer-content">
+            <span>Oracle EBS Intelligence Hub v3.0 | R12 Enterprise Suite</span>
+            <span>Powered by IBM BOB + ICA Context Studio + Agentic AI</span>
+            <span id="footerTabList">Chat ◆ Reports ◆ Data Connect</span>
+        </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  EMPLOYEE — DELETE REQUEST DIALOG                                -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div id="deleteRequestDialog" class="nr-overlay" style="display:none;" onclick="closeDRDialog(event)">
+      <div class="nr-modal dr-modal">
+        <div class="nr-header dr-header">
+          <div class="dr-header-inner">
+            <span class="dr-header-icon">🗑</span>
+            <div>
+              <h3>Request Report Deletion</h3>
+              <p class="dr-header-sub">Your request will be sent to the Technical team for approval.</p>
+            </div>
+          </div>
+          <button class="nr-close" onclick="closeDRDialog()">✕</button>
+        </div>
+        <div class="nr-body">
+          <div class="dr-report-chip" id="drReportChip">
+            <span class="dr-chip-icon">📋</span>
+            <span id="drReportTitle">Report Name</span>
+          </div>
+          <div class="nr-field">
+            <label class="nr-label">Reason for deletion <span class="nr-req">*</span></label>
+            <select id="drReason" class="nr-input">
+              <option value="">— Select a reason —</option>
+              <option value="Duplicate report">Duplicate report</option>
+              <option value="Outdated / incorrect data">Outdated / incorrect data</option>
+              <option value="Test data — not needed">Test data — not needed</option>
+              <option value="Uploaded wrong file">Uploaded wrong file</option>
+              <option value="Report no longer required">Report no longer required</option>
+              <option value="Other">Other (see note below)</option>
+            </select>
+          </div>
+          <div class="nr-field">
+            <label class="nr-label">Additional notes <span style="color:#9AB8D0;font-weight:400;">(optional)</span></label>
+            <textarea id="drNotes" class="nr-input nr-textarea" rows="3"
+                      placeholder="Provide any additional context for the Technical team…"></textarea>
+          </div>
+          <div class="dr-info-box">
+            <svg viewBox="0 0 20 20" fill="currentColor" width="14" style="flex-shrink:0;color:#0572CE;">
+              <path fill-rule="evenodd" d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+            </svg>
+            <span>The Technical team will review your request and either approve or decline the deletion. You'll see the status update in real time.</span>
+          </div>
+        </div>
+        <div class="nr-footer">
+          <button class="nr-btn nr-btn-cancel" onclick="closeDRDialog()">Cancel</button>
+          <button class="nr-btn nr-btn-create dr-btn-submit" onclick="submitDeleteRequest()">📨 Send Request</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  DELETE CONFIRM MODAL (replaces window.confirm)                  -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div id="deleteConfirmOverlay" class="nr-overlay" style="display:none;">
+      <div class="nr-modal" style="max-width:420px;">
+        <div class="nr-header">
+          <h3>🗑 Confirm Delete</h3>
+          <button class="nr-close" onclick="_deleteConfirmCancel()">✕</button>
+        </div>
+        <div style="padding:24px 20px 8px;">
+          <p id="deleteConfirmMsg" style="margin:0 0 8px;font-size:0.97rem;color:#333;line-height:1.5;"></p>
+          <p style="margin:0;font-size:0.85rem;color:#666;">The report will be moved to the Recycle Bin. You can restore it anytime via the 🔔 panel.</p>
+        </div>
+        <div class="nr-footer" style="padding:16px 20px;">
+          <button class="nr-btn nr-btn-cancel" onclick="_deleteConfirmCancel()">Cancel</button>
+          <button class="nr-btn" id="deleteConfirmOK"
+                  style="background:#C52727;color:#fff;border-color:#C52727;"
+                  onclick="_deleteConfirmOK()">🗑 Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  TECHNICAL — NOTIFICATIONS / PENDING REQUESTS PANEL             -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div id="notifPanelOverlay" class="notif-overlay" style="display:none;" onclick="closeNotifPanel(event)">
+      <div class="notif-panel">
+        <div class="notif-panel-header">
+          <div class="notif-panel-title">
+              <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+                <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Requests &amp; Recycle Bin</span>
+              <span class="notif-panel-count" id="notifPanelCount">0 pending</span>
+            </div>
+            <div class="notif-panel-actions">
+              <button class="notif-clear-btn" onclick="clearAllRequests()" title="Clear resolved requests and flush Recycle Bin">Clear resolved</button>
+              <button class="nr-close" onclick="closeNotifPanel()">✕</button>
+            </div>
+        </div>
+        <div id="notifPanelList" class="notif-panel-list">
+          <!-- injected by renderNotifPanel() -->
+        </div>
+      </div>
+    </div>
+
+    <!-- SCRIPTS — ?v=20 forces browser to bypass cache after every code change -->
+    <script src="ebs-credentials.js?v=20"></script>
+    <script src="ebs-reports-data.js?v=20"></script>
+    <script src="ebs-sqllib-data.js?v=20"></script>
+    <script src="ebs-academy-data.js?v=20"></script>
+    <script src="ebs-reports.js?v=20"></script>
+    <!-- ICA Context Studio integration — loads after main JS -->
+    <script src="ebs-ica-integration.js?v=20"></script>
+    <!-- Requirements Analyzer — loads after main JS -->
+    <script src="ebs-req-analyzer.js?v=20"></script>
+    <!-- Requirements Studio — SQL/PLSQL/TDD/Test Case Generator -->
+    <script src="ebs-requirements-studio.js?v=20"></script>
+</body>
+</html>
