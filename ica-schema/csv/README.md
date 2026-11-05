@@ -67,5 +67,5 @@ They have been **fully replaced** with v5.0 content. Only the filenames remain t
 | `approver_groups.csv` | iExpense approver groups (CCP_DEPT, CCH_FIRST_SUP, etc.) | 12 SQL Library categories |
 | `expense_templates.csv` | iExpense expense templates per OU | 15 EBS Academy learning modules |
 | `special_submitters.csv` | Karen Martino / Melissa / Damon Howell special routing | 3 Data Connect source types |
-| `operating_units.csv` | CCP / CCH / CCF iExpense operating units | 3 real Oracle EBS operating units (UAE) |
+| `operating_units.csv` | CCP / CCH / CCF iExpense operating units | 3 Cook County operating units (CCP / CCH / CCF) |
 | `test_scenarios.csv` | iExpense approval routing test cases | 35 Intelligence Hub E2E test scenarios |

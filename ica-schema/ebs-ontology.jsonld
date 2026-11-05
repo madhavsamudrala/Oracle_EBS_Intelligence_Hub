@@ -329,7 +329,7 @@
       "@type": "owl:Class",
       "rdfs:label": "Oracle EBS Operating Unit",
       "rdfs:comment": "A legal/business entity in Oracle EBS Multi-Org (MOAC) setup. Identified by ORG_ID in _ALL tables. All multi-org tables require an AND org_id = :p_org_id filter.",
-      "skos:example": "Gulf Business Unit (ORG_ID=101), UAE Shared Services (ORG_ID=102)",
+      "skos:example": "Cook County Primary (ORG_ID=101), Cook County Health (ORG_ID=201)",
       "rdfs:subClassOf": { "@id": "schema:Organization" }
     },
 

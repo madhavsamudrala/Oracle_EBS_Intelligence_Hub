@@ -1,6 +1,8 @@
-# Functional Specification — Oracle EBS Reports Extracts
+# Functional Specification — Oracle EBS Intelligence Hub
 
-**Version:** 2.0 | **Date:** 2024-10 | **Module:** Cross-Module (AP/AR/GL/PO/HRMS/iExpense/INV)
+**Version:** 6.0 | **Date:** 2026-11 | **Module:** Cross-Module (AP/AR/GL/PO/HRMS/iExpense/INV)
+
+> Originally written as "Oracle EBS Reports Extracts" v2.0 (2024-10). Renamed for v6.0; see [`FUNCTIONAL_SPEC.md`](FUNCTIONAL_SPEC.md) for the current feature list and version history.
 
 ---
 
@@ -8,7 +10,7 @@
 
 ### 1.1 System Purpose
 
-The Oracle EBS Reports Extracts portal provides Cook County (and any Oracle EBS R12 customer) with a self-service reporting interface that connects business users directly to Oracle EBS financial and HR data through natural-language queries, pre-built report templates, and developer tools — all without requiring direct access to the Oracle EBS application servers.
+The Oracle EBS Intelligence Hub portal provides Cook County (and any Oracle EBS R12 customer) with a self-service reporting interface that connects business users directly to Oracle EBS financial and HR data through natural-language queries, pre-built report templates, and developer tools — all without requiring direct access to the Oracle EBS application servers.
 
 ### 1.2 Business Context
 
@@ -342,4 +344,4 @@ Opens portal (Doc Generator tab)
 
 ---
 
-*Functional Specification v2.0 | Oracle EBS Reports Extracts | IBM BOB + ICA Context Studio*
+*Functional Specification v6.0 | Oracle EBS Intelligence Hub | IBM BOB + ICA Context Studio*

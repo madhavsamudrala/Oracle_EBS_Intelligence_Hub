@@ -136,66 +136,6 @@ async def fetch_mcp_context(query: str) -> str:
     except Exception as e:
         logger.warning(f"MCP skipped: {str(e)}")
     return ""
-    headers = {
-        "Authorization": f"Bearer {bearer}",
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-    }
-    results = []
-    payload1 = {
-        "jsonrpc": "2.0",
-        "method": "tools/call",
-        "id": 1,
-        "params": {
-            "name": "context-broker-hybrid-query",
-            "arguments": {
-                "context_id": ICA_CONTEXT_ID,
-                "AgentPersona": "OracleEBSIntelligenceAgent",
-                "query": query,
-                "sources": ["vector", "graph"],
-                "semantic_weight": 0.7,
-                "graph_weight": 0.3,
-                "vector_params": {
-                    "top_k": 10
-                },
-                "x-api-key": mcp_token
-            }
-        }
-    }
-    payload2 = {
-        "jsonrpc": "2.0",
-        "method": "tools/call",
-        "id": 2,
-        "params": {
-            "name": "context-broker-vector-query",
-            "arguments": {
-                "context_id": ICA_CONTEXT_ID,
-                "AgentPersona": "OracleEBSIntelligenceAgent",
-                "query": query,
-                "top_k": 10,
-                "x-api-key": mcp_token
-            }
-        }
-    }
-    try:
-        async with httpx.AsyncClient(timeout=25) as client:
-            r1 = await client.post(mcp_url, headers=headers, json=payload1)
-            if r1.status_code == 200:
-                content = r1.json().get("result", {}).get("content", [])
-                if content:
-                    results.append(content[0].get("text", ""))
-                    logger.info(f"Hybrid query returned {len(results[0])} chars")
-            r2 = await client.post(mcp_url, headers=headers, json=payload2)
-            if r2.status_code == 200:
-                content = r2.json().get("result", {}).get("content", [])
-                if content:
-                    results.append(content[0].get("text", ""))
-                    logger.info(f"Vector query returned data")
-    except Exception as e:
-        logger.warning(f"MCP call failed: {str(e)}")
-    combined = "\n\n---\n\n".join(results)
-    logger.info(f"Total MCP context: {len(combined)} chars")
-    return combined
 @router.post("/chat", response_model=ChatResponse)
 async def ica_chat(req: ChatRequest):
     if not req.message.strip():
@@ -315,7 +255,7 @@ Format with bullet points and clear sections."""
             logger.error(f"ICA error: {str(e)}")
             return ChatResponse(
                 success=False,
-                message=f"Error: {str(e)}",
+                message="Unexpected error while contacting ICA",
                 source="ica_error",
                 session_id=req.session_id
             )

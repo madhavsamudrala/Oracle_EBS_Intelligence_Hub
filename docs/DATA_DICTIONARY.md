@@ -1,6 +1,6 @@
-# Data Dictionary — Oracle EBS Reports Extracts
+# Data Dictionary — Oracle EBS Intelligence Hub
 
-**Version:** 2.0 | **Oracle EBS:** R12.2.x | **Date:** 2024-10
+**Version:** 6.0 | **Oracle EBS:** R12.2.x | **Date:** 2026-11
 
 This document describes every report in the portal: its business purpose, Oracle EBS source tables, column definitions, key SQL notes, and data quality considerations.
 
@@ -609,4 +609,4 @@ AND    SYSDATE BETWEEN ppf.effective_start_date
 
 ---
 
-*Data Dictionary v2.0 | Oracle EBS Reports Extracts | IBM BOB + ICA Context Studio*
+*Data Dictionary v6.0 | Oracle EBS Intelligence Hub | IBM BOB + ICA Context Studio*

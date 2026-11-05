@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════
-   Oracle EBS Reports Extracts — Sample Data (100 records per report)
-   Version: 2.0  |  Oracle EBS R12 Enterprise Suite
+   Oracle EBS Intelligence Hub — Sample Data (100 records per report)
+   Version: 6.0  |  Oracle EBS R12 Enterprise Suite
    ═══════════════════════════════════════════════════════════════════ */
 
 /* ─── Utility ────────────────────────────────────────────────────── */

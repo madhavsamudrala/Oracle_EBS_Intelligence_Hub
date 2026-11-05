@@ -1,4 +1,4 @@
 ou_id,ou_name,ou_code,currency,country,ebs_org_id,modules_active,report_count,notes
-OU_UAE_CORP,UAE Corporate,UAE_CORP,AED,UAE,101,"AP, AR, GL, PO, HRMS, INV, iExpense",26,Primary operating unit — all 7 modules active
-OU_UAE_TECH,UAE Technology Division,UAE_TECH,AED,UAE,102,"AP, GL, PO, HRMS",14,Technology division — subset of modules
-OU_UAE_SHARED,UAE Shared Services,UAE_SHARED,AED,UAE,103,"AP, GL, PO",8,Shared services — finance and procurement only
+OU_CCP,Cook County Primary,CCP,USD,USA,101,"AP, AR, GL, PO, HRMS, INV, iExpense",26,Primary operating unit — all 7 modules active
+OU_CCH,Cook County Health,CCH,USD,USA,201,"AP, GL, PO, HRMS",14,Health operating unit — subset of modules
+OU_CCF,Cook County Finance,CCF,USD,USA,301,"AP, GL, PO",8,Finance operating unit — finance and procurement only

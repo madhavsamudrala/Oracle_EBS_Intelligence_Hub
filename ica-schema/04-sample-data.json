@@ -27,9 +27,9 @@
         "module": "AP",
         "title": "Suppliers Report",
         "sample_rows": [
-          { "VENDOR_ID": 10001, "VENDOR_NAME": "ABC Technology Ltd", "VENDOR_TYPE": "VENDOR", "VENDOR_STATUS": "Active", "COUNTRY": "UAE" },
-          { "VENDOR_ID": 10002, "VENDOR_NAME": "Gulf Supplies Co", "VENDOR_TYPE": "VENDOR", "VENDOR_STATUS": "Active", "COUNTRY": "UAE" },
-          { "VENDOR_ID": 10003, "VENDOR_NAME": "Dubai Logistics LLC", "VENDOR_TYPE": "VENDOR", "VENDOR_STATUS": "On Hold", "COUNTRY": "UAE" }
+          { "VENDOR_ID": 10001, "VENDOR_NAME": "ABC Technology Ltd", "VENDOR_TYPE": "VENDOR", "VENDOR_STATUS": "Active", "COUNTRY": "USA" },
+          { "VENDOR_ID": 10002, "VENDOR_NAME": "Lakeshore Supplies Co", "VENDOR_TYPE": "VENDOR", "VENDOR_STATUS": "Active", "COUNTRY": "USA" },
+          { "VENDOR_ID": 10003, "VENDOR_NAME": "Chicago Logistics LLC", "VENDOR_TYPE": "VENDOR", "VENDOR_STATUS": "On Hold", "COUNTRY": "USA" }
         ]
       },
       {
@@ -38,8 +38,8 @@
         "title": "Aged Payables Detail",
         "sample_rows": [
           { "VENDOR_NAME": "ABC Technology Ltd", "INVOICE_NUM": "INV-2024-001", "INVOICE_DATE": "2024-01-15", "DUE_DATE": "2024-02-15", "AMOUNT_REMAINING": 45000.00, "DAYS_OVERDUE": 62 },
-          { "VENDOR_NAME": "Gulf Supplies Co", "INVOICE_NUM": "INV-2024-045", "INVOICE_DATE": "2024-02-01", "DUE_DATE": "2024-03-01", "AMOUNT_REMAINING": 12500.00, "DAYS_OVERDUE": 18 },
-          { "VENDOR_NAME": "Dubai Logistics LLC", "INVOICE_NUM": "INV-2024-102", "INVOICE_DATE": "2024-03-10", "DUE_DATE": "2024-04-10", "AMOUNT_REMAINING": 8900.00, "DAYS_OVERDUE": 0 }
+          { "VENDOR_NAME": "Lakeshore Supplies Co", "INVOICE_NUM": "INV-2024-045", "INVOICE_DATE": "2024-02-01", "DUE_DATE": "2024-03-01", "AMOUNT_REMAINING": 12500.00, "DAYS_OVERDUE": 18 },
+          { "VENDOR_NAME": "Chicago Logistics LLC", "INVOICE_NUM": "INV-2024-102", "INVOICE_DATE": "2024-03-10", "DUE_DATE": "2024-04-10", "AMOUNT_REMAINING": 8900.00, "DAYS_OVERDUE": 0 }
         ]
       },
       {
@@ -48,7 +48,7 @@
         "title": "Suppliers High Payments",
         "sample_rows": [
           { "VENDOR_NAME": "ABC Technology Ltd", "YEAR": 2024, "TOTAL_PAID": 1250000.00, "PAYMENT_COUNT": 24 },
-          { "VENDOR_NAME": "Gulf Supplies Co", "YEAR": 2024, "TOTAL_PAID": 875000.00, "PAYMENT_COUNT": 18 },
+          { "VENDOR_NAME": "Lakeshore Supplies Co", "YEAR": 2024, "TOTAL_PAID": 875000.00, "PAYMENT_COUNT": 18 },
           { "VENDOR_NAME": "Emirates IT Services", "YEAR": 2024, "TOTAL_PAID": 640000.00, "PAYMENT_COUNT": 12 }
         ]
       },
@@ -68,7 +68,7 @@
         "title": "PO Detail Report",
         "sample_rows": [
           { "PO_NUMBER": "PO-2024-0541", "VENDOR_NAME": "ABC Technology Ltd", "ITEM_DESCRIPTION": "Server Hardware", "QUANTITY": 5, "UNIT_PRICE": 12000.00, "LINE_AMOUNT": 60000.00, "STATUS": "Approved" },
-          { "PO_NUMBER": "PO-2024-0542", "VENDOR_NAME": "Gulf Supplies Co", "ITEM_DESCRIPTION": "Office Supplies", "QUANTITY": 200, "UNIT_PRICE": 25.00, "LINE_AMOUNT": 5000.00, "STATUS": "Approved" }
+          { "PO_NUMBER": "PO-2024-0542", "VENDOR_NAME": "Lakeshore Supplies Co", "ITEM_DESCRIPTION": "Office Supplies", "QUANTITY": 200, "UNIT_PRICE": 25.00, "LINE_AMOUNT": 5000.00, "STATUS": "Approved" }
         ]
       },
       {
@@ -95,7 +95,7 @@
         "module": "AR",
         "title": "AR Aging Report",
         "sample_rows": [
-          { "CUSTOMER_NAME": "Dubai Mall Group", "INVOICE_NUMBER": "AR-2024-0892", "INVOICE_DATE": "2024-02-01", "DUE_DATE": "2024-03-01", "AMOUNT_DUE": 320000.00, "DAYS_OVERDUE": 49 },
+          { "CUSTOMER_NAME": "Michigan Avenue Retail Group", "INVOICE_NUMBER": "AR-2024-0892", "INVOICE_DATE": "2024-02-01", "DUE_DATE": "2024-03-01", "AMOUNT_DUE": 320000.00, "DAYS_OVERDUE": 49 },
           { "CUSTOMER_NAME": "Abu Dhabi Holdings", "INVOICE_NUMBER": "AR-2024-0910", "INVOICE_DATE": "2024-02-20", "DUE_DATE": "2024-03-20", "AMOUNT_DUE": 150000.00, "DAYS_OVERDUE": 30 }
         ]
       },
@@ -104,8 +104,8 @@
         "module": "INV",
         "title": "Inventory Valuation",
         "sample_rows": [
-          { "ITEM_NUMBER": "COMP-SERVER-001", "ITEM_DESCRIPTION": "Dell PowerEdge R740", "QUANTITY_ON_HAND": 12, "UNIT_COST": 18500.00, "TOTAL_VALUE": 222000.00, "ORGANIZATION": "Dubai Warehouse" },
-          { "ITEM_NUMBER": "COMP-LAPTOP-005", "ITEM_DESCRIPTION": "ThinkPad X1 Carbon", "QUANTITY_ON_HAND": 45, "UNIT_COST": 3200.00, "TOTAL_VALUE": 144000.00, "ORGANIZATION": "Dubai Warehouse" }
+          { "ITEM_NUMBER": "COMP-SERVER-001", "ITEM_DESCRIPTION": "Dell PowerEdge R740", "QUANTITY_ON_HAND": 12, "UNIT_COST": 18500.00, "TOTAL_VALUE": 222000.00, "ORGANIZATION": "Chicago Warehouse" },
+          { "ITEM_NUMBER": "COMP-LAPTOP-005", "ITEM_DESCRIPTION": "ThinkPad X1 Carbon", "QUANTITY_ON_HAND": 45, "UNIT_COST": 3200.00, "TOTAL_VALUE": 144000.00, "ORGANIZATION": "Chicago Warehouse" }
         ]
       }
     ],
