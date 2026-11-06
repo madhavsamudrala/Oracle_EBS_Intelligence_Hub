@@ -205,6 +205,16 @@ Format with bullet points and clear sections."""
             logger.info(f"ICA status: {response.status_code}")
             if response.status_code == 200:
                 text = extract_ica_message(response.json())
+                if (not text or
+                        text.lstrip().lower().startswith("the agent request failed")):
+                    # Langflow returned 200 but the agent node reported an error.
+                    logger.error(f"ICA agent node error: {text[:300]}")
+                    return ChatResponse(
+                        success=False,
+                        message="ICA agent returned an error. Check the backend log.",
+                        source="ica_agent_error",
+                        session_id=req.session_id
+                    )
                 return ChatResponse(
                     success=True,
                     message=text,
