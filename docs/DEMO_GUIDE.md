@@ -38,7 +38,7 @@ Arrange two windows side by side: Playground on the left, Hub page on the right.
 | Step | Where | Do | Show |
 |---|---|---|---|
 | 1 | Playground | `List the available contexts.` | `ctx_b0ecd6cee49f` and the Tool Trace |
-| 2 | Playground | `Review this SQL: select * from ap_invoices_all` | COMP-001 and COMP-008, with the tool used |
+| 2 | Playground | `Review this SQL: select * from ap_invoices_all` | The ORG_ID rule and the SELECT * rule, with the tool used |
 | 3 | Hub page | Log in as **Technical**; passwords are in your local `ebs-credentials.js` | 7 tabs visible |
 | 4 | Chat tab | Same question as step 2 | Badge **ICA Live**; the same answer inside the page |
 | 5 | Reports | Open AP -> Aged Payables Detail; try charts and CSV/Excel/PDF export | 26 reports across 7 modules |
@@ -51,6 +51,25 @@ Arrange two windows side by side: Playground on the left, Hub page on the right.
 
 The Employee role shows 3 tabs; the Technical role shows all 7.
 
+### Questions a client would actually ask
+
+Use plain business questions in steps 2 and 4. Do not ask for rule IDs such as COMP-008; the agent finds the rule itself.
+
+- `Review this SQL: select * from ap_invoices_all`
+- `Why should SELECT * be avoided in production queries?`
+- `Which tables need an ORG_ID filter?`
+- `Which reports cover overdue supplier invoices?`
+- `Which column holds the supplier name?`
+- `Walk me through the procure-to-pay process.`
+
+Avoid tables that are not in the knowledge graph (for example `AP_INVOICE_LINES_ALL`). The agent will say it found nothing, which is correct, but it is a weak demo moment.
+
+### Before you present (10 minutes ahead)
+
+1. Open the `ebs-hub` flow in Langflow and send `Hi` in the Playground. It should answer in a few seconds.
+2. Run `test-ica.bat`. Tests 2 to 5 should show `"source":"ica_live"`.
+3. Press Ctrl+F5 on the Hub page and check the badge says **ICA Live**.
+
 ## 4. If something fails
 
 | Symptom | Fix |
@@ -59,6 +78,7 @@ The Employee role shows 3 tabs; the Technical role shows all 7.
 | `/health` shows `ica_configured: false` | `ICA_WORKFLOW_URL` or `ICA_API_KEY` missing in `backend/.env`. Run `configure-secrets.bat`. |
 | Chat answers look generic | Local fallback is answering. Check `ica_configured`, then the backend window for the error. |
 | Playground says `Invalid token` | Re-paste the Context Studio key in the agent instructions. See `CONTEXT_STUDIO_AGENT_SETUP.md`. |
+| Reply says `Session mint failed (401) ... "exp" claim` | The Langflow session token expired. Close and reopen Langflow, or refresh the `ICAAAS_BACKEND_TOKEN` global variable, then send `Hi` in the Playground. A new Langflow API key does not fix this. |
 | Page asks for CORS or cannot call the backend | Open the page from `http://localhost:8080`, not by double-clicking the file. |
 
 ## 5. Showing it to a client who cannot reach your machine
