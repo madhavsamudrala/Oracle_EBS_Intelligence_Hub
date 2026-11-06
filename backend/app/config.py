@@ -14,6 +14,9 @@ class Settings(BaseSettings):
     ica_api_key:      str = ""
     ica_api_url:      str = ""
     ica_context_id:   str = ""
+    # True: send the user's question unchanged to the ICA agent, which calls
+    # the Context Broker tools itself. False: legacy mode (backend enriches the prompt).
+    ica_agent_mode:   bool = True
     # MCP Gateway
     mcp_gateway_url:   str = ""
     mcp_gateway_id:    str = ""

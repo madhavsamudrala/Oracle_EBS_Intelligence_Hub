@@ -1,6 +1,6 @@
 batch
 @echo off
-title Oracle EBS Intelligence Hub — First Time Setup
+title Oracle EBS Intelligence Hub â€” First Time Setup
 color 0B
 echo.
 echo ================================================
@@ -58,10 +58,12 @@ if not exist "backend\.env" (
     echo   ACTION REQUIRED
     echo ================================================
     echo.
-    echo   Please open backend\.env and fill in:
+    echo   Run configure-secrets.bat to enter your
+    echo   workflow URL, Langflow API key and tokens
+    echo   with hidden prompts. Or edit backend\.env:
     echo.
     echo   ICA_WORKFLOW_URL = your ICA workflow URL
-    echo   ICA_API_KEY      = your ICA API key
+    echo   ICA_API_KEY      = your Langflow API key
     echo   ICA_CONTEXT_ID   = your context ID
     echo.
     echo   File location:

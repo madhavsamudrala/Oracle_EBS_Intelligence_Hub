@@ -152,8 +152,10 @@ async def ica_chat(req: ChatRequest):
             source="config_error",
             session_id=req.session_id
         )
-    mcp_context = await fetch_mcp_context(req.message)
-    if mcp_context:
+    mcp_context = "" if settings.ica_agent_mode else await fetch_mcp_context(req.message)
+    if settings.ica_agent_mode:
+        enriched_message = req.message
+    elif mcp_context:
         enriched_message = f"""You are Oracle EBS Intelligence Agent v6.0.
 BUILT-IN EBS KNOWLEDGE:
 {EBS_KNOWLEDGE}
