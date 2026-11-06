@@ -1,6 +1,6 @@
 # Oracle EBS Intelligence Hub
 
-**Version:** 6.0 | **Status:** Production Ready | **Platform:** SPA + FastAPI Backend | **Team:** CookCountyBoB
+**Version:** 6.0 | **Status:** Production Ready | **Platform:** SPA + FastAPI Backend | **Team:** Cook County AMS Project
 
 > A deployable IBM Consulting accelerator for Oracle EBS R12 — AI-powered reporting via IBM ICA Context Studio, SQL development tools, a 15-module learning academy, live data import, and document generation. Built entirely using IBM Bob. DASC-compliant security model. Team-wide deployment in under 1 hour.
 
@@ -273,7 +273,7 @@ Oracle-EBS-Intelligence-HUB/
 
 ---
 
-## IBM BoB Challenge — CookCountyBoB
+## IBM BoB Challenge — Cook County AMS Project
 
 Built entirely using **IBM Bob** for the IBM Build-on-Bob (BoB) challenge.
 
@@ -298,7 +298,7 @@ Built entirely using **IBM Bob** for the IBM Build-on-Bob (BoB) challenge.
 
 | Version | Date | Key Changes |
 |---|---|---|
-| v6.0 | Jul 2025 | **DASC security model** (role-based access, least privilege, zero-trust API); **DASC info bar** in app; Team Reuse Strategy; `start-all.bat` one-command deploy; ICA MCP live badge; CookCountyBoB submission |
+| v6.0 | Jul 2025 | **DASC security model** (role-based access, least privilege, zero-trust API); **DASC info bar** in app; Team Reuse Strategy; `start-all.bat` one-command deploy; ICA MCP live badge; Cook County AMS Project submission |
 | v5.2 | Jul 2025 | Ontology v5.2: 30+ OWL classes, 52+ properties; RICE taxonomy; ebs-complete-ontology.jsonld |
 | v5.0 | Jun 2025 | SQL Lab AI, Academy (15 modules), Delete/Recycle Bin, Employee request workflow, Notification panel |
 | v4.0 | Mar 2025 | Oracle Blue theme, role-based login, fiscal date fix |
@@ -308,4 +308,4 @@ Built entirely using **IBM Bob** for the IBM Build-on-Bob (BoB) challenge.
 
 ---
 
-*Oracle EBS Intelligence Hub v6.0 | CookCountyBoB Team | IBM BoB Challenge | Built with IBM Bob · Powered by IBM ICA Context Studio · 🛡️ DASC-Compliant*
+*Oracle EBS Intelligence Hub v6.0 | Cook County AMS Project Team | IBM BoB Challenge | Built with IBM Bob · Powered by IBM ICA Context Studio · 🛡️ DASC-Compliant*

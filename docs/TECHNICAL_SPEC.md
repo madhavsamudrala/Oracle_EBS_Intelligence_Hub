@@ -3,7 +3,7 @@
 
 **Version:** 6.0
 **Date:** July 2025
-**Author:** CookCountyBoB — IBM ICA Oracle EBS Team
+**Author:** Cook County AMS Project — IBM ICA Oracle EBS Team
 **Status:** Production Ready | IBM BoB Challenge Submission
 
 ---
@@ -633,7 +633,7 @@ The [`ica-schema/`](../ica-schema/) directory contains the full **ICA Context St
 | v1.0 | 2024-06 | Initial release — 4 tabs, 26 reports, Chat, SQL Advisor |
 | v2.0 | 2024-10 | Code Review (27 checks), SQL Formatter, SVG diagrams |
 | v3.0 | 2025-01 | IBM Carbon theme, Data Connect tab, XLSX import |
-| **v6.0** | **2025-07** | **DASC security model** (`_showDascInfoBar`, `_applyRoleTabVisibility`); Employee least-privilege (no curiosity triggers); DASC info bar (mint/blue light theme); ICA MCP live badge; FastAPI backend (`start-all.bat`); Team Reuse Strategy; DASC + Reuse nodes in ICA ontology; CookCountyBoB submission 13-page PDF |
+| **v6.0** | **2025-07** | **DASC security model** (`_showDascInfoBar`, `_applyRoleTabVisibility`); Employee least-privilege (no curiosity triggers); DASC info bar (mint/blue light theme); ICA MCP live badge; FastAPI backend (`start-all.bat`); Team Reuse Strategy; DASC + Reuse nodes in ICA ontology; Cook County AMS Project submission 13-page PDF |
 | v4.0 | 2025-03 | Oracle Blue theme, role-based login, fiscal date fix |
 | v5.2 | 2025-07 | **Ontology v5.2**: 30+ OWL classes, 52+ properties; RICE taxonomy; ebs-complete-ontology.jsonld (2008 lines) |
 | v5.1 | 2025-06 | RICE taxonomy OWL classes; ebs-complete-ontology.jsonld entity format |

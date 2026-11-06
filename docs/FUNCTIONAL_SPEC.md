@@ -3,7 +3,7 @@
 
 **Version:** 6.0
 **Date:** July 2025
-**Author:** CookCountyBoB — IBM ICA Oracle EBS Team
+**Author:** Cook County AMS Project — IBM ICA Oracle EBS Team
 **Status:** Production Ready | IBM BoB Challenge Submission
 
 ---
@@ -491,7 +491,7 @@ Score = 100 − (Critical×20) − (Major×10) − (Minor×5)
 | v1.0 | 2024-06 | Initial 4-tab app — Chat, Reports, SQL Advisor, Doc Generator |
 | v2.0 | 2024-10 | Code Review 27 checks, SQL Formatter, SVG diagrams |
 | v3.0 | 2025-01 | Data Connect tab, Excel import, IBM Carbon theme |
-| **v6.0** | **2025-07** | **DASC security model** — least privilege (no curiosity triggers), DASC info bar, zero-trust API; ICA MCP live with IBM ICA Context Studio; `start-all.bat` team deployment; Team Reuse Strategy; CookCountyBoB IBM BoB Challenge submission |
+| **v6.0** | **2025-07** | **DASC security model** — least privilege (no curiosity triggers), DASC info bar, zero-trust API; ICA MCP live with IBM ICA Context Studio; `start-all.bat` team deployment; Team Reuse Strategy; Cook County AMS Project IBM BoB Challenge submission |
 | v5.0 | 2025-06 | SQL Lab (500+ queries + AI), Academy (15 modules), Delete/Recycle Bin system, employee delete request workflow, notification panel |
 | v4.0 | 2025-03 | Oracle Blue theme, role-based login (Employee/Technical), fiscal date fix |
 | v5.1 | 2025-06 | Knowledge graph ontology: RICE taxonomy (RICEComponent/EBSInterface/EBSConversion/EBSExtension/AMEConfiguration/OracleWorkflow/OAFComponent/SOAService/APEXApplication/ADFApplication/RedwoodComponent), ModuleKnowledge class; ebs-complete-ontology.jsonld entity format |

@@ -42,7 +42,7 @@ team_deploy_command,start-all.bat,One command to start frontend + backend + ICA 
 team_shared_ica_knowledge,true,ICA Context Studio knowledge graph shared across entire consulting team
 team_onboarding_days,2-3,New joiners productive in days not weeks via Academy + Chat
 team_target,IBM Oracle EBS engagement teams,Intended deployment target for reuse
-challenge_team,CookCountyBoB,IBM BoB Challenge team name
+challenge_team,Cook County AMS Project,IBM BoB Challenge team name
 challenge_version,6.0,Submission version
 built_with,IBM Bob,Development tool used for all code generation
 app_version,6.0,Current application version

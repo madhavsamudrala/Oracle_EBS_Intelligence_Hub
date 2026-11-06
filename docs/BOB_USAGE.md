@@ -1,5 +1,5 @@
 # BOB Usage Guide
-## Oracle EBS Intelligence Hub v6.0 — CookCountyBoB
+## Oracle EBS Intelligence Hub v6.0 — Cook County AMS Project
 
 This document describes how **IBM BOB** (Build-on-Bob) is used throughout this project — from initial scaffolding to every feature, security model, and integration component.
 
@@ -157,7 +157,7 @@ See [`appstudio/oracle-ebs-intelligence-hub-agent.yaml`](../appstudio/oracle-ebs
 
 ## BOB Challenge Submission
 
-**Team:** CookCountyBoB  
+**Team:** Cook County AMS Project  
 **Demo:** Oracle EBS Intelligence Hub v6.0
 
 ### Submission Pages
@@ -191,4 +191,4 @@ See [`appstudio/oracle-ebs-intelligence-hub-agent.yaml`](../appstudio/oracle-ebs
 
 ---
 
-*Oracle EBS Intelligence Hub v6.0 | CookCountyBoB | IBM BoB Challenge | Built entirely with IBM Bob*
+*Oracle EBS Intelligence Hub v6.0 | Cook County AMS Project | IBM BoB Challenge | Built entirely with IBM Bob*

@@ -1,6 +1,6 @@
 # Oracle EBS Intelligence Hub — Complete Project Overview
 
-**Version:** 6.0 | **Platform:** Oracle EBS R12 | **Built by:** CookCountyBoB (IBM BoB Challenge)  
+**Version:** 6.0 | **Platform:** Oracle EBS R12 | **Built by:** Cook County AMS Project (IBM BoB Challenge)  
 **Stack:** HTML5 / CSS3 / Vanilla JavaScript + Python FastAPI Backend + IBM ICA Context Studio via MCP  
 **Files:** `oracle-ebs-intelligence-hub.html` + `ebs-reports.js` + `ebs-reports.css` + `ebs-ica-integration.js` + `backend/`
 
@@ -83,7 +83,7 @@ After successful login, the IBM Carbon-style header is permanently visible:
 | Element | Description |
 |---------|-------------|
 | **IBM \| Oracle EBS Intelligence Hub** | Branded app title |
-| **CookCountyBoB pill** | Team identifier — always visible during demo |
+| **Cook County AMS Project pill** | Team identifier — always visible during demo |
 | **🛡️ DASC badge** | Frosted glass badge — always visible, DASC branding |
 | **ICA Live / Offline badge** | Green "ICA Live" / grey "ICA Offline" — polls `/health` every 30s |
 | **Role pill** | Shows Employee / Technical with role icon |
@@ -290,4 +290,4 @@ Oracle-EBS-Intelligence-HUB/
 
 ---
 
-*Oracle EBS Intelligence Hub v6.0 | CookCountyBoB | IBM BoB Challenge 2025 | Built with IBM Bob · 🛡️ DASC-Compliant · ♻️ Team Reuse Ready*
+*Oracle EBS Intelligence Hub v6.0 | Cook County AMS Project | IBM BoB Challenge 2025 | Built with IBM Bob · 🛡️ DASC-Compliant · ♻️ Team Reuse Ready*
