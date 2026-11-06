@@ -48,19 +48,25 @@ window.icaService = {
       body: JSON.stringify({ping:true})
     })
     .then(function(r){ return r.json(); })
-    .then(function(){
-      var wasOnline = window.icaService.online;
-      window.icaService.online = true;
-      if (!wasOnline) {
-        console.info('[ICA] ✅ Backend connected');
-        window.icaService._updateBadge(true);
+    .then(function(h){
+      /* Live only when the backend reports the ICA workflow as
+         configured. Backend reachable but not configured is a
+         separate state, so the badge never overstates status. */
+      var configured = !!(h && h.ica_configured === true);
+      var state = configured ? 'live' : 'unconfigured';
+      window.icaService.online    = configured;
+      window.icaService.contextId = (h && h.context_id) || '';
+      if (window.icaService.state !== state) {
+        window.icaService.state = state;
+        console.info('[ICA] Backend reachable, ica_configured=' + configured);
+        window.icaService._updateBadge(state);
       }
     })
     .catch(function(){
-      var wasOnline = window.icaService.online;
       window.icaService.online = false;
-      if (wasOnline) {
-        window.icaService._updateBadge(false);
+      if (window.icaService.state !== 'offline') {
+        window.icaService.state = 'offline';
+        window.icaService._updateBadge('offline');
       }
     });
   },
@@ -86,15 +92,26 @@ window.icaService = {
       return null;
     });
   },
-  _updateBadge: function(online) {
+  _updateBadge: function(state) {
     var badge = document.getElementById('icaStatusBadge');
     if (!badge) return;
-    if (online) {
+    if (state === true) state = 'live';
+    if (state === false) state = 'offline';
+    badge.style.animation = 'none';
+    if (state === 'live') {
       badge.textContent      = '● ICA Live';
+      badge.title            = 'Backend reachable and ICA workflow configured' +
+        (window.icaService.contextId ?
+          ' (context ' + window.icaService.contextId + ')' : '');
       badge.style.color      = '#24A148';
       badge.style.background = '#DEFBE6';
       badge.style.border     = '1px solid #24A148';
-      badge.style.animation  = 'none';
+    } else if (state === 'unconfigured') {
+      badge.textContent      = '◐ ICA Not Configured';
+      badge.title            = 'Backend is running but ICA_WORKFLOW_URL is not set. Run configure-secrets.bat.';
+      badge.style.color      = '#8E6A00';
+      badge.style.background = '#FFF8E1';
+      badge.style.border     = '1px solid #F1C21B';
     } else {
       badge.textContent      = '○ ICA Offline';
       badge.style.color      = '#DA1E28';
@@ -237,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function(){
               'font-weight:700;' +
               'margin-bottom:8px;' +
               'letter-spacing:0.5px;">' +
-              '🤖 ICA Agent — Live Grounded Response' +
+              '🤖 ICA Agent Response' +
             '</div>' +
             '<div style="' +
               'font-size:0.85rem;' +
@@ -252,7 +269,10 @@ document.addEventListener('DOMContentLoaded', function(){
               'opacity:0.7;' +
               'border-top:1px solid #C8DFF5;' +
               'padding-top:4px;">' +
-              '● ICA Live · EBS Context Studio · ' +
+              '● ICA Agent' +
+              (window.icaService.contextId ?
+                ' · ' + window.icaService.contextId : '') +
+              ' · ' +
               new Date().toLocaleTimeString() +
             '</div>';
           msgs.scrollTop = msgs.scrollHeight;
