@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════
    Oracle EBS SQL Library Data — Tab 5: SQL Generator & DBA Reference
-   Version 1.0 | Oracle EBS R12+ compatible | All queries production-ready
+   Version 1.0 | Oracle E-Business Suite compatible | All queries production-ready
    ═══════════════════════════════════════════════════════════════════ */
 'use strict';
 window.EBS_SQL_LIBRARY = {
@@ -449,7 +449,7 @@ ORDER BY
       desc:'Full CREATE TABLE with all column types, NOT NULL, PK, FK, indexes, storage',
       tags:['DDL','DBA','CREATE','table'],
       sql:`/* ──────────────────────────────────────────────────────────
-   CREATE TABLE — Oracle EBS R12 Style
+   CREATE TABLE — Oracle E-Business Suite Style
    Includes: column types, constraints, storage clause.
    Replace APPS with your schema name as needed.
    ────────────────────────────────────────────────────────── */
@@ -1686,7 +1686,7 @@ FETCH FIRST 20 ROWS ONLY;`
       tags:['Unix','shell','EBS','directories','APPL_TOP'],
       sql:`#!/bin/bash
 # ──────────────────────────────────────────────────────────
-#  Oracle EBS R12 Key Directory Variables
+#  Oracle E-Business Suite Key Directory Variables
 #  Source the EBS environment file first to set these vars.
 # ──────────────────────────────────────────────────────────
 

@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════
    Oracle EBS Academy Data — Tab 6: Complete EBS Learning Portal
-   Version 1.0 | Oracle EBS R12+ | Functional + Technical
+   Version 1.0 | Oracle E-Business Suite | Functional + Technical
    ═══════════════════════════════════════════════════════════════════ */
 'use strict';
 window.EBS_ACADEMY = {
@@ -17,7 +17,7 @@ modules: [
   {
     id:'hrms_overview', label:'HRMS Overview & Architecture',
     content:{
-      summary:'Oracle HRMS (Human Resources Management System) is a fully integrated suite covering the entire employee lifecycle from recruitment to retirement. In EBS R12 it is organised around three core pillars: Core HR (people management), Payroll (compensation processing), and Self-Service HR (manager/employee self-service).',
+      summary:'Oracle HRMS (Human Resources Management System) is a fully integrated suite covering the entire employee lifecycle from recruitment to retirement. In E-Business Suite it is organised around three core pillars: Core HR (people management), Payroll (compensation processing), and Self-Service HR (manager/employee self-service).',
       functional:[
         'Core HR manages the Work Structures (Business Groups, Organisations, Jobs, Positions, Grades)',
         'DateTrack is the signature EBS feature — every HR record has an EFFECTIVE_START_DATE / EFFECTIVE_END_DATE so full history is preserved',
@@ -640,7 +640,7 @@ SELECT wi.item_type,
   {
     id:'oaf_arch', label:'OAF Architecture (MVC)',
     content:{
-      summary:'Oracle Application Framework (OAF) is a Java/J2EE MVC framework used for all self-service pages in EBS R12 (iExpense, iProcurement, iRecruitment, Payslip, etc.). Understanding OAF is essential for extending or personalising these pages.',
+      summary:'Oracle Application Framework (OAF) is a Java/J2EE MVC framework used for all self-service pages in E-Business Suite (iExpense, iProcurement, iRecruitment, Payslip, etc.). Understanding OAF is essential for extending or personalising these pages.',
       functional:[
         'MVC: Model (Business Components for Java — BC4J), View (XML Page Definitions), Controller (Java AM/CO)',
         'Pages are defined as XML metadata stored in MDS (Metadata Store) — $JAVA_TOP/oracle/apps/.../webui/',
@@ -776,7 +776,7 @@ SELECT fcp.concurrent_program_name  short_name,
   {
     id:'bip_dev', label:'BIP Development End-to-End',
     content:{
-      summary:'Oracle BI Publisher (formerly XML Publisher) is the modern reporting tool in EBS R12. It separates data extraction (Data Model / SQL query) from presentation (RTF/PDF/Excel template), enabling pixel-perfect formatted outputs.',
+      summary:'Oracle BI Publisher (formerly XML Publisher) is the modern reporting tool in Oracle E-Business Suite. It separates data extraction (Data Model / SQL query) from presentation (RTF/PDF/Excel template), enabling pixel-perfect formatted outputs.',
       functional:[
         '1. Data Definition: registered in XML Publisher Administrator (FND → XML Publisher → Data Definitions)',
         '2. SQL Query / Data Model: the SQL that generates the XML data extract',
@@ -1379,7 +1379,7 @@ SELECT papf.employee_number,
     }
   },
   {
-    id:'apex_upgrade', label:'EBS R12 → Oracle APEX + Fusion Roadmap',
+    id:'apex_upgrade', label:'E-Business Suite → Oracle APEX + Fusion Roadmap',
     content:{
       summary:'The long-term Oracle EBS modernisation roadmap leads toward Oracle Cloud ERP (Fusion). Customers on EBS R12.2 can extend their investment with APEX for custom functionality while planning a phased Cloud migration.',
       functional:[
@@ -1506,7 +1506,7 @@ SELECT fcr.request_id,
         'Menu: tree of Functions; a user with a Responsibility sees only the Menu items linked to that Responsibility',
         'Function: a single navigable unit — a Form, OAF Page, Report, or concurrent program',
         'Request Group: set of concurrent programs a Responsibility can submit',
-        'Data Group: maps application to DB schema (almost always APPS schema in R12)',
+        'Data Group: maps application to DB schema (almost always APPS schema)',
         'Security Profile: HRMS concept — restricts which employees a user can see (by org, supervisor hierarchy)',
         'Exclusions: you can exclude specific Functions or Menu entries from a Responsibility — faster than creating a new Responsibility'
       ],

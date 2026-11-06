@@ -7058,3 +7058,16 @@ button[title], a[title], label[title], [onclick][title] {
   .ica-rules-grid { grid-template-columns: 1fr; }
   .ica-hero-right { display: none; }
 }
+
+/* ── Doc Generator template links + cover table contrast ─────────── */
+.template-notice a { color: #0F62FE; font-weight: 600; text-decoration: underline; }
+.doc-cover-table, .doc-cover-table th, .doc-cover-table td { background: transparent !important; }
+.doc-cover-table th { color: #C0C0D0; border: 1px solid rgba(255,255,255,0.25); }
+.doc-cover-table td { color: #FFFFFF; border: 1px solid rgba(255,255,255,0.25); }
+
+/* ── SQL Advisor help cards ──────────────────────────────────────── */
+.sql-help {
+  margin-top: 8px; padding: 8px 12px; background: #EDF5FF;
+  border-left: 3px solid #0F62FE; font-size: 0.8rem; line-height: 1.5; color: #161616;
+}
+.sql-help-note { display: block; margin-top: 4px; color: #525252; font-style: italic; }

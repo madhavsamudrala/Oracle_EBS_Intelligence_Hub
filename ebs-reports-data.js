@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════
    Oracle EBS Intelligence Hub — Sample Data (100 records per report)
-   Version: 6.0  |  Oracle EBS R12 Enterprise Suite
+   Version: 6.0  |  Oracle E-Business Suite Enterprise Suite
    ═══════════════════════════════════════════════════════════════════ */
 
 /* ─── Utility ────────────────────────────────────────────────────── */

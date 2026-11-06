@@ -791,7 +791,7 @@ ${p.needsStaging?`<tr><td>${name}_STG</td><td>stg</td><td>Staging (Custom)</td><
 </table>
 
 <div style="margin-top:30px;padding-top:10px;border-top:1px solid #C8DFF5;font-size:9pt;color:#888;text-align:center">
-  IBM ICA | Oracle EBS Intelligence Hub v6.0 | Generated ${today} | IBM BOB + ICA Context Studio
+  IBM ICA | Oracle EBS Intelligence Hub v6.0 | Generated ${today} | IBM Bob + ICA Context Studio
 </div>
 </body></html>`;
 }
@@ -820,7 +820,7 @@ function _rqaGenFuncDoc(p) {
 <h2>1. Business Overview</h2>
 <p>${p.text.replace(/\n/g,'<br>')}</p>
 <h2>2. Scope</h2>
-<p>This functional specification covers the requirements, business rules, and acceptance criteria for the <strong>${p.name}</strong> program in Oracle EBS R12 ${p.module} module.</p>
+<p>This functional specification covers the requirements, business rules, and acceptance criteria for the <strong>${p.name}</strong> program in Oracle E-Business Suite ${p.module} module.</p>
 <h2>3. Business Rules</h2>
 <ul>
   <li>All data must be filtered by Operating Unit (ORG_ID) — no cross-org data access.</li>

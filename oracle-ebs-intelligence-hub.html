@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Oracle EBS Intelligence Hub — AI-powered reporting, SQL Lab, EBS Academy, Data Connect for Oracle EBS R12">
+    <meta name="description" content="Oracle EBS Intelligence Hub — AI-powered reporting, SQL Lab, EBS Academy, Data Connect for Oracle E-Business Suite">
     <meta name="keywords" content="Oracle EBS, Intelligence Hub, Reports, SQL Lab, Academy, iExpense, Payables, Receivables, GL, HRMS, AI Assistant">
     <meta name="author" content="Oracle EBS Team | IBM ICA">
     <title>Oracle EBS Intelligence Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="ebs-reports.css?v=20">
+    <link rel="stylesheet" href="ebs-reports.css?v=21">
     <link rel="stylesheet" href="ebs-reports-additions.css?v=20">
     <link rel="stylesheet" href="ebs-requirements-studio.css?v=20">
     <!-- Chart.js CDN -->
@@ -51,7 +51,7 @@
             </svg>
           </div>
           <h1 class="rl-app-title">Oracle EBS<br>Intelligence Hub</h1>
-          <p class="rl-app-subtitle">v6.0 · R12 Enterprise · AI-Powered · IBM BoB Challenge</p>
+          <p class="rl-app-subtitle">v6.0 · Oracle E-Business Suite · AI-Powered · IBM BoB Challenge</p>
         </div>
 
         <!-- Feature pills -->
@@ -71,7 +71,7 @@
           <div class="rl-powered-stack">
             <div class="rl-powered-chip">
               <svg viewBox="0 0 20 20" fill="none" width="14" height="14"><circle cx="10" cy="10" r="8" stroke="white" stroke-width="1.5"/><path d="M6 10h8M10 6v8" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
-              IBM BOB
+              IBM Bob
             </div>
             <div class="rl-powered-chip rl-powered-ica">
               <svg viewBox="0 0 20 20" fill="none" width="14" height="14"><rect x="2" y="2" width="16" height="16" rx="3" stroke="white" stroke-width="1.5"/><path d="M6 7h8M6 10h5M6 13h7" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -92,7 +92,7 @@
         <div style="margin-top:auto;padding-top:12px;border-top:1px solid rgba(255,255,255,0.15);text-align:center">
           <div style="font-size:0.7rem;color:rgba(255,255,255,0.45);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px">IBM BoB Challenge · Team</div>
           <div style="font-size:1.05rem;font-weight:700;color:#62c6e8;letter-spacing:0.06em">CookCountyBoB</div>
-          <div style="font-size:0.65rem;color:rgba(255,255,255,0.35);margin-top:3px">Oracle EBS R12 · v6.0 · DASC-Compliant</div>
+          <div style="font-size:0.65rem;color:rgba(255,255,255,0.35);margin-top:3px">Oracle E-Business Suite · v6.0 · DASC-Compliant</div>
         </div>
       </div>
 
@@ -223,7 +223,7 @@
           <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <span>Sign Out</span>
         </button>
-        <div class="cds-header-badge">Oracle EBS R12</div>
+        <div class="cds-header-badge">E-Business Suite</div>
       </div>
     </header>
 
@@ -366,11 +366,11 @@
                 <div class="chat-header">
                  <!--    <div class="chat-status"> -->
                    <!--      <span class="status-dot active"></span> -->
-                  <!--       <span>Oracle EBS AI Assistant — Powered by ICA + BOB</span> -->
+                  <!--       <span>Oracle EBS AI Assistant — Powered by ICA + Bob</span> -->
                   <!--   </div> -->
 				  <div class="chat-status">
 					<span class="status-dot active"></span>
-					<span>Oracle EBS AI Assistant — Powered by ICA + BOB</span>
+					<span>Oracle EBS AI Assistant — Powered by ICA + Bob</span>
 					<span id="icaStatusBadge" style="
 						margin-left:10px;
 						padding:2px 10px;
@@ -404,7 +404,7 @@
                         <div class="msg-avatar">🤖</div>
                         <div class="msg-bubble">
                             <p>👋 Welcome to <strong>Oracle EBS Intelligence Hub v6.0</strong> — built with <strong>IBM Bob</strong>, powered by <strong>IBM ICA Context Studio</strong> via <strong>MCP Gateway</strong>.</p>
-                            <p style="margin-top:6px;">Ask me anything about Oracle EBS R12. Every answer is grounded in enterprise knowledge retrieved live from ICA — not a generic AI response.</p>
+                            <p style="margin-top:6px;">Ask me anything about Oracle E-Business Suite. Every answer is grounded in enterprise knowledge retrieved live from ICA — not a generic AI response.</p>
                             <hr style="border:none;border-top:1px solid #C8DFF5;margin:10px 0;">
                             <p style="margin-bottom:6px;font-weight:600;color:#00274D;">📋 I can help with reports across 7 modules:</p>
                             <ul>
@@ -826,7 +826,7 @@
                 </button>
                 <button class="sql-subtab-btn" data-subtab="sql-codereview-tab"
                     onclick="switchSQLSubTab('sql-codereview-tab', this)"
-                    title="Check your SQL against Oracle EBS coding standards. Finds 13 types of issues including multi-org compliance, N+1 subqueries, and gives a quality score out of 100.">
+                    title="Check your SQL against Oracle EBS coding standards. Checks 27 rules including multi-org compliance, N+1 subqueries, and gives a quality score out of 100.">
                     🔍 Code Review
                 </button>
                 <button class="sql-subtab-btn" data-subtab="sql-formatter-tab"
@@ -842,7 +842,9 @@
             <div id="sql-perf-tab" class="sql-subtab-content active">
                 <div class="sql-advisor-header">
                     <h2>⚡ Oracle SQL Performance Advisor</h2>
-                    <p>Paste your slow Oracle EBS SQL below. Get instant cost estimates, bottleneck analysis, index recommendations, and a faster rewritten version.</p>
+                    <p>Paste a slow Oracle EBS query. The advisor scans it for known performance patterns and shows what to fix, plus a rewritten version.</p>
+                    <div class="sql-help"><strong>How to use:</strong> 1) Pick the module and paste your SQL, or click Load Sample SQL. 2) Click Analyse &amp; Optimise. 3) Read Issues, then Recommendations, then copy the Optimised SQL.
+                        <span class="sql-help-note">The cost figures are indicative scores from rule-based checks, not Oracle EXPLAIN PLAN results. Confirm with EXPLAIN PLAN in your database.</span></div>
                 </div>
                 <div class="sql-advisor-workspace" id="sqlAdvisorWorkspace">
 
@@ -878,20 +880,7 @@
                                     <option value="inventory">INV - Inventory</option>
                                 </select>
                             </div>
-                            <div class="meta-group">
-                                <label>DB Version:</label>
-                                <select id="dbVersion" title="Which Oracle database version is this query running on?">
-                                    <option value="19c">Oracle 19c</option>
-                                    <option value="12c">Oracle 12c</option>
-                                    <option value="11g">Oracle 11g</option>
-                                </select>
                             </div>
-                            <div class="meta-group">
-                                <label>Est. Rows:</label>
-                                <input type="number" id="estRows" value="1000000"
-                                    title="Approximate number of rows in the main table — helps the advisor estimate query cost." placeholder="Est. row count">
-                            </div>
-                        </div>
                         <textarea id="sqlInputArea" class="sql-textarea"
                             placeholder="-- Paste your Oracle EBS SQL query here&#10;-- Example:&#10;SELECT aps.vendor_name, SUM(apia.amount) total&#10;FROM   ap_suppliers aps, ap_invoices_all apia&#10;WHERE  aps.vendor_id = apia.vendor_id&#10;AND    apia.invoice_date BETWEEN :p_start AND :p_end&#10;GROUP BY aps.vendor_name&#10;ORDER BY total DESC"></textarea>
                     </div>
@@ -902,13 +891,13 @@
                             <div class="score-card red">
                                 <div class="score-label">BEFORE Optimisation</div>
                                 <div class="score-value" id="costBefore">—</div>
-                                <div class="score-unit">Est. Cost Units</div>
+                                <div class="score-unit">Indicative score</div>
                             </div>
                             <div class="score-arrow">→</div>
                             <div class="score-card green">
                                 <div class="score-label">AFTER Optimisation</div>
                                 <div class="score-value" id="costAfter">—</div>
-                                <div class="score-unit">Est. Cost Units</div>
+                                <div class="score-unit">Indicative score</div>
                             </div>
                             <div class="score-savings">
                                 <div class="savings-label">💡 Improvement</div>
@@ -965,7 +954,8 @@
             <div id="sql-codereview-tab" class="sql-subtab-content" style="display:none;">
                 <div class="sql-advisor-header">
                     <h2>🔍 Oracle EBS SQL Code Review</h2>
-                    <p>Paste your SQL for a full quality check — covers 13 Oracle EBS standards, gives a score out of 100, and shows a before/after fix for every issue found.</p>
+                    <p>Paste your SQL for a quality check against 27 Oracle EBS rules. You get a score out of 100 and a before/after fix for each finding.</p>
+                    <div class="sql-help"><strong>How the score works:</strong> it starts at 100. Each Critical finding (wrong results or a major slowdown) takes off 20, each Major 10, each Minor 5. Info and Good items do not change the score.</div>
                 </div>
                 <div class="code-review-workspace">
 
@@ -974,6 +964,10 @@
                         <div class="cr-panel-header">
                             <h3>📝 SQL Query Input</h3>
                             <div class="cr-panel-actions">
+                                <button class="btn-sm btn-secondary" onclick="loadSampleReviewSQL()"
+                                    title="Load a sample query that contains several common problems so you can see how the review works.">
+                                    &#128196; Load Sample
+                                </button>
                                 <button class="btn-sm btn-secondary" onclick="loadSQLToReview()"
                                     title="If you already pasted a query in the Performance Advisor tab, click here to copy it across automatically — no need to paste it again.">
                                     📥 Load from Perf Advisor
@@ -983,31 +977,9 @@
                                     🗑️ Clear
                                 </button>
                                 <button class="btn-sm btn-primary" onclick="performCodeReview()"
-                                    title="Run the full code quality check. Checks 13 Oracle EBS standards: multi-org ORG_ID compliance, DateTrack filters on HR tables, N+1 correlated subqueries, implicit comma joins, TRUNC on columns, SELECT *, NLS date literals, FOR UPDATE, and more. Returns a score out of 100 with before/after fix for each issue.">
+                                    title="Run the full code quality check. Checks 27 Oracle EBS rules: multi-org ORG_ID compliance, DateTrack filters on HR tables, N+1 correlated subqueries, implicit comma joins, TRUNC on columns, SELECT *, NLS date literals, FOR UPDATE, and more. Returns a score out of 100 with before/after fix for each issue.">
                                     🔍 Run Code Review
                                 </button>
-                            </div>
-                        </div>
-                        <div class="cr-meta-bar">
-                            <div class="cr-meta-item">
-                                <label>Module:</label>
-                                <select id="crModule" title="Selecting the module applies module-specific rules (e.g. multi-org rules for AP, DateTrack rules for HRMS).">
-                                    <option value="ap">AP - Accounts Payable</option>
-                                    <option value="po">PO - Purchasing</option>
-                                    <option value="gl">GL - General Ledger</option>
-                                    <option value="iexp">iExpense</option>
-                                    <option value="hrms">HRMS</option>
-                                    <option value="ar">AR - Receivables</option>
-                                    <option value="inv">INV - Inventory</option>
-                                </select>
-                            </div>
-                            <div class="cr-meta-item">
-                                <label>Standard:</label>
-                                <select id="crStandard" title="Which set of coding standards to check against.">
-                                    <option value="oracle-ebs">Oracle EBS R12 Standards</option>
-                                    <option value="ansi">ANSI SQL-99</option>
-                                    <option value="oracle-19c">Oracle 19c Best Practices</option>
-                                </select>
                             </div>
                         </div>
                         <textarea id="codeReviewInput" class="sql-textarea cr-textarea"
@@ -1039,7 +1011,8 @@
             <div id="sql-formatter-tab" class="sql-subtab-content" style="display:none;">
                 <div class="sql-advisor-header">
                     <h2>✨ Oracle SQL Code Formatter</h2>
-                    <p>Paste any Oracle SQL or PL/SQL block below. The formatter will rewrite it with consistent indentation, capitalised keywords, aligned aliases, and clean structure — ready for peer review or documentation.</p>
+                    <p>Paste Oracle SQL. The formatter puts each column, table and JOIN on its own line, applies your keyword case and indent, and keeps sub-queries together. It works best on SELECT statements; PL/SQL blocks get basic line breaks only.</p>
+                    <div class="sql-help"><strong>How to use:</strong> 1) Paste SQL or click Load Sample. 2) Choose indent and keyword case. 3) Click Format SQL, then Copy, or send the result to the Performance Advisor or Code Review.</div>
                 </div>
                 <div class="formatter-workspace">
                     <div class="formatter-options-bar">
@@ -1134,10 +1107,10 @@
                 <h2>📄 Technical & Functional Document Generator</h2>
                 <p>Generate standardized Oracle EBS Technical and Functional specification documents. Fill in the details below and download a complete Word-compatible document.</p>
                 <div class="template-notice">
-                    📁 <strong>Word Template:</strong> Place your <code>.docx</code> template files in
-                    <code>C:\Madhav\ICA Oracle\BoB\Oracle-EBS-Intelligence-HUB\docs\templates\</code>.
-                    The generator uses your template's structure and branding. Currently generating in HTML format
-                    (open in Word → Save As .docx for full Word formatting).
+                    &#128193; <strong>Word templates (Cook County standard):</strong>
+                    <a href="docs/templates/CCG-DO080-REP-XXX-XXX-Technical_Document.doc" download>Technical Design template</a> &middot;
+                    <a href="docs/templates/CCG%20ERP%20FS%20REP-XXX-XXX-Functional_Document.doc" download>Functional Specification template</a>.
+                    The generated document follows the same section structure. Download it as HTML, open it in Word and choose Save As .docx.
                 </div>
             </div>
 
@@ -1404,7 +1377,7 @@
         <div class="academy-sidebar">
           <div class="academy-sidebar-header">
             <h3>🎓 EBS Academy</h3>
-            <p>Oracle EBS R12+ Complete Learning</p>
+            <p>Oracle E-Business Suite: complete learning</p>
           </div>
           <div class="academy-search-wrap">
             <input type="text" id="academySearch" class="academy-search-input"
@@ -1426,7 +1399,7 @@
               <div class="academy-welcome-hero">
                 <div class="academy-hero-icon">🎓</div>
                 <h1>Oracle EBS Academy</h1>
-                <p>Master Oracle EBS R12+ — functional cycles, technical tables, SQL queries, and implementation best practices. Every module covered from end-to-end.</p>
+                <p>Master Oracle E-Business Suite — functional cycles, technical tables, SQL queries, and implementation best practices. Every module covered from end-to-end.</p>
                 <div style="margin-top:16px;">
                   <button class="academy-asst-quick-btn" style="font-size:0.8rem;padding:8px 18px;border-radius:20px;" onclick="openAcademyAssistant()">🤖 Ask EBS Assistant anything →</button>
                 </div>
@@ -1486,7 +1459,7 @@
                 </div>
                 <div class="sqllab-code-container" style="max-height:320px;">
                   <div class="sqllab-code-toolbar">
-                    <span class="sqllab-code-lang">Oracle SQL — EBS R12</span>
+                    <span class="sqllab-code-lang">Oracle SQL — E-Business Suite</span>
                     <button class="sqllab-copy-btn" onclick="copyAcademySql()">📋 Copy</button>
                   </div>
                   <pre id="academySqlBlock" class="sqllab-code-block" style="max-height:280px;overflow:auto;"></pre>
@@ -2310,7 +2283,7 @@
               <div class="ica-node-card ica-node-table">
                 <div class="ica-node-icon">🗄️</div>
                 <div class="ica-node-name">EBSTable</div>
-                <div class="ica-node-desc">Oracle EBS R12 base tables and views. ap_invoices_all, gl_je_headers, per_all_people_f and 20+ others.</div>
+                <div class="ica-node-desc">Oracle E-Business Suite base tables and views. ap_invoices_all, gl_je_headers, per_all_people_f and 20+ others.</div>
                 <div class="ica-node-count">20+ nodes</div>
               </div>
               <div class="ica-node-card ica-node-bp">
@@ -2780,8 +2753,8 @@ POST http://localhost:3001/query<br>
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <footer class="ebs-footer" id="appFooter" style="display:none;">
         <div class="footer-content">
-            <span>Oracle EBS Intelligence Hub v6.0 | R12 Enterprise Suite</span>
-            <span>Powered by IBM BOB + ICA Context Studio + Agentic AI</span>
+            <span>Oracle EBS Intelligence Hub v6.0 | Oracle E-Business Suite</span>
+            <span>Powered by IBM Bob + ICA Context Studio + Agentic AI</span>
             <span id="footerTabList">Chat ◆ Reports ◆ Data Connect</span>
         </div>
     </footer>
@@ -2888,7 +2861,7 @@ POST http://localhost:3001/query<br>
     <script src="ebs-reports-data.js?v=20"></script>
     <script src="ebs-sqllib-data.js?v=20"></script>
     <script src="ebs-academy-data.js?v=20"></script>
-    <script src="ebs-reports.js?v=21"></script>
+    <script src="ebs-reports.js?v=22"></script>
     <!-- ICA Context Studio integration — loads after main JS -->
     <script src="ebs-ica-integration.js?v=21"></script>
     <!-- Requirements Analyzer — loads after main JS -->
