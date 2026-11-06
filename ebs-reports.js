@@ -2212,7 +2212,7 @@ function clearChat() {
   <div class="message assistant">
     <div class="msg-avatar">🤖</div>
     <div class="msg-bubble">
-      <p>Welcome to <strong>Oracle EBS Reports Assistant</strong>! I can help you generate reports for:</p>
+      <p>Welcome to <strong>Oracle EBS Intelligence Hub</strong>! I can help you generate reports for:</p>
       <ul>
         <li>📊 <strong>Payables</strong> — Aged payables, invoice register, supplier payments</li>
         <li>🏢 <strong>Purchasing</strong> — PO details, receipts, savings analysis</li>
@@ -3973,7 +3973,7 @@ function initRecentSessions() {
   if (!historyList) return;
 
   historyList.innerHTML = RECENT_SESSION_MAP.map((s, i) => {
-    const ages = ['Today', 'Yesterday', '2 days ago'];
+    const ages = ['Sample report', 'Sample report', 'Sample report'];
     return `<div class="history-item clickable" onclick="openRecentSession(${i})" title="Click to open ${s.label}">
       <span class="history-icon">📊</span>
       <div class="history-text">

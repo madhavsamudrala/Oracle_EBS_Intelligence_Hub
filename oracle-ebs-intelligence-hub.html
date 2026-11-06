@@ -340,22 +340,22 @@
                     <button class="quick-btn" onclick="injectQuery('Withholding tax by supplier summary')">💰 Tax Report</button>
                 </div>
                 <div class="chat-history-section">
-                    <h4>Recent Sessions</h4>
+                    <h4>Sample Reports</h4>
                     <div id="chatHistory" class="chat-history-list">
                         <!-- Populated by initRecentSessions() in ebs-reports.js -->
                         <div class="history-item clickable" onclick="openRecentSession(0)">
                           <span class="history-icon">📊</span>
-                          <div class="history-text"><span class="history-label">iExpense Approval Report</span><span class="history-age">Today</span></div>
+                          <div class="history-text"><span class="history-label">iExpense Approval Report</span><span class="history-age">Sample report</span></div>
                           <span class="history-arrow">›</span>
                         </div>
                         <div class="history-item clickable" onclick="openRecentSession(1)">
                           <span class="history-icon">📊</span>
-                          <div class="history-text"><span class="history-label">Supplier High Payments Analysis</span><span class="history-age">Yesterday</span></div>
+                          <div class="history-text"><span class="history-label">Supplier High Payments Analysis</span><span class="history-age">Sample report</span></div>
                           <span class="history-arrow">›</span>
                         </div>
                         <div class="history-item clickable" onclick="openRecentSession(2)">
                           <span class="history-icon">📊</span>
-                          <div class="history-text"><span class="history-label">GL Trial Balance Q4</span><span class="history-age">2 days ago</span></div>
+                          <div class="history-text"><span class="history-label">GL Trial Balance Q4</span><span class="history-age">Sample report</span></div>
                           <span class="history-arrow">›</span>
                         </div>
                     </div>
@@ -2780,7 +2780,7 @@ POST http://localhost:3001/query<br>
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <footer class="ebs-footer" id="appFooter" style="display:none;">
         <div class="footer-content">
-            <span>Oracle EBS Intelligence Hub v3.0 | R12 Enterprise Suite</span>
+            <span>Oracle EBS Intelligence Hub v6.0 | R12 Enterprise Suite</span>
             <span>Powered by IBM BOB + ICA Context Studio + Agentic AI</span>
             <span id="footerTabList">Chat ◆ Reports ◆ Data Connect</span>
         </div>
@@ -2888,7 +2888,7 @@ POST http://localhost:3001/query<br>
     <script src="ebs-reports-data.js?v=20"></script>
     <script src="ebs-sqllib-data.js?v=20"></script>
     <script src="ebs-academy-data.js?v=20"></script>
-    <script src="ebs-reports.js?v=20"></script>
+    <script src="ebs-reports.js?v=21"></script>
     <!-- ICA Context Studio integration — loads after main JS -->
     <script src="ebs-ica-integration.js?v=21"></script>
     <!-- Requirements Analyzer — loads after main JS -->
