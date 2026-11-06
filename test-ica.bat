@@ -1,4 +1,3 @@
-batch
 @echo off
 title Oracle EBS Intelligence Hub - ICA Test
 color 0E
