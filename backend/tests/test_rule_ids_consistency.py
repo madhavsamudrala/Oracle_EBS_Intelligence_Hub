@@ -268,5 +268,4 @@ def test_reingestion_doc_hashes_match_the_files_it_tells_you_to_upload():
     for rel in ("ica-schema/csv/approval_rules.csv", "ica-schema/Oracle_EBS_Intelligence_Hub.jsonld"):
         data = (REPO / rel).read_bytes().replace(b"\r\n", b"\n")
         digest = hashlib.sha256(data).hexdigest()
-        raw_digest = hashlib.sha256((REPO / rel).read_bytes()).hexdigest()
-        assert digest in doc or raw_digest in doc, f"{rel}: hash in CONTEXT_STUDIO_REINGESTION.md is stale"
+        assert digest in doc, f"{rel}: the LF (as stored in Git) hash in CONTEXT_STUDIO_REINGESTION.md is stale"

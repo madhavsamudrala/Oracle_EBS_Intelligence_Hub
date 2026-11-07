@@ -22,12 +22,13 @@ The two files that must be replaced (not added next to the old copies) are exact
 
 ## 2. Fingerprints of the files to upload
 
-Taken from the working copy on this machine. Check them before upload (`Get-FileHash <file> -Algorithm SHA256`). A fresh clone on Windows may convert line endings, so a different hash on a clone does not by itself mean a wrong file; compare content, or upload from this working folder.
+Taken from the working copy on this machine. Check them before upload (`Get-FileHash <file> -Algorithm SHA256`). The JSON-LD has two valid fingerprints because Windows Git converts line endings: the LF form stored in Git and the CRLF form in a Windows working copy. They are the same content. If your hash matches neither row, do not upload.
 
 | File | Bytes | SHA-256 |
 |---|---|---|
 | `ica-schema/csv/approval_rules.csv` | 5,330 | `ecb726ab12ee7d23d87be8f58edfd202ccbe147b4d006cda0862a2f5cfcfd646` |
-| `ica-schema/Oracle_EBS_Intelligence_Hub.jsonld` | 514,484 | `23b23ffdfca00d3ebd37808d68db6ec2aa6066842b302174d744ed7463aba17b` |
+| `ica-schema/Oracle_EBS_Intelligence_Hub.jsonld` | 514,484 (Windows working copy, CRLF) | `23b23ffdfca00d3ebd37808d68db6ec2aa6066842b302174d744ed7463aba17b` |
+| `ica-schema/Oracle_EBS_Intelligence_Hub.jsonld` | 501,969 (as stored in Git, LF) | `4c2d6537d3896335f2be28be34705a0881c6dacc104f49930c821d823caf79a5` |
 
 Do NOT upload the root-level `Oracle_EBS_Intelligence_Hub.jsonld` (git-ignored, older, contains demo password hints). The correct file is inside `ica-schema/`.
 
