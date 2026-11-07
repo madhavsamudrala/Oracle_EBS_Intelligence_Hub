@@ -84,8 +84,20 @@ window.icaService = {
       return r.json();
     })
     .then(function(data){
-      return (data && data.success && data.message)
-        ? data.message : null;
+      if (data && data.success && data.message) return data.message;
+      /* Phase 0: the backend answered but reported a genuine AI failure
+         (bad token, graph unreachable, agent error). Hand the details to the
+         caller so the user SEES the problem instead of a silent local answer.
+         Network/HTTP errors still return null (local fallback, as before). */
+      if (data && data.success === false && data.message) {
+        return {
+          failed:  true,
+          kind:    data.error_kind || '',
+          source:  data.source || '',
+          message: data.message
+        };
+      }
+      return null;
     })
     .catch(function(e){
       console.warn('[ICA] Chat error:', e.message);
@@ -220,6 +232,32 @@ document.addEventListener('DOMContentLoaded', function(){
         .then(function(icaReply){
           var bubble = document.getElementById(bubbleId);
           if (!bubble) return;
+          if (icaReply && icaReply.failed) {
+            /* Genuine AI failure reported by the backend: show it clearly. */
+            var safeMsg = String(icaReply.message)
+              .replace(/&/g,'&amp;')
+              .replace(/</g,'&lt;')
+              .replace(/>/g,'&gt;');
+            bubble.style.background = '#FFF1F1';
+            bubble.style.border     = '1.5px solid #DA1E28';
+            bubble.innerHTML =
+              '<div style="font-size:0.68rem;color:#DA1E28;' +
+                'font-weight:700;margin-bottom:8px;letter-spacing:0.5px;">' +
+                '⚠ ICA Agent — no answer generated' +
+              '</div>' +
+              '<div style="font-size:0.85rem;line-height:1.6;color:#161616;">' +
+                safeMsg +
+              '</div>' +
+              '<div style="font-size:0.65rem;color:#DA1E28;margin-top:8px;' +
+                'opacity:0.8;border-top:1px solid #F5C6C9;padding-top:4px;">' +
+                'AI error' +
+                (icaReply.kind ? ' · ' + icaReply.kind : '') +
+                ' · ' + new Date().toLocaleTimeString() +
+              '</div>';
+            msgs.scrollTop = msgs.scrollHeight;
+            console.warn('[ICA] AI failure shown to user:', icaReply.kind || icaReply.source);
+            return;
+          }
           if (!icaReply || icaReply.trim().length < 10){
             /* ICA failed — remove bubble and use local */
             icaDiv.remove();

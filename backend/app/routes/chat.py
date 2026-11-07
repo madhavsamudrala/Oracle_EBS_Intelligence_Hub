@@ -9,6 +9,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 import httpx
 from app.config import settings
+from app.services.ica_reply import classify_reply, redact_secrets
 router = APIRouter()
 logger = logging.getLogger(__name__)
 ICA_WORKFLOW_URL = settings.ica_workflow_url
@@ -17,6 +18,8 @@ MCP_API_KEY = settings.mcp_api_key
 ICA_CONTEXT_ID = settings.ica_context_id
 REQUEST_TIMEOUT = settings.request_timeout
 MAX_RETRIES = settings.max_retries
+# Phase 0: seconds to wait before the single retry of an "unreachable" reply.
+UNREACHABLE_RETRY_DELAY = 1.5
 EBS_KNOWLEDGE = """
 ORACLE EBS R12 REPORTS CATALOG:
 AP MODULE REPORTS:
@@ -67,6 +70,11 @@ class ChatResponse(BaseModel):
     message: str
     source: str
     session_id: Optional[str] = None
+    # Phase 0: why an AI reply was rejected (auth | unreachable | tool_failed |
+    # agent_error | empty_reply). None for normal answers. Old clients ignore it.
+    error_kind: Optional[str] = None
+    # Phase 0: how many times Langflow was asked (1 normally, 2 after the unreachable retry).
+    attempts: int = 1
 class EnrichRequest(BaseModel):
     message: str
     module: str = "AP"
@@ -205,21 +213,57 @@ Format with bullet points and clear sections."""
             logger.info(f"ICA status: {response.status_code}")
             if response.status_code == 200:
                 text = extract_ica_message(response.json())
-                if (not text or
-                        text.lstrip().lower().startswith("the agent request failed")):
-                    # Langflow returned 200 but the agent node reported an error.
-                    logger.error(f"ICA agent node error: {text[:300]}")
+                # Langflow returns 200 even when the agent could not reach the
+                # knowledge graph (e.g. "Invalid token"). Check the reply text
+                # instead of trusting the status code alone.
+                check = classify_reply(text)
+                attempt_notes = []   # short, secret-free outcome of each attempt
+                if check.kind == "unreachable":
+                    attempt_notes.append("1: unreachable")
+                    # Phase 0: the knowledge graph was briefly unreachable.
+                    # Ask the SAME read-only question ONE more time. This is a
+                    # single fixed retry (not tied to MAX_RETRIES) so it cannot
+                    # loop. auth / session_expired / agent_error are never retried.
+                    logger.warning("ICA reply was 'unreachable' - retrying once")
+                    await asyncio.sleep(UNREACHABLE_RETRY_DELAY)
+                    try:
+                        async with httpx.AsyncClient(timeout=REQUEST_TIMEOUT) as client:
+                            retry_resp = await client.post(
+                                ICA_WORKFLOW_URL, headers=headers, json=payload)
+                        if retry_resp.status_code == 200:
+                            text = extract_ica_message(retry_resp.json())
+                            check = classify_reply(text)
+                            attempt_notes.append(f"2: {check.kind}")
+                        else:
+                            attempt_notes.append(f"2: HTTP {retry_resp.status_code}")
+                    except Exception as e:
+                        # Keep the first (unreachable) result and report it.
+                        attempt_notes.append(f"2: {type(e).__name__}")
+                        logger.warning(f"ICA unreachable-retry failed: {type(e).__name__}")
+                attempts = 2 if attempt_notes else 1
+                if not check.ok:
+                    # Log a redacted, shortened copy: replies can echo keys.
+                    logger.error(
+                        f"ICA reply rejected ({check.kind}, attempts={attempts}): "
+                        f"{redact_secrets(text)[:300]}")
+                    message = check.user_message
+                    if attempt_notes:
+                        # Only fixed labels (kind, HTTP status, exception class): no reply text, no keys.
+                        message += f" Tried 2 times ({'; '.join(attempt_notes)})."
                     return ChatResponse(
                         success=False,
-                        message="ICA agent returned an error. Check the backend log.",
-                        source="ica_agent_error",
-                        session_id=req.session_id
+                        message=message,
+                        source=check.source,
+                        session_id=req.session_id,
+                        error_kind=check.kind,
+                        attempts=attempts
                     )
                 return ChatResponse(
                     success=True,
                     message=text,
                     source="ica_live",
-                    session_id=req.session_id
+                    session_id=req.session_id,
+                    attempts=attempts
                 )
             elif response.status_code in [401, 403]:
                                 return ChatResponse(
