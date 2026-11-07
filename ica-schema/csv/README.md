@@ -13,7 +13,7 @@ All previous iExpense Approval domain data has been replaced.
 | `ebs_edges.csv` | Graph edges — module→report, report→table, table→rule relationships | 52 |
 | `ebs_relationships.csv` | Oracle EBS table JOIN conditions (SQL join paths between base tables) | 15 |
 | `natural_language_queries.csv` | NL query intent mappings — chat input → report key / tab / feature | 115+ |
-| `approval_rules.csv` | **27 SQL compliance & business rules** (ORG_ID, DateTrack, SELECT*, injection, performance) |
+| `approval_rules.csv` | **27 SQL compliance & business rules** (ORG_ID, DateTrack, SELECT*, injection, performance). 16 rows reuse the master `RULE_nnn` IDs from `02-rules.json`; 11 rows are CSV-only rules with `APR-nnn` IDs (see "Rule ID namespaces" below) |
 | `approver_groups.csv` | **12 SQL Library categories** with query counts (AP, AR, GL, PO, HRMS, INV, iExpense, FND, Perf, Sec, WF, Multi-Org) |
 | `expense_templates.csv` | **15 Academy modules** — module ID, topic count, color, sample topics |
 | `special_submitters.csv` | **3 Data Connect sources** — Excel/CSV upload, Simulated DB, Live Oracle DB |
@@ -39,6 +39,19 @@ All previous iExpense Approval domain data has been replaced.
 ### approval_rules.csv (SQL Compliance Rules)
 `rule_id, rule_name, rule_type, category, severity, applies_to, description, code_review_check_number`
 
+**Rule ID namespaces (Phase 0 fix).** `ica-schema/02-rules.json` is the **master** rule list.
+Before Phase 0 this CSV reused `RULE_014`..`RULE_027` with different meanings from the master
+(for example `RULE_021` was "Hardcoded Org ID" here but "AR Payment Schedule Status Filter" in the master),
+so the AI agent mixed the two meanings. Now:
+
+| ID pattern | Meaning |
+|------------|---------|
+| `RULE_nnn` | Same rule, same name as in `02-rules.json`. Never redefine these here. |
+| `APR-nnn`  | A rule that exists only in this CSV. `code_review_check_number` is blank because no browser check implements it. |
+
+The old-ID to new-ID table is in [`docs/rule_id_mapping.csv`](../../docs/rule_id_mapping.csv).
+`backend/tests/test_rule_ids_consistency.py` fails if the two files disagree.
+
 ### approver_groups.csv (SQL Library Categories)
 `category_id, category_name, module, query_count, description, color, example_queries`
 
@@ -63,7 +76,7 @@ They have been **fully replaced** with v5.0 content. Only the filenames remain t
 
 | Filename | Was | Now |
 |----------|-----|-----|
-| `approval_rules.csv` | iExpense AME approval routing rules (CCP/CCH/CCF) | 27 EBS SQL compliance & best practice rules |
+| `approval_rules.csv` | iExpense AME approval routing rules (CCP/CCH/CCF) | 27 EBS SQL compliance & best practice rules (`RULE_nnn` master IDs + `APR-nnn`) |
 | `approver_groups.csv` | iExpense approver groups (CCP_DEPT, CCH_FIRST_SUP, etc.) | 12 SQL Library categories |
 | `expense_templates.csv` | iExpense expense templates per OU | 15 EBS Academy learning modules |
 | `special_submitters.csv` | Karen Martino / Melissa / Damon Howell special routing | 3 Data Connect source types |

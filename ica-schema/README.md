@@ -26,7 +26,7 @@ ica-schema/
     ├── ebs_relationships.csv        # Oracle EBS table JOIN relationships (15 SQL join paths)
     ├── column_mapping_rules.csv     # 100 column mapping rules (Excel/DB → EBS columns)
     ├── natural_language_queries.csv # 115+ NL query intent mappings (chat → report/feature/tab)
-    ├── approval_rules.csv           # 27 SQL compliance & business rules
+    ├── approval_rules.csv           # 27 SQL rules: master RULE_nnn IDs + CSV-only APR-001..APR-011
     ├── approver_groups.csv          # 12 SQL Library categories
     ├── expense_templates.csv        # 15 Academy modules with topics
     ├── special_submitters.csv       # 3 Data Connect sources: Excel, Simulated DB, Live DB

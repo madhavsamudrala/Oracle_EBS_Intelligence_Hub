@@ -1,0 +1,163 @@
+{
+  "samples": {
+    "select_star_no_org": "SELECT * FROM ap_invoices_all WHERE invoice_num = 'A1'",
+    "clean_query": "SELECT aia.invoice_id, aia.invoice_num FROM ap_invoices_all aia WHERE aia.org_id = :p_org_id AND ROWNUM <= 100",
+    "functions_and_in": "SELECT a.invoice_id FROM ap_invoices_all a WHERE TRUNC(a.invoice_date) = SYSDATE AND a.vendor_id IN (SELECT vendor_id FROM ap_suppliers) AND a.org_id = 1",
+    "not_in_like_dml": "DELETE FROM ap_checks_all WHERE vendor_name LIKE '%ACME' AND check_id NOT IN (SELECT check_id FROM ap_invoice_payments_all)",
+    "dynamic_sql_ddl": "BEGIN EXECUTE IMMEDIATE 'DROP TABLE x'; END;",
+    "null_and_alias": "SELECT invoice_id FROM ap_invoices_all WHERE cancelled_date IS NOT NULL AND org_id = 5"
+  },
+  "baseline": {
+    "select_star_no_org": {
+      "source": "backend",
+      "findings": [
+        {
+          "rule": "RULE_001",
+          "severity": "High",
+          "message": "Missing ORG_ID filter \u2014 multi-org tables require org context."
+        },
+        {
+          "rule": "RULE_002",
+          "severity": "Medium",
+          "message": "Possible hard-coded literal \u2014 consider using bind variables."
+        },
+        {
+          "rule": "RULE_003",
+          "severity": "High",
+          "message": "SELECT * detected \u2014 list explicit columns for performance."
+        },
+        {
+          "rule": "RULE_006",
+          "severity": "Low",
+          "message": "Large table queried without ROWNUM limit."
+        },
+        {
+          "rule": "RULE_019",
+          "severity": "Low",
+          "message": "Consider using table aliases for clarity."
+        }
+      ],
+      "score": 40,
+      "summary": "\u26a0\ufe0f 5 issue(s) found \u2014 review before running in production."
+    },
+    "clean_query": {
+      "source": "backend",
+      "findings": [],
+      "score": 100,
+      "summary": "\u2705 No compliance issues detected."
+    },
+    "functions_and_in": {
+      "source": "backend",
+      "findings": [
+        {
+          "rule": "RULE_004",
+          "severity": "Medium",
+          "message": "Function on indexed column may suppress index usage."
+        },
+        {
+          "rule": "RULE_005",
+          "severity": "Medium",
+          "message": "IN (SELECT) \u2014 consider EXISTS for better performance."
+        },
+        {
+          "rule": "RULE_006",
+          "severity": "Low",
+          "message": "Large table queried without ROWNUM limit."
+        }
+      ],
+      "score": 75,
+      "summary": "\u26a0\ufe0f 3 issue(s) found \u2014 review before running in production."
+    },
+    "not_in_like_dml": {
+      "source": "backend",
+      "findings": [
+        {
+          "rule": "RULE_001",
+          "severity": "High",
+          "message": "Missing ORG_ID filter \u2014 multi-org tables require org context."
+        },
+        {
+          "rule": "RULE_002",
+          "severity": "Medium",
+          "message": "Possible hard-coded literal \u2014 consider using bind variables."
+        },
+        {
+          "rule": "RULE_005",
+          "severity": "Medium",
+          "message": "IN (SELECT) \u2014 consider EXISTS for better performance."
+        },
+        {
+          "rule": "RULE_007",
+          "severity": "Medium",
+          "message": "Leading wildcard LIKE \u2014 full index scan."
+        },
+        {
+          "rule": "RULE_008",
+          "severity": "High",
+          "message": "NOT IN with subquery \u2014 NULL handling may return no rows."
+        },
+        {
+          "rule": "RULE_017",
+          "severity": "Critical",
+          "message": "DML statement detected \u2014 SELECT only allowed."
+        },
+        {
+          "rule": "RULE_019",
+          "severity": "Low",
+          "message": "Consider using table aliases for clarity."
+        }
+      ],
+      "score": 0,
+      "summary": "\u26a0\ufe0f 7 issue(s) found \u2014 review before running in production."
+    },
+    "dynamic_sql_ddl": {
+      "source": "backend",
+      "findings": [
+        {
+          "rule": "RULE_001",
+          "severity": "High",
+          "message": "Missing ORG_ID filter \u2014 multi-org tables require org context."
+        },
+        {
+          "rule": "RULE_002",
+          "severity": "Medium",
+          "message": "Possible hard-coded literal \u2014 consider using bind variables."
+        },
+        {
+          "rule": "RULE_009",
+          "severity": "Critical",
+          "message": "EXECUTE IMMEDIATE detected \u2014 SQL injection risk."
+        },
+        {
+          "rule": "RULE_016",
+          "severity": "Critical",
+          "message": "DDL statement detected \u2014 not permitted in reports."
+        }
+      ],
+      "score": 10,
+      "summary": "\u26a0\ufe0f 4 issue(s) found \u2014 review before running in production."
+    },
+    "null_and_alias": {
+      "source": "backend",
+      "findings": [
+        {
+          "rule": "RULE_006",
+          "severity": "Low",
+          "message": "Large table queried without ROWNUM limit."
+        },
+        {
+          "rule": "RULE_019",
+          "severity": "Low",
+          "message": "Consider using table aliases for clarity."
+        },
+        {
+          "rule": "RULE_024",
+          "severity": "Low",
+          "message": "Consider NVL/COALESCE to handle NULLs defensively."
+        }
+      ],
+      "score": 85,
+      "summary": "\u26a0\ufe0f 3 issue(s) found \u2014 review before running in production."
+    }
+  }
+}

@@ -1,0 +1,28 @@
+old_id_in_approval_rules_csv,old_name,new_id,action,master_rule_name,note
+RULE_001,Multi-Org ORG_ID Required,RULE_001,unchanged,Multi-Org ORG_ID Required,
+RULE_002,DateTrack PER_ALL_PEOPLE_F Filter,RULE_002,renamed_to_master_wording,DateTrack PER_PEOPLE_F Filter,
+RULE_003,DateTrack PER_ALL_ASSIGNMENTS_F PRIMARY_FLAG,RULE_003,renamed_to_master_wording,DateTrack PER_ASSIGNMENTS_F PRIMARY_FLAG,
+RULE_004,Exclude Cancelled Invoices,RULE_004,unchanged,Exclude Cancelled Invoices,
+RULE_005,Exclude Void Cheques,RULE_005,unchanged,Exclude Void Cheques,
+RULE_006,GL Summary Flag Filter,RULE_006,unchanged,GL Summary Flag Filter,
+RULE_007,iExpense SOURCE Filter,RULE_007,unchanged,iExpense SOURCE Filter,
+RULE_008,SELECT * Wildcard Prohibited,RULE_008,unchanged,SELECT * Wildcard Prohibited,
+RULE_009,Correlated Scalar Subquery,RULE_009,renamed_to_master_wording,Correlated Scalar Subquery N+1,
+RULE_010,EXECUTE IMMEDIATE Injection,RULE_010,renamed_to_master_wording,EXECUTE IMMEDIATE SQL Injection,
+RULE_011,LIKE Leading Wildcard,RULE_011,renamed_to_master_wording,LIKE Leading Wildcard Index Bypass,
+RULE_012,NOT IN with NULLs,RULE_012,unchanged,NOT IN with NULLs,
+RULE_013,ROWNUM with ORDER BY,RULE_013,unchanged,ROWNUM with ORDER BY,
+RULE_014,Missing GL_BALANCES Currency Filter,APR-001,new_apr_id,,
+RULE_015,PO Authorization Status,APR-002,new_apr_id,,
+RULE_016,AP Payment Status Flag,APR-003,new_apr_id,,
+RULE_017,AR Posted Transactions Only,APR-004,new_apr_id,,Overlaps master RULE_021 on status != CL; adds gl_date posted-only check.
+RULE_018,INV Organization Filter,RULE_023,merged_into_master,Inventory Organization ID Filter,
+RULE_019,FND_LOOKUP_VALUES Language,RULE_014,merged_into_master,FND_LOOKUPS Use VL View,
+RULE_020,GL Period Status Open,APR-005,new_apr_id,,
+RULE_021,Hardcoded Org ID,RULE_017,merged_into_master,Use MO_GLOBAL for Multi-Org Context,
+RULE_022,Missing TRUNC on Date Comparison,APR-006,new_apr_id,,Related to browser Code Review check 19.
+RULE_023,Implicit Column Conversion,APR-007,new_apr_id,,Related to ontology COMP-009 (functions on indexed columns).
+RULE_024,Cartesian Join Risk,APR-008,new_apr_id,,
+RULE_025,Bind Variable Missing in WHERE,APR-009,new_apr_id,,Related to ontology COMP-007 (bind variables).
+RULE_026,Missing NOVALIDATE on FK,APR-010,new_apr_id,,
+RULE_027,DBMS_OUTPUT in Production,APR-011,new_apr_id,,
