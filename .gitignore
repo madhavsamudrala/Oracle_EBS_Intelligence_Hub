@@ -78,3 +78,7 @@ _*.csv
 _*.json
 _*.xlsx
 ebs-credentials.js
+# --- Sensitive local files (never commit) ---
+/Oracle_EBS_Intelligence_Hub.jsonld
+/agent-orchestration-*.yaml
+/.bob/

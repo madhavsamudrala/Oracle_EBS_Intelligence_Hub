@@ -1,4 +1,13 @@
 # =============================================================================
+# ARCHIVED - DO NOT USE AS THE CURRENT AGENT DEFINITION
+# This is the v5.0 design document. The agent that is actually deployed is
+#   appstudio/oracle-ebs-intelligence-hub-agent-v6.yaml
+# Rule IDs below are NOT current: RULE_014..RULE_027 here use the old
+# approval_rules.csv meanings. The master list is ica-schema/02-rules.json;
+# CSV-only rules are now APR-001..APR-011 (see docs/rule_id_mapping.csv).
+# Kept unchanged below this header for history only (Phase 0 decision).
+# =============================================================================
+# =============================================================================
 # Oracle EBS Intelligence Hub — IBM BOB Agent Configuration
 # Version:    5.0
 # Updated:    2025

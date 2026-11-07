@@ -146,7 +146,10 @@ python -m http.server 8080
 
 ## BOB AppStudio Configuration
 
-See [`appstudio/oracle-ebs-intelligence-hub-agent.yaml`](../appstudio/oracle-ebs-intelligence-hub-agent.yaml) for the BOB agent definition:
+> The current agent definition is [`appstudio/oracle-ebs-intelligence-hub-agent-v6.yaml`](../appstudio/oracle-ebs-intelligence-hub-agent-v6.yaml).
+> The v5.0 file below is archived (see [`appstudio/README.md`](../appstudio/README.md)); its rule IDs are out of date.
+
+See [`appstudio/oracle-ebs-intelligence-hub-agent.yaml`](../appstudio/oracle-ebs-intelligence-hub-agent.yaml) (archived v5.0) for the original BOB agent design:
 - System prompt with DASC security context
 - ICA Context Studio knowledge base references
 - Tool definitions (report lookup, SQL analysis, Academy queries)
