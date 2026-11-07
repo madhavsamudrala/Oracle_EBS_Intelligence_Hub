@@ -1,6 +1,8 @@
-# Rule merge review (Phase 0, Option A) - for your approval
+# Rule merge review (Phase 0, Option A) - approved and applied
 
-Status: **proposal. Nothing has been uploaded to Context Studio.**
+Status: **approved by the project owner and applied (Phase 0, round 3). Nothing has been uploaded to Context Studio.**
+
+Decisions applied: the three merges and `RULE_017` -> `APR-004` (section 1); `RULE_014` now also names the `language = USERENV('LANG')` base-table filter (1.2); the CSV uses the master description for the 16 shared IDs and keeps its own text for the 11 `APR-nnn` rows (section 2); hidden `tab-ica` is aligned to the master, tab kept (3.1); `ebs-req-analyzer.js` cites `COMP-007` and `RULE_002` correctly (3.2). The sections below keep the original reasoning. Where a section says "not changed" or "proposal", read it as the state **before** round 3.
 
 - Master list: `ica-schema/02-rules.json`
 - Second list: `ica-schema/csv/approval_rules.csv`
@@ -49,7 +51,7 @@ How to read this:
 3. **Scoring is not affected.** The Code Review score subtracts only critical (20), major (10) and minor (5). `info` costs 0. The browser already reports this check as `info`, so no score changes. The Python `ComplianceChecker` does not implement this rule.
 4. A test (`test_rule_014_severity_matches_the_browser_check_that_implements_it`) fails if the browser check, the master and the CSV ever disagree.
 
-**What is lost:** the phrase "or filter `language = USERENV('LANG')` on the base table". To keep it, add it to the master description later. That is a one-line change in `02-rules.json`, and it means regenerating the JSON-LD and re-ingesting it. I did **not** change the master in Phase 0.
+**Applied in round 3:** the phrase was kept. Master `RULE_014` now ends with "If the base table FND_LOOKUP_VALUES is queried instead, filter language = USERENV('LANG')". Checked first: the browser check 24 only flags `FND_LOOKUPS` without `FND_LOOKUP_VALUES_VL`, so the added sentence does not change what is detected, and `ebs-reports.js` already uses `fpot.language = USERENV('LANG')` for base-table translation joins. `build_context_schema.py` was re-run; the only change in `Oracle_EBS_Intelligence_Hub.jsonld` is that one description line (527 nodes before and after).
 
 **Alternative if you disagree:** keep the old row as a separate `APR-012` with Minor. I do not recommend it, because the graph would then hold two rules for one browser check.
 
@@ -110,7 +112,7 @@ The CSV was written with finer labels than the master. Of the 16 rows that share
 
 A new, unreviewed difference fails the test. So does removing a documented difference without updating this document.
 
-**Data note found while checking:** the 13 shared rows also differ in `description` wording, and in `applies_to` (CSV) versus `applies_to_tables` (master). Example: `RULE_001` in the CSV says "`org_id` filter"; the master says "`org_id = :p_org_id` or MO_GLOBAL filter". The meaning is the same and the master text is more precise. Decision for you (section 5): replace the CSV descriptions with the master text, so the agent never quotes two phrasings of one rule. I recommend yes, together with the re-ingestion.
+**Data note found while checking:** the 13 shared rows also differ in `description` wording, and in `applies_to` (CSV) versus `applies_to_tables` (master). Example: `RULE_001` in the CSV says "`org_id` filter"; the master says "`org_id = :p_org_id` or MO_GLOBAL filter". The meaning is the same and the master text is more precise. **Applied in round 3:** the CSV `description` for all 16 shared IDs is now the master text, word for word, so the agent cannot quote two phrasings of one rule. The 11 `APR-nnn` rows keep their own descriptions (checked by hash: unchanged). `rule_type`, `category` and `applies_to` stay as documented above. Tests: `test_csv_descriptions_equal_master_for_shared_rules`, `test_apr_rows_keep_their_own_descriptions`.
 
 ---
 
@@ -119,11 +121,11 @@ A new, unreviewed difference fails the test. So does removing a documented diffe
 | Source | State | Plan |
 |---|---|---|
 | `appstudio/oracle-ebs-intelligence-hub-agent.yaml` (v5.0) | Lists old `RULE_014`..`RULE_027` meanings | **Archived in Phase 0.** A header comment was added and the rest is byte-for-byte unchanged. New `appstudio/README.md`. The link in `docs/BOB_USAGE.md` now points to the current file, `...-agent-v6.yaml`. |
-| Hidden `tab-ica` in `oracle-ebs-intelligence-hub.html` (lines ~2383-2424) | Lists 26 `RULE_nnn` entries; **0 of 26 names match the master** (for example `RULE_002` "Use bind variables"; master "DateTrack PER_PEOPLE_F Filter") | **Not changed. Needs your approval.** See 3.1. |
-| `ebs-req-analyzer.js` (hidden Req Analyzer tab), lines 277-280 and 736-738 | Cites `RULE_001` ORG_ID (correct), **`RULE_002` as "bind variables" (wrong; master is DateTrack), `RULE_003` as DateTrack (wrong; master is PRIMARY_FLAG)** | Report only. See 3.2. |
+| Hidden `tab-ica` in `oracle-ebs-intelligence-hub.html` (lines ~2383-2430) | Had 24 rule items, 0 of 24 names matching the master (for example `RULE_002` "Use bind variables"; master "DateTrack PER_PEOPLE_F Filter") | **Aligned in round 3 (option A).** All 28 `RULE_001`..`RULE_028` now appear once with the master name. See 3.1. |
+| `ebs-req-analyzer.js` (hidden Req Analyzer tab), lines 737-738 | Cited `RULE_002` as "bind variables" (wrong) and `RULE_003` as DateTrack (wrong) | **Fixed in round 3.** Now `COMP-007` and `RULE_002`. See 3.2. |
 | `backend/app/routes/chat.py` and `services/ica_workflow_service.py` shorthand lists (`RULE_001`..`RULE_007`) | Names agree with the master (checked by `test_rule_catalogue.py`) | No change. |
 
-### 3.1 Hidden `tab-ica`: how it would be removed or aligned (proposal only)
+### 3.1 Hidden `tab-ica`: aligned (option A, applied)
 
 The tab button has `data-hidden="true"` and `style="display:none"`. In a real browser, the employee role sees 3 tabs, the technical role sees 7, and `tab-ica` is in neither list. Options:
 
@@ -131,11 +133,11 @@ The tab button has `data-hidden="true"` and `style="display:none"`. In a real br
 - **B: remove the rule-list block** from the hidden panel. It is also invisible; the panel just has no rules section.
 - **C: delete the whole hidden tab** (button, panel and any CSS or JS only it uses). Largest change; needs its own review.
 
-Nothing has been changed. Please choose A, B, C or "leave".
+**Applied: A.** In `oracle-ebs-intelligence-hub.html` only the text inside the rule list changed. The old list had 24 items with invented names (and ids such as `RULE_016` "Avoid DDL in reports"). The new list shows all 28 `RULE_001`..`RULE_028` exactly once with the master name, spread over the same five groups (Security, Performance, Date Handling, Multi-Org, Data Quality) with the same markup and CSS classes. The panel stays hidden for every role, so no visible screen changes. The four rules the old list was missing (`RULE_012`, `013`, `014`, `015`) were added so the panel matches the "28 rules" badge. The group an ID sits in is a display grouping only; the master `category` is unchanged. Test: `test_hidden_tab_ica_rule_names_match_master`.
 
-### 3.2 `ebs-req-analyzer.js` (hidden tab)
+### 3.2 `ebs-req-analyzer.js` (hidden tab): fixed (applied)
 
-Proposed: change the label text `RULE_002` to `COMP-007 (bind variables)` and `RULE_003` to `RULE_002 (DateTrack)` on lines 737-738 and 279. It is text inside generated documents only, with no layout change. Not done, because it changes generated document wording.
+**Applied.** Two label strings in the generated technical-design text: "...prevent SQL injection (`RULE_002`)" is now "(`COMP-007`)", and "...on PER_ tables (`RULE_003`)" is now "(`RULE_002`)". Checked against the sources: the ontology (`ebs-ontology.jsonld`) defines `COMP-007` as "Bind Variables Required", and the master defines `RULE_002` as "DateTrack PER_PEOPLE_F Filter". The generated code on line 279 already said `RULE_002` next to the DateTrack filter, so it was correct and is unchanged. No detection or generation logic changed (2 lines, text only). The `?v=` cache-buster for this file was raised from 20 to 21 so browsers load the corrected text. Test: `test_req_analyzer_cites_the_right_rule_ids`.
 
 ---
 
@@ -143,10 +145,10 @@ Proposed: change the label text `RULE_002` to `COMP-007 (bind variables)` and `R
 
 `code_review_check_number` in `02-rules.json` does not match the browser's real checks for many rules. For example `RULE_001` says 4 but the ORG_ID check is 5, and `RULE_016`..`RULE_028` are shifted. This was verified against `performCodeReview()`. The three merges inherit whatever number the master has. Fixing it changes `02-rules.json`, so the generated JSON-LD changes and needs re-ingestion. It is held for Phase 2.
 
-## 5. Decisions needed from you
+## 5. Decisions (all answered in round 3)
 
-1. Approve or change the three merges (and `RULE_017` -> `APR-004`).
-2. Master wording for `RULE_014`: add "or filter `language = USERENV('LANG')`"? This needs the JSON-LD regenerated.
-3. Replace the CSV descriptions with the master text? (recommended)
-4. Hidden `tab-ica`: A, B, C or leave.
-5. `ebs-req-analyzer.js` label fix: yes or no.
+1. Three merges and `RULE_017` -> `APR-004`: **approved**.
+2. Master wording for `RULE_014`: **added**, JSON-LD regenerated.
+3. CSV descriptions replaced with master text for the 16 shared IDs: **done**.
+4. Hidden `tab-ica`: **A, aligned; tab kept**.
+5. `ebs-req-analyzer.js` label fix: **done**.

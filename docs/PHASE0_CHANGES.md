@@ -14,7 +14,7 @@ To go back to the old demo at any time:
 | 1 | The backend said `success: true` when the agent replied "Invalid token" (HTTP 200 with an apology inside). | A new classifier reads the reply and rejects apologies. | `services/ica_reply.py` (new), `routes/chat.py` |
 | 2 | The page showed that apology as a normal answer, or silently swapped in a local answer. | Genuine AI failures show a red "no answer generated" bubble with the reason. | `ebs-ica-integration.js`, `oracle-ebs-intelligence-hub.html` (cache-buster only) |
 | 3 | `RULE_003` meant "SELECT *" in the Python checker but "PRIMARY_FLAG" in the knowledge graph (also `RULE_016`, `RULE_024`). | One catalogue of rule IDs, using the graph's IDs. | `services/rule_catalogue.py` (new), `services/compliance_checker.py` |
-| 4 | No tests existed. | 84 Python tests + 7 JavaScript tests. | `backend/tests/` (new), `backend/requirements-dev.txt` (new) |
+| 4 | No tests existed. | 90 Python tests + 7 JavaScript tests. | `backend/tests/` (new), `backend/requirements-dev.txt` (new) |
 | 5 | `ica-schema/csv/approval_rules.csv` reused `RULE_014`..`RULE_027` with different meanings from the master `02-rules.json`, so the agent mixed them up. | CSV rewritten: shared rules use master IDs; 11 CSV-only rules renamed `APR-001`..`APR-011`. Mapping file added. | `ica-schema/csv/approval_rules.csv`, `docs/rule_id_mapping.csv` (new), 2 READMEs |
 | 6 | A brief "knowledge graph unreachable" reply failed the whole question. | One automatic retry for `unreachable` only. The final message now says what happened on both attempts. | `routes/chat.py` |
 | 7 | Old v5 agent YAML listed outdated rule IDs and looked current. | Marked ARCHIVED (comment header only), new `appstudio/README.md`, link fixed in `BOB_USAGE.md`. | `appstudio/*`, `docs/BOB_USAGE.md` |
@@ -143,7 +143,7 @@ Run from the repository root:
 |---|---|---|
 | `test_ica_reply.py` | 14 | Real answers pass; every apology type is rejected; long answers are not falsely rejected; secrets are redacted |
 | `test_chat_route.py` | 27 | `/api/chat` with a FAKE Langflow: success, apology, agent error, empty, 401, 500, timeout, connect error, not configured, no secret in logs; plus the `unreachable` retry (success after retry, exactly 2 calls when it fails twice, retry network error, and auth / session / agent / empty are called exactly once); the final message lists both attempts and never contains reply text or keys |
-| `test_rule_ids_consistency.py` | 18 | No duplicate IDs; the same ID never has two names; CSV severity and check numbers equal the master; CSV-only rules are `APR-nnn`; the mapping file covers all 27 old IDs and points at real IDs; catalogue names equal the master; the `rule_type` / `category` differences are exactly the documented list; RULE_014 severity equals the browser check |
+| `test_rule_ids_consistency.py` | 24 | CSV descriptions equal the master; `RULE_014` carries the language filter in master and JSON-LD; hidden `tab-ica` shows all 28 master names; the analyzer cites `COMP-007` / `RULE_002`; the re-ingestion doc hashes match the files; No duplicate IDs; the same ID never has two names; CSV severity and check numbers equal the master; CSV-only rules are `APR-nnn`; the mapping file covers all 27 old IDs and points at real IDs; catalogue names equal the master; the `rule_type` / `category` differences are exactly the documented list; RULE_014 severity equals the browser check |
 | `test_no_secrets_tracked.py` | 5 | No credential file name and no key-shaped value is tracked; test fixtures must be marked as invented; the old key prefix is absent |
 | `test_rule_catalogue.py` | 20 | Every check catalogued; old clashing IDs gone; IDs and names equal the graph files; scores identical to the pre-Phase-0 baseline |
 | `js/test_ica_failure_ui.js` | 7 | Real `ebs-ica-integration.js` in a fake browser: red bubble for AI failure, HTML escaped, old fallbacks kept |
@@ -215,15 +215,13 @@ Wrong Langflow API key (HTTP 401/403 from Langflow, unchanged behaviour):
 
 ## 7. Context Studio re-ingestion (NOT done - for you to do)
 
+Superseded by round 3: the full, exact instructions are in **`docs/CONTEXT_STUDIO_REINGESTION.md`**. In short, two existing sources must be REPLACED (deleted and re-uploaded, never added next to the old copy):
+
 | File | Action |
 |---|---|
-| `ica-schema/csv/approval_rules.csv` | **Re-ingest.** This is the only changed knowledge file. |
-| `ica-schema/Oracle_EBS_Intelligence_Hub.jsonld` | No change, no re-ingest. |
-| `ica-schema/02-rules.json`, other CSV and JSON files | No change. |
-
-Before or after the upload, delete or replace the OLD `approval_rules.csv` data in Context Studio. If it stays, the old `RULE_014`..`RULE_027` meanings stay in the graph and the agent keeps mixing them.
-
-Check afterwards in the Playground: ask `What SQL rules apply to ap_invoices_all?` and `What is RULE_021?`. Expected: `RULE_021` is "AR Payment Schedule Status Filter", `RULE_017` is "Use MO_GLOBAL for Multi-Org Context", and CSV-only rules appear as `APR-nnn`.
+| `ica-schema/csv/approval_rules.csv` | **Replace.** New IDs and master descriptions. |
+| `ica-schema/Oracle_EBS_Intelligence_Hub.jsonld` | **Replace.** One description line changed (`RULE_014`). 527 nodes. |
+| `ica-schema/02-rules.json`, every other CSV and JSON file | No upload. |
 
 ## 8. Review round 2 additions
 
@@ -257,3 +255,30 @@ Chat tab with a stubbed backend (real page code, fake `/api/chat`):
 
 Not covered: pixel/visual comparison (no screenshots were compared), Excel upload, exports, report deletion workflow, and the live Langflow path (needs the running backend and your keys). Those use code that Phase 0 did not touch (`ebs-reports.js` and the data files are byte-identical to the tag).
 
+## 10. Review round 3: approved rule corrections (applied)
+
+Decisions applied exactly as approved. Full reasoning is in `docs/RULE_MERGE_REVIEW.md`.
+
+| # | Change | Files | Effect on detection, scoring, UI |
+|---|---|---|---|
+| 1 | Merges `RULE_018`->`RULE_023`, `RULE_019`->`RULE_014` (Minor->Info), `RULE_021`->`RULE_017`, and `RULE_017`->`APR-004` confirmed. Rationale and severity difference kept in the review doc. | `docs/RULE_MERGE_REVIEW.md` | None |
+| 2 | `RULE_014` master description gained: "If the base table FND_LOOKUP_VALUES is queried instead, filter language = USERENV('LANG')". Checked first against browser check 24 (it only flags `FND_LOOKUPS` without `FND_LOOKUP_VALUES_VL`) and against `ebs-reports.js`, which already uses `language = USERENV('LANG')` for base-table translation joins. JSON-LD regenerated: the only diff is that line, still 527 nodes. | `ica-schema/02-rules.json`, `ica-schema/Oracle_EBS_Intelligence_Hub.jsonld` | None |
+| 3 | The 16 shared CSV rows use the master description word for word. The 11 `APR-nnn` rows keep their own text (hash unchanged). | `ica-schema/csv/approval_rules.csv` | None |
+| 4 | Hidden `tab-ica`: rule list text aligned. 24 invented items replaced by all 28 `RULE_001`..`RULE_028` with master names, same five groups and CSS classes. Tab kept, still hidden for both roles. | `oracle-ebs-intelligence-hub.html` | No visible change. Hidden panel only. |
+| 5 | `ebs-req-analyzer.js`: bind-variable note `RULE_002`->`COMP-007`; DateTrack note `RULE_003`->`RULE_002`. Checked against `ebs-ontology.jsonld` (`COMP-007` = Bind Variables Required) and the master (`RULE_002` = DateTrack PER_PEOPLE_F Filter). Two text strings, no logic. Script cache-buster `?v=20`->`?v=21`. | `ebs-req-analyzer.js`, `oracle-ebs-intelligence-hub.html` | None on detection. Wording in generated documents only. |
+| 6 | 6 new tests. The CSV-description test and the tab-ica test were each shown to fail when the data was broken on purpose, and to pass again once restored. | `backend/tests/test_rule_ids_consistency.py` | n/a |
+
+### Regression after round 3 (real Edge, headless, pre-Phase-0 tag vs current)
+
+| Check | Result |
+|---|---|
+| Visible tabs, employee role | 3 and 3, identical |
+| Visible tabs, technical role | 7 and 7, identical |
+| Content of the 9 tabs other than `tab-ica` (text length, buttons, inputs) | identical, both roles |
+| Hidden `tab-ica` | differs on purpose: 24 -> 28 rule items. Not reachable by any role. |
+| Code Review on a fixed query | identical: same score, 21 cards, same text length |
+| Console errors | identical (only the CORS error for `/health`, because no backend ran) |
+
+The Code Review score in this run is 50/100 on both sides (the earlier run used a different query, which scored 40). The point is that the tag and the current code agree.
+
+Unchanged by round 3: `ebs-reports.js` (27 browser checks), the Python `ComplianceChecker` (14 rules, baseline test passes), scoring weights.
