@@ -2386,42 +2386,46 @@
             <div class="ica-rules-grid">
               <div class="ica-rule-group">
                 <div class="ica-rule-group-title">🔒 Security</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_001</span> Always filter by ORG_ID</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_002</span> Use bind variables, not literals</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_003</span> Restrict SELECT * usage</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_016</span> Avoid DDL in reports</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_017</span> No DML in SELECT queries</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_010</span> EXECUTE IMMEDIATE SQL Injection</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_027</span> FND_GLOBAL Context Required for EBS APIs</div>
               </div>
               <div class="ica-rule-group">
                 <div class="ica-rule-group-title">⚡ Performance</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_004</span> Avoid function on indexed column</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_005</span> Use EXISTS not IN for subqueries</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_006</span> Add ROWNUM limits on large tables</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_018</span> Avoid implicit type conversion</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_019</span> Use table aliases consistently</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_008</span> SELECT * Wildcard Prohibited</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_009</span> Correlated Scalar Subquery N+1</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_011</span> LIKE Leading Wildcard Index Bypass</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_024</span> Use BULK COLLECT for Large Data Sets</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_028</span> Use EXISTS Instead of IN for Subqueries</div>
               </div>
               <div class="ica-rule-group">
                 <div class="ica-rule-group-title">📅 Date Handling</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_007</span> Use TRUNC for date comparisons</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_008</span> Avoid SYSDATE arithmetic strings</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_020</span> Use TO_DATE with explicit format</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_021</span> Consistent NLS date format</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_002</span> DateTrack PER_PEOPLE_F Filter</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_003</span> DateTrack PER_ASSIGNMENTS_F PRIMARY_FLAG</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_018</span> DateTrack Historical Query Pattern</div>
               </div>
               <div class="ica-rule-group">
                 <div class="ica-rule-group-title">🏢 Multi-Org</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_009</span> Use MO_GLOBAL for multi-org</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_010</span> Filter LEDGER_ID where applicable</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_022</span> Validate SET_OF_BOOKS_ID joins</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_023</span> Use FND_PROFILE for org context</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_001</span> Multi-Org ORG_ID Required</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_017</span> Use MO_GLOBAL for Multi-Org Context</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_023</span> Inventory Organization ID Filter</div>
               </div>
               <div class="ica-rule-group">
                 <div class="ica-rule-group-title">✅ Data Quality</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_011</span> Check STATUS / FLAG columns</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_024</span> Handle NULL with NVL/COALESCE</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_025</span> Validate EFFECTIVE_DATE ranges</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_026</span> Avoid DISTINCT on large result sets</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_027</span> Use WITH clause for repeated subqueries</div>
-                <div class="ica-rule-item"><span class="ica-rule-id">RULE_028</span> Document all custom parameters</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_004</span> Exclude Cancelled Invoices</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_005</span> Exclude Void Cheques</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_006</span> GL Summary Flag Filter</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_007</span> iExpense SOURCE Filter</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_012</span> NOT IN with NULLs</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_013</span> ROWNUM with ORDER BY</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_014</span> FND_LOOKUPS Use VL View</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_015</span> Missing SQL Comment Header</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_016</span> AP Invoice Void Cheque Filter</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_019</span> PO FINALLY CLOSED Filter</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_020</span> AR Complete Flag Filter</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_021</span> AR Payment Schedule Status Filter</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_022</span> GL Actual Flag Filter</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_025</span> Explicit Transaction Control in PL/SQL</div>
+                <div class="ica-rule-item"><span class="ica-rule-id">RULE_026</span> WHO Columns Required in Custom Tables</div>
               </div>
             </div>
           </div>
@@ -2865,7 +2869,7 @@ POST http://localhost:3001/query<br>
     <!-- ICA Context Studio integration — loads after main JS -->
     <script src="ebs-ica-integration.js?v=22"></script>
     <!-- Requirements Analyzer — loads after main JS -->
-    <script src="ebs-req-analyzer.js?v=20"></script>
+    <script src="ebs-req-analyzer.js?v=21"></script>
     <!-- Requirements Studio — SQL/PLSQL/TDD/Test Case Generator -->
     <script src="ebs-requirements-studio.js?v=20"></script>
 </body>

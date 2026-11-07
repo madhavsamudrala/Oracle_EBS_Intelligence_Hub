@@ -1,4 +1,4 @@
-# ICA Schema CSV Files — Oracle EBS Intelligence Hub v5.0
+﻿# ICA Schema CSV Files — Oracle EBS Intelligence Hub v5.0
 
 All CSV files in this directory describe the **Oracle EBS Intelligence Hub v5.0**.  
 All previous iExpense Approval domain data has been replaced.
@@ -46,8 +46,8 @@ so the AI agent mixed the two meanings. Now:
 
 | ID pattern | Meaning |
 |------------|---------|
-| `RULE_nnn` | Same rule, same name as in `02-rules.json`. Never redefine these here. |
-| `APR-nnn`  | A rule that exists only in this CSV. `code_review_check_number` is blank because no browser check implements it. |
+| `RULE_nnn` | Same rule, same name, same severity and same **description** as in `02-rules.json` (the master text is copied word for word). Never redefine these here. `rule_type`, `category` and `applies_to` may be finer here; the differences are listed in `docs/RULE_MERGE_REVIEW.md` and pinned by tests. |
+| `APR-nnn`  | A rule that exists only in this CSV, with its own description. `code_review_check_number` is blank because no browser check implements it. |
 
 The old-ID to new-ID table is in [`docs/rule_id_mapping.csv`](../../docs/rule_id_mapping.csv).
 `backend/tests/test_rule_ids_consistency.py` fails if the two files disagree.

@@ -206,3 +206,67 @@ def test_rule_014_severity_matches_the_browser_check_that_implements_it():
     assert master["RULE_014"]["code_review_check_number"] == 24
     csv_row = next(r for r in _csv_rows() if r["rule_id"] == "RULE_014")
     assert csv_row["severity"] == "Info"
+
+
+# ------------------------------------------- Phase 0 round 3: descriptions and UI text follow the master
+def test_csv_descriptions_equal_master_for_shared_rules():
+    """The 16 shared IDs use the master description word for word. APR-nnn rows keep their own text."""
+    master = {r["rule_id"]: r for r in _master()}
+    shared = [r for r in _csv_rows() if r["rule_id"] in master]
+    assert len(shared) == 16
+    wrong = [r["rule_id"] for r in shared if r["description"] != master[r["rule_id"]]["description"]]
+    assert not wrong, f"CSV description differs from master: {wrong}"
+
+
+def test_apr_rows_keep_their_own_descriptions():
+    apr = [r for r in _csv_rows() if APR_RE.match(r["rule_id"])]
+    assert len(apr) == 11
+    assert all(r["description"].strip() for r in apr)
+
+
+def test_rule_014_description_mentions_the_language_filter():
+    """RULE_014 keeps the old RULE_019 advice: filter language = USERENV('LANG') on the base table."""
+    master = {r["rule_id"]: r for r in _master()}
+    assert "language = USERENV('LANG')" in master["RULE_014"]["description"]
+    assert "FND_LOOKUP_VALUES_VL" in master["RULE_014"]["description"]
+    # The generated JSON-LD (the real Context Studio upload) must carry the same text.
+    graph = json.loads((REPO / "ica-schema" / "Oracle_EBS_Intelligence_Hub.jsonld").read_text("utf-8"))["@graph"]
+    descriptions = {n.get("description") for n in graph if isinstance(n, dict)}
+    assert master["RULE_014"]["description"] in descriptions, "JSON-LD is stale: rebuild with build_context_schema.py"
+
+
+def test_hidden_tab_ica_rule_names_match_master():
+    """Hidden tab-ica lists RULE_001..RULE_028. Every ID appears once with the master name."""
+    html_text = (REPO / "oracle-ebs-intelligence-hub.html").read_text("utf-8")
+    items = re.findall(r'<span class="ica-rule-id">(RULE_\d{3})</span>\s*([^<]+)</div>', html_text)
+    master = {r["rule_id"]: r["rule_name"] for r in _master()}
+    ids = [i for i, _ in items]
+    assert sorted(ids) == [f"RULE_{n:03d}" for n in range(1, 29)]
+    wrong = [(i, n.strip()) for i, n in items if master[i] != n.strip()]
+    assert not wrong, f"tab-ica name differs from master: {wrong}"
+
+
+def test_req_analyzer_cites_the_right_rule_ids():
+    """Bind variables = COMP-007 (ontology). DateTrack on PER_ tables = RULE_002 (master)."""
+    js = (REPO / "ebs-req-analyzer.js").read_text("utf-8")
+    assert "prevent SQL injection (COMP-007)" in js
+    assert "on PER_ tables (RULE_002)" in js
+    assert "prevent SQL injection (RULE_002)" not in js
+    assert "on PER_ tables (RULE_003)" not in js
+    master = {r["rule_id"]: r["rule_name"] for r in _master()}
+    assert master["RULE_002"].startswith("DateTrack PER_PEOPLE_F")
+    onto = json.loads((REPO / "ica-schema" / "ebs-ontology.jsonld").read_text("utf-8"))["@graph"]
+    comp7 = next(n for n in onto if n.get("identityKey") == "COMP-007")
+    assert "Bind Variables" in comp7["rdfs:label"]
+
+def test_reingestion_doc_hashes_match_the_files_it_tells_you_to_upload():
+    """docs/CONTEXT_STUDIO_REINGESTION.md lists SHA-256 values. If a knowledge file changes and the doc
+    is not updated, the owner would upload something different from what was reviewed.
+    Line endings are normalised (git may convert LF/CRLF on Windows)."""
+    import hashlib
+    doc = (REPO / "docs" / "CONTEXT_STUDIO_REINGESTION.md").read_text("utf-8")
+    for rel in ("ica-schema/csv/approval_rules.csv", "ica-schema/Oracle_EBS_Intelligence_Hub.jsonld"):
+        data = (REPO / rel).read_bytes().replace(b"\r\n", b"\n")
+        digest = hashlib.sha256(data).hexdigest()
+        raw_digest = hashlib.sha256((REPO / rel).read_bytes()).hexdigest()
+        assert digest in doc or raw_digest in doc, f"{rel}: hash in CONTEXT_STUDIO_REINGESTION.md is stale"

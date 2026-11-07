@@ -734,8 +734,8 @@ function _rqaGenTechDoc(p) {
 <h3>3.1 Key Technical Decisions</h3>
 <ul>
   <li><strong>Multi-Org:</strong> MO_GLOBAL.SET_POLICY_CONTEXT used for ORG_ID enforcement (RULE_001)</li>
-  <li><strong>Bind Variables:</strong> All parameters passed as bind variables to prevent SQL injection (RULE_002)</li>
-  <li><strong>DateTrack:</strong> ${mod==='HRMS'?'EFFECTIVE_START_DATE / EFFECTIVE_END_DATE filters applied on PER_ tables (RULE_003)':'Not applicable for this module'}</li>
+  <li><strong>Bind Variables:</strong> All parameters passed as bind variables to prevent SQL injection (COMP-007)</li>
+  <li><strong>DateTrack:</strong> ${mod==='HRMS'?'EFFECTIVE_START_DATE / EFFECTIVE_END_DATE filters applied on PER_ tables (RULE_002)':'Not applicable for this module'}</li>
   <li><strong>Error Handling:</strong> Row-level exception handling with ROLLBACK on fatal errors</li>
   <li><strong>Logging:</strong> FND_FILE.PUT_LINE used for LOG and OUTPUT streams</li>
   <li><strong>Staging:</strong> ${p.needsStaging?`${name}_STG table used for intermediate data storage`:'Direct processing — no staging table required'}</li>
