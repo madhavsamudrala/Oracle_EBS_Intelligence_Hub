@@ -78,7 +78,8 @@ def test_csv_rule_ids_use_master_values():
         if not m:
             continue
         assert r["severity"] == m["severity"], r["rule_id"]
-        assert r["code_review_check_number"] == str(m["code_review_check_number"]), r["rule_id"]
+        want = "" if m["code_review_check_number"] is None else str(m["code_review_check_number"])   # null in master = blank in CSV
+        assert r["code_review_check_number"] == want, r["rule_id"]
 
 
 # ------------------------------------------------------------- namespaces

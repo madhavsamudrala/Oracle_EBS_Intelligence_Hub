@@ -1,9 +1,9 @@
 rule_id,rule_name,rule_type,category,severity,applies_to,description,code_review_check_number
-RULE_001,Multi-Org ORG_ID Required,sql_compliance,EBS Compliance,Critical,"AP_INVOICES_ALL, AP_CHECKS_ALL, AP_PAYMENT_SCHEDULES_ALL, AP_EXPENSE_REPORT_HEADERS_ALL, PO_HEADERS_ALL, AR_PAYMENT_SCHEDULES_ALL",All _ALL tables must include AND org_id = :p_org_id or MO_GLOBAL filter to prevent cross-org data leakage,4
-RULE_002,DateTrack PER_PEOPLE_F Filter,sql_compliance,DateTrack,Critical,PER_ALL_PEOPLE_F,PER_PEOPLE_F is a DateTrack table — must filter SYSDATE BETWEEN effective_start_date AND effective_end_date to get current record only,5
+RULE_001,Multi-Org ORG_ID Required,sql_compliance,EBS Compliance,Critical,"AP_INVOICES_ALL, AP_CHECKS_ALL, AP_PAYMENT_SCHEDULES_ALL, AP_EXPENSE_REPORT_HEADERS_ALL, PO_HEADERS_ALL, AR_PAYMENT_SCHEDULES_ALL",All _ALL tables must include AND org_id = :p_org_id or MO_GLOBAL filter to prevent cross-org data leakage,5
+RULE_002,DateTrack PER_PEOPLE_F Filter,sql_compliance,DateTrack,Critical,PER_ALL_PEOPLE_F,PER_PEOPLE_F is a DateTrack table — must filter SYSDATE BETWEEN effective_start_date AND effective_end_date to get current record only,6
 RULE_003,DateTrack PER_ASSIGNMENTS_F PRIMARY_FLAG,sql_compliance,DateTrack,Critical,PER_ALL_ASSIGNMENTS_F,"PER_ASSIGNMENTS_F must filter PRIMARY_FLAG='Y' to get the primary assignment only, plus effective date range",21
 RULE_004,Exclude Cancelled Invoices,sql_compliance,AP,Minor,AP_INVOICES_ALL,AP_INVOICES_ALL should normally exclude cancelled invoices unless the query specifically needs them,23
-RULE_005,Exclude Void Cheques,sql_compliance,AP,Minor,AP_CHECKS_ALL,AP_CHECKS_ALL should normally exclude void cheques unless specifically needed,0
+RULE_005,Exclude Void Cheques,sql_compliance,AP,Minor,AP_CHECKS_ALL,AP_CHECKS_ALL should normally exclude void cheques unless specifically needed,
 RULE_006,GL Summary Flag Filter,sql_compliance,GL,Minor,GL_CODE_COMBINATIONS,GL_CODE_COMBINATIONS should filter summary_flag='N' AND enabled_flag='Y' to exclude summary accounts,22
 RULE_007,iExpense SOURCE Filter,sql_compliance,iExpense,Major,AP_EXPENSE_REPORT_HEADERS_ALL,"AP_EXPENSE_REPORT_HEADERS_ALL SOURCE column must be filtered to include only iExpense records, not all AP expense reports",25
 RULE_008,SELECT * Wildcard Prohibited,sql_best_practice,Performance,Critical,All queries,SELECT * retrieves all columns including BLOBs — breaks if table structure changes and prevents index-only scans,2
@@ -13,8 +13,8 @@ RULE_011,LIKE Leading Wildcard Index Bypass,sql_best_practice,Performance,Major,
 RULE_012,NOT IN with NULLs,sql_best_practice,SQL Best Practice,Critical,All queries,NOT IN (SELECT ...) returns zero rows if the subquery contains any NULL — use NOT EXISTS instead,16
 RULE_013,ROWNUM with ORDER BY,sql_best_practice,SQL Best Practice,Critical,All queries,ROWNUM is applied before ORDER BY — results in wrong top-N rows. Use FETCH FIRST or subquery pattern,20
 RULE_014,FND_LOOKUPS Use VL View,sql_compliance,FND,Info,FND_LOOKUP_VALUES_VL,"Prefer FND_LOOKUP_VALUES_VL (language-aware view) over FND_LOOKUPS for multilingual environments. If the base table FND_LOOKUP_VALUES is queried instead, filter language = USERENV('LANG')",24
-RULE_017,Use MO_GLOBAL for Multi-Org Context,sql_compliance,EBS Compliance,Major,All queries,In MOAC-enabled environments use MO_GLOBAL.GET_CURRENT_ORG_ID() or MO_GLOBAL.SET_POLICY_CONTEXT to ensure correct ORG_ID rather than hardcoding values,7
-RULE_023,Inventory Organization ID Filter,sql_compliance,INV,Critical,"MTL_SYSTEM_ITEMS_B, MTL_ONHAND_QUANTITIES_DETAIL",MTL tables use organization_id (not org_id) for inventory organization scoping. Missing this filter returns all organizations data,13
+RULE_017,Use MO_GLOBAL for Multi-Org Context,sql_compliance,EBS Compliance,Major,All queries,In MOAC-enabled environments use MO_GLOBAL.GET_CURRENT_ORG_ID() or MO_GLOBAL.SET_POLICY_CONTEXT to ensure correct ORG_ID rather than hardcoding values,
+RULE_023,Inventory Organization ID Filter,sql_compliance,INV,Critical,"MTL_SYSTEM_ITEMS_B, MTL_ONHAND_QUANTITIES_DETAIL",MTL tables use organization_id (not org_id) for inventory organization scoping. Missing this filter returns all organizations data,
 APR-001,Missing GL_BALANCES Currency Filter,sql_compliance,GL,Major,GL_BALANCES,Must filter by currency_code to avoid summing across currencies in GL balance queries,
 APR-002,PO Authorization Status,sql_compliance,PO,Minor,PO_HEADERS_ALL,Filter authorization_status = 'APPROVED' unless reporting all POs including drafts,
 APR-003,AP Payment Status Flag,sql_compliance,AP,Minor,AP_INVOICES_ALL,Use payment_status_flag = 'Y' for fully paid or 'N' for outstanding invoices,

@@ -3977,7 +3977,7 @@
         "applies_to_tables": "AP_INVOICES_ALL; AP_CHECKS_ALL; AP_PAYMENT_SCHEDULES_ALL; AP_EXPENSE_REPORT_HEADERS_ALL; PO_HEADERS_ALL; PO_LINES_ALL; AR_PAYMENT_SCHEDULES_ALL",
         "sql_pattern": "FROM {table}_ALL without AND org_id",
         "correction": "AND {table}.org_id = mo_global.get_current_org_id()",
-        "code_review_check_number": "4",
+        "code_review_check_number": "5",
         "relationships": "rule_applies_to_table -> AP_INVOICES_ALL; rule_applies_to_table -> AP_CHECKS_ALL; rule_applies_to_table -> AP_PAYMENT_SCHEDULES_ALL; rule_applies_to_table -> AP_EXPENSE_REPORT_HEADERS_ALL; rule_applies_to_table -> PO_HEADERS_ALL; rule_applies_to_table -> PO_LINES_ALL; rule_checked_in_tab -> SQL Advisor"
       },
       "relatesTo": [
@@ -4007,7 +4007,7 @@
         "applies_to_tables": "PER_PEOPLE_F; PER_ALL_PEOPLE_F",
         "sql_pattern": "FROM PER_PEOPLE_F without effective date filter",
         "correction": "SYSDATE BETWEEN p.effective_start_date AND p.effective_end_date",
-        "code_review_check_number": "5",
+        "code_review_check_number": "6",
         "relationships": "rule_applies_to_table -> PER_ALL_PEOPLE_F; rule_checked_in_tab -> SQL Advisor"
       },
       "relatesTo": [
@@ -4082,7 +4082,6 @@
         "applies_to_tables": "AP_CHECKS_ALL",
         "sql_pattern": "FROM AP_CHECKS_ALL without AND void_date IS NULL",
         "correction": "AND c.void_date IS NULL",
-        "code_review_check_number": "0",
         "relationships": "rule_applies_to_table -> AP_CHECKS_ALL; rule_checked_in_tab -> SQL Advisor"
       },
       "relatesTo": [
@@ -4349,7 +4348,6 @@
         "applies_to_tables": "AP_CHECKS_ALL",
         "sql_pattern": "FROM AP_CHECKS_ALL without AND void_date IS NULL",
         "correction": "AND c.void_date IS NULL",
-        "code_review_check_number": "6",
         "relationships": "rule_applies_to_table -> AP_CHECKS_ALL; rule_checked_in_tab -> SQL Advisor"
       },
       "relatesTo": [
@@ -4374,7 +4372,6 @@
         "applies_to_tables": "all _ALL tables",
         "sql_pattern": "WHERE org_id = hardcoded_value without MO_GLOBAL",
         "correction": "WHERE org_id = MO_GLOBAL.GET_CURRENT_ORG_ID()",
-        "code_review_check_number": "7",
         "relationships": "rule_checked_in_tab -> SQL Advisor; rule_complements_rule -> Multi-Org ORG_ID Required"
       },
       "relatesTo": [
@@ -4399,7 +4396,6 @@
         "applies_to_tables": "PER_ALL_PEOPLE_F; PER_ALL_ASSIGNMENTS_F; PAY_PAYROLLS_F; PAY_ELEMENT_TYPES_F",
         "sql_pattern": "SYSDATE BETWEEN eff_start AND eff_end in historical context",
         "correction": ":p_as_of_date BETWEEN effective_start_date AND effective_end_date",
-        "code_review_check_number": "8",
         "relationships": "rule_applies_to_table -> PER_ALL_PEOPLE_F; rule_applies_to_table -> PER_ALL_ASSIGNMENTS_F; rule_applies_to_table -> PAY_PAYROLLS_F; rule_checked_in_tab -> SQL Advisor"
       },
       "relatesTo": [
@@ -4426,7 +4422,6 @@
         "applies_to_tables": "PO_HEADERS_ALL; PO_LINE_LOCATIONS_ALL",
         "sql_pattern": "FROM PO_HEADERS_ALL without FINALLY CLOSED exclusion",
         "correction": "AND pha.closed_code != 'FINALLY CLOSED' AND pha.authorization_status = 'APPROVED'",
-        "code_review_check_number": "9",
         "relationships": "rule_applies_to_table -> PO_HEADERS_ALL; rule_checked_in_tab -> SQL Advisor"
       },
       "relatesTo": [
@@ -4451,7 +4446,6 @@
         "applies_to_tables": "RA_CUSTOMER_TRX_ALL",
         "sql_pattern": "FROM RA_CUSTOMER_TRX_ALL without complete_flag filter",
         "correction": "AND rct.complete_flag = 'Y'",
-        "code_review_check_number": "10",
         "relationships": "rule_checked_in_tab -> SQL Advisor; rule_applies_to_module -> Accounts Receivable"
       },
       "relatesTo": [
@@ -4476,7 +4470,6 @@
         "applies_to_tables": "AR_PAYMENT_SCHEDULES_ALL",
         "sql_pattern": "FROM AR_PAYMENT_SCHEDULES_ALL without status filter",
         "correction": "AND aps.status NOT IN ('CL','VOID')",
-        "code_review_check_number": "11",
         "relationships": "rule_checked_in_tab -> SQL Advisor; rule_applies_to_module -> Accounts Receivable"
       },
       "relatesTo": [
@@ -4501,7 +4494,6 @@
         "applies_to_tables": "GL_BALANCES",
         "sql_pattern": "FROM GL_BALANCES without actual_flag filter",
         "correction": "AND gb.actual_flag = 'A'  -- A=Actual, B=Budget, E=Encumbrance",
-        "code_review_check_number": "12",
         "relationships": "rule_applies_to_table -> GL_BALANCES; rule_checked_in_tab -> SQL Advisor"
       },
       "relatesTo": [
@@ -4526,7 +4518,6 @@
         "applies_to_tables": "MTL_MATERIAL_TRANSACTIONS; MTL_ONHAND_QUANTITIES_DETAIL; MTL_SYSTEM_ITEMS_B; MTL_PARAMETERS",
         "sql_pattern": "FROM MTL_* table without AND organization_id",
         "correction": "AND mmt.organization_id = :p_organization_id",
-        "code_review_check_number": "13",
         "relationships": "rule_applies_to_table -> MTL_ONHAND_QUANTITIES_DETAIL; rule_applies_to_table -> MTL_SYSTEM_ITEMS_B; rule_checked_in_tab -> SQL Advisor"
       },
       "relatesTo": [
@@ -4552,7 +4543,6 @@
         "applies_to_tables": "all",
         "sql_pattern": "FOR rec IN (SELECT ... FROM large_table) LOOP single row DML FORALL not used",
         "correction": "FETCH cur BULK COLLECT INTO l_table LIMIT 1000; FORALL i IN l_table.FIRST..l_table.LAST",
-        "code_review_check_number": "14",
         "relationships": "rule_checked_in_tab -> SQL Advisor"
       },
       "relatesTo": [
@@ -4576,7 +4566,6 @@
         "applies_to_tables": "all",
         "sql_pattern": "INSERT/UPDATE/DELETE in PL/SQL without EXCEPTION handler and ROLLBACK",
         "correction": "EXCEPTION WHEN OTHERS THEN ROLLBACK; RAISE_APPLICATION_ERROR(-20001, SQLERRM);",
-        "code_review_check_number": "17",
         "relationships": "rule_checked_in_tab -> SQL Advisor"
       },
       "relatesTo": [
@@ -4600,7 +4589,6 @@
         "applies_to_tables": "XXCUST_* custom tables",
         "sql_pattern": "CREATE TABLE xxcust_* without WHO columns",
         "correction": "CREATED_BY NUMBER NOT NULL, CREATION_DATE DATE NOT NULL, LAST_UPDATED_BY NUMBER NOT NULL, LAST_UPDATE_DATE DATE NOT NULL, LAST_UPDATE_LOGIN NUMBER",
-        "code_review_check_number": "18",
         "relationships": "rule_checked_in_tab -> SQL Advisor"
       },
       "relatesTo": [
@@ -4624,7 +4612,6 @@
         "applies_to_tables": "all API calls",
         "sql_pattern": "Call to HR_EMPLOYEE_API or AP_VENDOR_PUB without FND_GLOBAL.APPS_INITIALIZE",
         "correction": "FND_GLOBAL.APPS_INITIALIZE(user_id => :p_user_id, resp_id => :p_resp_id, resp_appl_id => :p_resp_appl_id);",
-        "code_review_check_number": "19",
         "relationships": "rule_checked_in_tab -> SQL Advisor"
       },
       "relatesTo": [
@@ -4648,7 +4635,6 @@
         "applies_to_tables": "all",
         "sql_pattern": "WHERE col IN (SELECT large_table ...)",
         "correction": "WHERE EXISTS (SELECT 1 FROM large_table WHERE ...)",
-        "code_review_check_number": "26",
         "relationships": "rule_checked_in_tab -> SQL Advisor"
       },
       "relatesTo": [
