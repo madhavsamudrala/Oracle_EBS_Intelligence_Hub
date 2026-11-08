@@ -14,7 +14,7 @@ To go back to the old demo at any time:
 | 1 | The backend said `success: true` when the agent replied "Invalid token" (HTTP 200 with an apology inside). | A new classifier reads the reply and rejects apologies. | `services/ica_reply.py` (new), `routes/chat.py` |
 | 2 | The page showed that apology as a normal answer, or silently swapped in a local answer. | Genuine AI failures show a red "no answer generated" bubble with the reason. | `ebs-ica-integration.js`, `oracle-ebs-intelligence-hub.html` (cache-buster only) |
 | 3 | `RULE_003` meant "SELECT *" in the Python checker but "PRIMARY_FLAG" in the knowledge graph (also `RULE_016`, `RULE_024`). | One catalogue of rule IDs, using the graph's IDs. | `services/rule_catalogue.py` (new), `services/compliance_checker.py` |
-| 4 | No tests existed. | 90 Python tests + 7 JavaScript tests. | `backend/tests/` (new), `backend/requirements-dev.txt` (new) |
+| 4 | No tests existed. | 142 Python tests + 7 JavaScript tests. | `backend/tests/` (new), `backend/requirements-dev.txt` (new) |
 | 5 | `ica-schema/csv/approval_rules.csv` reused `RULE_014`..`RULE_027` with different meanings from the master `02-rules.json`, so the agent mixed them up. | CSV rewritten: shared rules use master IDs; 11 CSV-only rules renamed `APR-001`..`APR-011`. Mapping file added. | `ica-schema/csv/approval_rules.csv`, `docs/rule_id_mapping.csv` (new), 2 READMEs |
 | 6 | A brief "knowledge graph unreachable" reply failed the whole question. | One automatic retry for `unreachable` only. The final message now says what happened on both attempts. | `routes/chat.py` |
 | 7 | Old v5 agent YAML listed outdated rule IDs and looked current. | Marked ARCHIVED (comment header only), new `appstudio/README.md`, link fixed in `BOB_USAGE.md`. | `appstudio/*`, `docs/BOB_USAGE.md` |
@@ -127,7 +127,7 @@ The docstring also claimed "28 rules" and a JavaScript function that does not ex
 
 **Where else rule IDs appear:** `chat.py` (`EBS_KNOWLEDGE`, `MODULE_RULES`) and `ica_workflow_service.py` quote `RULE_001`-`RULE_007`. A test confirms these already match the graph names (ORG_ID, DateTrack, PRIMARY_FLAG, Cancelled, Void, Summary, SOURCE), so they were left alone.
 
-**Not touched (Phase 2):** the 27 browser Code Review checks have no rule IDs. Mapping them is part of the rule-engine phase. `ica-schema/02-rules.json` already records `code_review_check_number` for the 24 it covers.
+**Not touched (Phase 2):** the 27 browser Code Review checks have no rule IDs. Mapping them is part of the rule-engine phase. `ica-schema/02-rules.json` records `code_review_check_number` for the 14 rules that a browser check genuinely implements (corrected in round 4, see section 11); the other 14 are `null`.
 
 **Existing functionality affected:** `POST /api/sql_advisor` is the only caller. The page never calls it. Output has the same fields plus the new ones.
 
@@ -143,7 +143,7 @@ Run from the repository root:
 |---|---|---|
 | `test_ica_reply.py` | 14 | Real answers pass; every apology type is rejected; long answers are not falsely rejected; secrets are redacted |
 | `test_chat_route.py` | 27 | `/api/chat` with a FAKE Langflow: success, apology, agent error, empty, 401, 500, timeout, connect error, not configured, no secret in logs; plus the `unreachable` retry (success after retry, exactly 2 calls when it fails twice, retry network error, and auth / session / agent / empty are called exactly once); the final message lists both attempts and never contains reply text or keys |
-| `test_rule_ids_consistency.py` | 24 | CSV descriptions equal the master; `RULE_014` carries the language filter in master and JSON-LD; hidden `tab-ica` shows all 28 master names; the analyzer cites `COMP-007` / `RULE_002`; the re-ingestion doc hashes match the files; No duplicate IDs; the same ID never has two names; CSV severity and check numbers equal the master; CSV-only rules are `APR-nnn`; the mapping file covers all 27 old IDs and points at real IDs; catalogue names equal the master; the `rule_type` / `category` differences are exactly the documented list; RULE_014 severity equals the browser check |
+| `test_code_review_check_mapping.py` | 52 | Every rule-to-check number is verified against the real detection code in `ebs-reports.js`; the 14 blank rules stay blank; `RULE_028` is not check 16; CSV and JSON-LD follow the master | CSV descriptions equal the master; `RULE_014` carries the language filter in master and JSON-LD; hidden `tab-ica` shows all 28 master names; the analyzer cites `COMP-007` / `RULE_002`; the re-ingestion doc hashes match the files; No duplicate IDs; the same ID never has two names; CSV severity and check numbers equal the master; CSV-only rules are `APR-nnn`; the mapping file covers all 27 old IDs and points at real IDs; catalogue names equal the master; the `rule_type` / `category` differences are exactly the documented list; RULE_014 severity equals the browser check |
 | `test_no_secrets_tracked.py` | 5 | No credential file name and no key-shaped value is tracked; test fixtures must be marked as invented; the old key prefix is absent |
 | `test_rule_catalogue.py` | 20 | Every check catalogued; old clashing IDs gone; IDs and names equal the graph files; scores identical to the pre-Phase-0 baseline |
 | `js/test_ica_failure_ui.js` | 7 | Real `ebs-ica-integration.js` in a fake browser: red bubble for AI failure, HTML escaped, old fallbacks kept |
@@ -210,7 +210,7 @@ Wrong Langflow API key (HTTP 401/403 from Langflow, unchanged behaviour):
 **Not changed (reported only):**
 - `appstudio/oracle-ebs-intelligence-hub-agent.yaml` (old v5 agent) still lists the old `RULE_014`..`RULE_027` meanings. The live v6 agent does not use it.
 - Hidden `tab-ica` in `oracle-ebs-intelligence-hub.html` shows a third set of rule names. No user role can open it.
-- `02-rules.json` has pre-existing wrong `code_review_check_number` values (for example `RULE_001` says 4, the real ORG_ID check is 5). Phase 2 work.
+- `02-rules.json` had wrong `code_review_check_number` values. Fixed in round 4 (section 11).
 - `ica-schema/Oracle_EBS_Intelligence_Hub.jsonld` is generated from `02-rules.json`, which did not change, so it is identical.
 
 ## 7. Context Studio re-ingestion (NOT done - for you to do)
@@ -282,3 +282,18 @@ Decisions applied exactly as approved. Full reasoning is in `docs/RULE_MERGE_REV
 The Code Review score in this run is 50/100 on both sides (the earlier run used a different query, which scored 40). The point is that the tag and the current code agree.
 
 Unchanged by round 3: `ebs-reports.js` (27 browser checks), the Python `ComplianceChecker` (14 rules, baseline test passes), scoring weights.
+
+## 11. Review round 4: Code Review check numbers corrected
+
+Approved as Option A. Details and the rule-by-rule report: `docs/CODE_REVIEW_CHECK_MAPPING.md`.
+
+| What | Result |
+|---|---|
+| Rule used | A number is kept only if that browser check genuinely detects what the rule says. No approximate numbers. |
+| Corrected | `RULE_001` 4 -> 5, `RULE_002` 5 -> 6 |
+| Verified unchanged | 12 rules (`RULE_003`, 004, 006, 007, 008, 009, 010, 011, 012, 013, 014, 015), each checked against detection code and severity |
+| Set to blank (`null`) | 14 rules: `RULE_005`, 016, 017, 018, 019, 020, 021, 022, 023, 024, 025, 026, 027, 028 |
+| `RULE_028` and check 16 | Check 16 fires only on `NOT IN (SELECT ...)` (that is `RULE_012`). `RULE_028` is about a positive `IN` and `EXISTS`. Not covered, so blank. |
+| Files | `ica-schema/02-rules.json`, regenerated `ica-schema/Oracle_EBS_Intelligence_Hub.jsonld`, `ica-schema/csv/approval_rules.csv`, new `backend/tests/test_code_review_check_mapping.py`, new `docs/CODE_REVIEW_CHECK_MAPPING.md`, updated `docs/CONTEXT_STUDIO_REINGESTION.md` |
+| Not changed | `ebs-reports.js` (byte-identical to the tag), the 14 Python rules, scoring, UI |
+| JSON-LD | Regenerated from the master; a second build is byte-identical (reproducible). 527 nodes. |

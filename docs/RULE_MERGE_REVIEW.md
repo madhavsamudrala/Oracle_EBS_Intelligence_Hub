@@ -1,4 +1,4 @@
-# Rule merge review (Phase 0, Option A) - approved and applied
+﻿# Rule merge review (Phase 0, Option A) - approved and applied
 
 Status: **approved by the project owner and applied (Phase 0, round 3). Nothing has been uploaded to Context Studio.**
 
@@ -141,9 +141,9 @@ The tab button has `data-hidden="true"` and `style="display:none"`. In a real br
 
 ---
 
-## 4. Pre-existing problem found (not fixed; Phase 2)
+## 4. Pre-existing problem found (fixed in round 4)
 
-`code_review_check_number` in `02-rules.json` does not match the browser's real checks for many rules. For example `RULE_001` says 4 but the ORG_ID check is 5, and `RULE_016`..`RULE_028` are shifted. This was verified against `performCodeReview()`. The three merges inherit whatever number the master has. Fixing it changes `02-rules.json`, so the generated JSON-LD changes and needs re-ingestion. It is held for Phase 2.
+`code_review_check_number` in `02-rules.json` does not match the browser's real checks for many rules. For example `RULE_001` says 4 but the ORG_ID check is 5, and `RULE_016`..`RULE_028` are shifted. This was verified against `performCodeReview()`. The three merges inherit whatever number the master has. Fixing it changes `02-rules.json`, so the generated JSON-LD changes and needs re-ingestion. **Fixed in round 4** (approved Option A): `RULE_001` is now 5, `RULE_002` is 6, and the 14 rules with no genuine browser check are `null`. Rule-by-rule evidence, including `RULE_028` versus check 16, is in `docs/CODE_REVIEW_CHECK_MAPPING.md`. The merged rules are affected as follows: `RULE_023` and `RULE_017` have no browser check, so they carry no number; `RULE_014` keeps 24.
 
 ## 5. Decisions (all answered in round 3)
 
